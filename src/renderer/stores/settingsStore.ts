@@ -201,7 +201,6 @@ export interface SettingsStoreState {
 	markdownEditMode: boolean;
 	chatRawTextMode: boolean;
 	showHiddenFiles: boolean;
-	terminalWidth: number;
 	logLevel: string;
 	maxLogBuffer: number;
 	maxOutputLines: number;
@@ -283,7 +282,6 @@ export interface SettingsStoreActions {
 	setMarkdownEditMode: (value: boolean) => void;
 	setChatRawTextMode: (value: boolean) => void;
 	setShowHiddenFiles: (value: boolean) => void;
-	setTerminalWidth: (value: number) => void;
 	setMaxOutputLines: (value: number) => void;
 	setOsNotificationsEnabled: (value: boolean) => void;
 	setAudioFeedbackEnabled: (value: boolean) => void;
@@ -427,7 +425,6 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 		markdownEditMode: false,
 		chatRawTextMode: false,
 		showHiddenFiles: true,
-		terminalWidth: 100,
 		logLevel: 'info',
 		maxLogBuffer: 5000,
 		maxOutputLines: 25,
@@ -602,11 +599,6 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 		setShowHiddenFiles: (value) => {
 			set({ showHiddenFiles: value });
 			window.maestro.settings.set('showHiddenFiles', value);
-		},
-
-		setTerminalWidth: (value) => {
-			set({ terminalWidth: value });
-			window.maestro.settings.set('terminalWidth', value);
 		},
 
 		setMaxOutputLines: (value) => {
@@ -1485,9 +1477,6 @@ export async function loadAllSettings(): Promise<void> {
 		if (allSettings['showHiddenFiles'] !== undefined)
 			patch.showHiddenFiles = allSettings['showHiddenFiles'] as boolean;
 
-		if (allSettings['terminalWidth'] !== undefined)
-			patch.terminalWidth = allSettings['terminalWidth'] as number;
-
 		// Logger settings
 		if (savedLogLevel !== undefined) patch.logLevel = savedLogLevel;
 		if (savedMaxLogBuffer !== undefined) patch.maxLogBuffer = savedMaxLogBuffer;
@@ -1859,7 +1848,6 @@ export function getSettingsActions() {
 		setMarkdownEditMode: state.setMarkdownEditMode,
 		setChatRawTextMode: state.setChatRawTextMode,
 		setShowHiddenFiles: state.setShowHiddenFiles,
-		setTerminalWidth: state.setTerminalWidth,
 		setLogLevel: state.setLogLevel,
 		setMaxLogBuffer: state.setMaxLogBuffer,
 		setMaxOutputLines: state.setMaxOutputLines,

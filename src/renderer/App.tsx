@@ -418,8 +418,6 @@ function MaestroConsoleInner() {
 		setChatRawTextMode,
 		showHiddenFiles: _showHiddenFiles,
 		setShowHiddenFiles: _setShowHiddenFiles,
-		terminalWidth: _terminalWidth,
-		setTerminalWidth: _setTerminalWidth,
 		logLevel,
 		logViewerSelectedLevels,
 		setLogViewerSelectedLevels,
