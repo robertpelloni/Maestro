@@ -6,7 +6,6 @@ import {
 	Square,
 	HelpCircle,
 	StopCircle,
-	FileEdit,
 	LayoutDashboard,
 	GitFork,
 	ArrowLeft,
@@ -16,14 +15,15 @@ import { useLayerStack } from '../contexts/LayerStackContext';
 import { MODAL_PRIORITIES } from '../constants/modalPriorities';
 import { useCue } from '../hooks/useCue';
 import type { CueSessionStatus, CueRunResult } from '../hooks/useCue';
-import { CueYamlEditor } from './CueYamlEditor';
+// CueYamlEditor kept for future use - visual pipeline editor is the primary interface
+// import { CueYamlEditor } from './CueYamlEditor';
 import { CueHelpContent } from './CueHelpModal';
 // Kept for reference - visual pipeline editor replaces this
 // import { CueGraphView } from './CueGraphView';
 import { CuePipelineEditor } from './CuePipelineEditor';
 import { useSessionStore } from '../stores/sessionStore';
 
-type CueModalTab = 'dashboard' | 'graph';
+type CueModalTab = 'dashboard' | 'pipeline';
 
 interface CueGraphSession {
 	sessionId: string;
@@ -82,12 +82,12 @@ function StatusDot({ status }: { status: 'active' | 'paused' | 'none' }) {
 function SessionsTable({
 	sessions,
 	theme,
-	onEditYaml,
+	onViewInPipeline,
 	queueStatus,
 }: {
 	sessions: CueSessionStatus[];
 	theme: Theme;
-	onEditYaml: (session: CueSessionStatus) => void;
+	onViewInPipeline: (session: CueSessionStatus) => void;
 	queueStatus: Record<string, number>;
 }) {
 	if (sessions.length === 0) {
@@ -148,13 +148,13 @@ function SessionsTable({
 							</td>
 							<td className="py-2 text-right">
 								<button
-									onClick={() => onEditYaml(s)}
+									onClick={() => onViewInPipeline(s)}
 									className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs hover:opacity-80 transition-opacity"
 									style={{ color: CUE_TEAL }}
-									title="Edit YAML"
+									title="View in Pipeline Editor"
 								>
-									<FileEdit className="w-3.5 h-3.5" />
-									Edit YAML
+									<GitFork className="w-3.5 h-3.5" />
+									View in Pipeline
 								</button>
 							</td>
 						</tr>
@@ -385,11 +385,11 @@ export function CueModal({ theme, onClose, cueShortcutKeys }: CueModalProps) {
 	}, [registerLayer, unregisterLayer]);
 
 	// Tab state
-	const [activeTab, setActiveTab] = useState<CueModalTab>('dashboard');
+	const [activeTab, setActiveTab] = useState<CueModalTab>('pipeline');
 
-	// Fetch graph data when Graph tab is active
+	// Fetch graph data when Pipeline Editor tab is active
 	useEffect(() => {
-		if (activeTab !== 'graph') return;
+		if (activeTab !== 'pipeline') return;
 		let cancelled = false;
 		window.maestro.cue
 			.getGraphData()
@@ -405,15 +405,8 @@ export function CueModal({ theme, onClose, cueShortcutKeys }: CueModalProps) {
 	// Help modal state
 	const [showHelp, setShowHelp] = useState(false);
 
-	// YAML editor state
-	const [yamlEditorSession, setYamlEditorSession] = useState<CueSessionStatus | null>(null);
-
-	const handleEditYaml = useCallback((session: CueSessionStatus) => {
-		setYamlEditorSession(session);
-	}, []);
-
-	const handleCloseYamlEditor = useCallback(() => {
-		setYamlEditorSession(null);
+	const handleViewInPipeline = useCallback((_session: CueSessionStatus) => {
+		setActiveTab('pipeline');
 	}, []);
 
 	// Active runs section is collapsible when empty
@@ -493,17 +486,17 @@ export function CueModal({ theme, onClose, cueShortcutKeys }: CueModalProps) {
 												Dashboard
 											</button>
 											<button
-												onClick={() => setActiveTab('graph')}
+												onClick={() => setActiveTab('pipeline')}
 												className="flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium transition-colors"
 												style={{
 													backgroundColor:
-														activeTab === 'graph' ? theme.colors.bgMain : 'transparent',
+														activeTab === 'pipeline' ? theme.colors.bgMain : 'transparent',
 													color:
-														activeTab === 'graph' ? theme.colors.textMain : theme.colors.textDim,
+														activeTab === 'pipeline' ? theme.colors.textMain : theme.colors.textDim,
 												}}
 											>
 												<GitFork className="w-3.5 h-3.5" />
-												Graph
+												Pipeline Editor
 											</button>
 										</div>
 									</>
@@ -589,7 +582,7 @@ export function CueModal({ theme, onClose, cueShortcutKeys }: CueModalProps) {
 											<SessionsTable
 												sessions={sessions}
 												theme={theme}
-												onEditYaml={handleEditYaml}
+												onViewInPipeline={handleViewInPipeline}
 												queueStatus={queueStatus}
 											/>
 										</div>
@@ -669,16 +662,7 @@ export function CueModal({ theme, onClose, cueShortcutKeys }: CueModalProps) {
 				</div>,
 				document.body
 			)}
-			{yamlEditorSession && (
-				<CueYamlEditor
-					key={yamlEditorSession.sessionId}
-					isOpen={true}
-					onClose={handleCloseYamlEditor}
-					projectRoot={yamlEditorSession.projectRoot}
-					sessionId={yamlEditorSession.sessionId}
-					theme={theme}
-				/>
-			)}
+			{/* CueYamlEditor kept for future use - visual pipeline editor is the primary interface */}
 		</>
 	);
 }
