@@ -8,6 +8,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { logger } from '../utils/logger';
 import { execFileNoThrow } from '../utils/execFile';
+import { ensureForkSetup } from '../utils/symphony-fork';
 import type { DocumentReference } from '../../shared/symphony-types';
 
 const LOG_CONTEXT = '[SymphonyRunner]';
@@ -105,7 +106,9 @@ async function pushBranch(localPath: string, branchName: string): Promise<boolea
 async function createDraftPR(
 	localPath: string,
 	issueNumber: number,
-	issueTitle: string
+	issueTitle: string,
+	upstreamSlug?: string,
+	forkOwner?: string
 ): Promise<{ success: boolean; prUrl?: string; prNumber?: number; error?: string }> {
 	const title = `[WIP] Symphony: ${issueTitle}`;
 	const body = `## Symphony Contribution
@@ -118,9 +121,23 @@ Closes #${issueNumber}
 
 *Work in progress - will be updated when Auto Run completes*`;
 
+	const args = ['pr', 'create', '--draft', '--title', title, '--body', body];
+
+	if (upstreamSlug && forkOwner) {
+		args.push('--repo', upstreamSlug);
+		// For cross-fork PRs, --head must specify the fork owner and branch
+		const branchResult = await execFileNoThrow(
+			'git',
+			['rev-parse', '--abbrev-ref', 'HEAD'],
+			localPath
+		);
+		const branchName = branchResult.stdout.trim();
+		args.push('--head', `${forkOwner}:${branchName}`);
+	}
+
 	const result = await execFileNoThrow(
 		'gh',
-		['pr', 'create', '--draft', '--title', title, '--body', body],
+		args,
 		localPath
 	);
 
@@ -212,9 +229,11 @@ export async function startContribution(options: SymphonyRunnerOptions): Promise
 	draftPrUrl?: string;
 	draftPrNumber?: number;
 	autoRunPath?: string;
+	isFork?: boolean;
+	forkSlug?: string;
 	error?: string;
 }> {
-	const { repoUrl, localPath, branchName, issueNumber, issueTitle, documentPaths, onStatusChange } =
+	const { repoSlug, repoUrl, localPath, branchName, issueNumber, issueTitle, documentPaths, onStatusChange } =
 		options;
 
 	try {
@@ -231,7 +250,14 @@ export async function startContribution(options: SymphonyRunnerOptions): Promise
 			return { success: false, error: 'Branch creation failed' };
 		}
 
-		// 2.5. Configure git user for commits
+		// 2.5. Fork setup — detect if user needs a fork for push access
+		const forkResult = await ensureForkSetup(localPath, repoSlug);
+		if (forkResult.error) {
+			await cleanupLocalRepo(localPath);
+			return { success: false, error: `Fork setup failed: ${forkResult.error}` };
+		}
+
+		// 2.6. Configure git user for commits
 		await configureGitUser(localPath);
 
 		// 3. Empty commit
@@ -247,8 +273,17 @@ export async function startContribution(options: SymphonyRunnerOptions): Promise
 			return { success: false, error: 'Push failed' };
 		}
 
-		// 5. Create draft PR
-		const prResult = await createDraftPR(localPath, issueNumber, issueTitle);
+		// 5. Create draft PR (cross-fork if needed)
+		const forkOwner = forkResult.isFork && forkResult.forkSlug
+			? forkResult.forkSlug.split('/')[0]
+			: undefined;
+		const prResult = await createDraftPR(
+			localPath,
+			issueNumber,
+			issueTitle,
+			forkResult.isFork ? repoSlug : undefined,
+			forkOwner
+		);
 		if (!prResult.success) {
 			await cleanupLocalRepo(localPath);
 			return { success: false, error: prResult.error };
@@ -265,6 +300,8 @@ export async function startContribution(options: SymphonyRunnerOptions): Promise
 			draftPrUrl: prResult.prUrl,
 			draftPrNumber: prResult.prNumber,
 			autoRunPath,
+			isFork: forkResult.isFork,
+			forkSlug: forkResult.forkSlug,
 		};
 	} catch (error) {
 		await cleanupLocalRepo(localPath);
@@ -282,7 +319,8 @@ export async function finalizeContribution(
 	localPath: string,
 	prNumber: number,
 	issueNumber: number,
-	issueTitle: string
+	issueTitle: string,
+	upstreamSlug?: string
 ): Promise<{ success: boolean; prUrl?: string; error?: string }> {
 	// Configure git user for commits (in case not already configured)
 	await configureGitUser(localPath);
@@ -299,14 +337,16 @@ Processed all Auto Run documents for: ${issueTitle}`;
 		return { success: false, error: `Commit failed: ${commitResult.stderr}` };
 	}
 
-	// Push changes
+	// Push changes (origin points to fork if ensureForkSetup ran)
 	const pushResult = await execFileNoThrow('git', ['push'], localPath);
 	if (pushResult.exitCode !== 0) {
 		return { success: false, error: `Push failed: ${pushResult.stderr}` };
 	}
 
 	// Convert draft to ready for review
-	const readyResult = await execFileNoThrow('gh', ['pr', 'ready', prNumber.toString()], localPath);
+	const readyArgs = ['pr', 'ready', prNumber.toString()];
+	if (upstreamSlug) readyArgs.push('--repo', upstreamSlug);
+	const readyResult = await execFileNoThrow('gh', readyArgs, localPath);
 	if (readyResult.exitCode !== 0) {
 		return { success: false, error: `Failed to mark PR ready: ${readyResult.stderr}` };
 	}
@@ -324,12 +364,16 @@ Closes #${issueNumber}
 
 *Contributed by the Maestro Symphony community* 🎵`;
 
-	await execFileNoThrow('gh', ['pr', 'edit', prNumber.toString(), '--body', body], localPath);
+	const editArgs = ['pr', 'edit', prNumber.toString(), '--body', body];
+	if (upstreamSlug) editArgs.push('--repo', upstreamSlug);
+	await execFileNoThrow('gh', editArgs, localPath);
 
 	// Get final PR URL
+	const viewArgs = ['pr', 'view', prNumber.toString(), '--json', 'url', '-q', '.url'];
+	if (upstreamSlug) viewArgs.push('--repo', upstreamSlug);
 	const prInfoResult = await execFileNoThrow(
 		'gh',
-		['pr', 'view', prNumber.toString(), '--json', 'url', '-q', '.url'],
+		viewArgs,
 		localPath
 	);
 
@@ -345,12 +389,15 @@ Closes #${issueNumber}
 export async function cancelContribution(
 	localPath: string,
 	prNumber: number,
-	cleanup: boolean = true
+	cleanup: boolean = true,
+	upstreamSlug?: string
 ): Promise<{ success: boolean; error?: string }> {
 	// Close the draft PR
+	const closeArgs = ['pr', 'close', prNumber.toString(), '--delete-branch'];
+	if (upstreamSlug) closeArgs.push('--repo', upstreamSlug);
 	const closeResult = await execFileNoThrow(
 		'gh',
-		['pr', 'close', prNumber.toString(), '--delete-branch'],
+		closeArgs,
 		localPath
 	);
 	if (closeResult.exitCode !== 0) {
