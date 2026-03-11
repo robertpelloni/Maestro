@@ -139,7 +139,10 @@ describe('StdoutHandler', () => {
 			});
 
 			handler.handleData(sessionId, '\x1b[?1h\x1b=Hello, remote world!');
-			expect(bufferManager.emitDataBuffered).toHaveBeenCalledWith(sessionId, 'Hello, remote world!');
+			expect(bufferManager.emitDataBuffered).toHaveBeenCalledWith(
+				sessionId,
+				'Hello, remote world!'
+			);
 		});
 
 		it('should accumulate to jsonBuffer in batch mode', () => {
