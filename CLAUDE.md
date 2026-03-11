@@ -50,7 +50,7 @@ After refactoring: identify now-unreachable code, list it explicitly, ask "Shoul
 
 ### Validate Before Push
 
-Before pushing any branch, re-run the relevant formatting, lint, and type-check commands for the changes you made. Fix any issues those commands surface, include the fixes in the branch, and only then push or update the PR.
+Before pushing any branch, re-run the relevant formatting, lint, type-check, and test commands for the changes you made. Fix any issues those commands surface, include the fixes in the branch, and only then push or update the PR.
 
 ---
 
