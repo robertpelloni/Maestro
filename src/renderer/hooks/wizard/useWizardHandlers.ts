@@ -180,7 +180,7 @@ export function useWizardHandlers(deps: UseWizardHandlersDeps): UseWizardHandler
 			.getState()
 			.sessions.find((s) => s.id === activeSession?.id);
 		if (!currentSession) return;
-		if (currentSession.toolType !== 'claude-code') return;
+		if (currentSession.toolType !== 'claude-code' && currentSession.toolType !== 'opencode') return;
 		if (currentSession.agentCommands && currentSession.agentCommands.length > 0) return;
 
 		const sessionId = currentSession.id;
@@ -188,8 +188,8 @@ export function useWizardHandlers(deps: UseWizardHandlersDeps): UseWizardHandler
 		let cancelled = false;
 
 		const mergeCommands = (
-			existing: { command: string; description: string }[],
-			newCmds: { command: string; description: string }[]
+			existing: { command: string; description: string; prompt?: string }[],
+			newCmds: { command: string; description: string; prompt?: string }[]
 		) => {
 			const merged = [...existing];
 			for (const cmd of newCmds) {
@@ -233,17 +233,24 @@ export function useWizardHandlers(deps: UseWizardHandlersDeps): UseWizardHandler
 
 		const discoverAgentCommands = async () => {
 			try {
-				const agentSlashCommands = await (window as any).maestro.agents.discoverSlashCommands(
+				const agentSlashCommands = await window.maestro.agents.discoverSlashCommands(
 					currentSession.toolType,
 					currentSession.cwd,
 					currentSession.customPath
 				);
 				if (cancelled) return;
 
-				const agentCommandObjects = ((agentSlashCommands || []) as string[]).map((cmd) => ({
-					command: cmd.startsWith('/') ? cmd : `/${cmd}`,
-					description: getSlashCommandDescription(cmd),
-				}));
+				const agentCommandObjects = (
+					agentSlashCommands ?? ([] as (string | { name: string; prompt?: string })[])
+				).map((cmd) => {
+					const name = typeof cmd === 'string' ? cmd : cmd.name;
+					const prompt = typeof cmd === 'string' ? undefined : cmd.prompt;
+					return {
+						command: name.startsWith('/') ? name : `/${name}`,
+						description: getSlashCommandDescription(name, currentSession.toolType),
+						prompt,
+					};
+				});
 
 				if (agentCommandObjects.length > 0) {
 					useSessionStore.getState().setSessions((prev) =>
@@ -264,7 +271,9 @@ export function useWizardHandlers(deps: UseWizardHandlersDeps): UseWizardHandler
 			}
 		};
 
-		fetchCustomCommands();
+		if (currentSession.toolType === 'claude-code') {
+			fetchCustomCommands();
+		}
 		discoverAgentCommands();
 
 		return () => {
