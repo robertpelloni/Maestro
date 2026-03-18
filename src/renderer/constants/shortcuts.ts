@@ -99,11 +99,6 @@ export const DEFAULT_SHORTCUTS: Record<string, Shortcut> = {
 		label: 'Jump to Terminal Tab',
 		keys: ['Alt', 'j'],
 	},
-	fontSizeReset: {
-		id: 'fontSizeReset',
-		label: 'Reset Font Size',
-		keys: ['Meta', 'Shift', '0'],
-	},
 };
 
 // Non-editable shortcuts (displayed in help but not configurable)
