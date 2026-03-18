@@ -118,6 +118,7 @@ function SessionListInner(props: SessionListProps) {
 	const groupChatsExpanded = useUIStore((s) => s.groupChatsExpanded);
 	const shortcuts = useSettingsStore((s) => s.shortcuts);
 	const leftSidebarWidthState = useSettingsStore((s) => s.leftSidebarWidth);
+	const persistentWebLink = useSettingsStore((s) => s.persistentWebLink);
 	const webInterfaceUseCustomPort = useSettingsStore((s) => s.webInterfaceUseCustomPort);
 	const webInterfaceCustomPort = useSettingsStore((s) => s.webInterfaceCustomPort);
 	const ungroupedCollapsed = useSettingsStore((s) => s.ungroupedCollapsed);
@@ -190,6 +191,7 @@ function SessionListInner(props: SessionListProps) {
 	);
 	const setSessions = useSessionStore.getState().setSessions;
 	const setGroups = useSessionStore.getState().setGroups;
+	const setPersistentWebLink = useSettingsStore.getState().setPersistentWebLink;
 	const setWebInterfaceUseCustomPort = useSettingsStore.getState().setWebInterfaceUseCustomPort;
 	const setWebInterfaceCustomPort = useSettingsStore.getState().setWebInterfaceCustomPort;
 	const setUngroupedCollapsed = useSettingsStore.getState().setUngroupedCollapsed;
@@ -761,6 +763,8 @@ function SessionListInner(props: SessionListProps) {
 										copyFlash={copyFlash}
 										setCopyFlash={setCopyFlash}
 										handleTunnelToggle={handleTunnelToggle}
+										persistentWebLink={persistentWebLink}
+										setPersistentWebLink={setPersistentWebLink}
 										webInterfaceUseCustomPort={webInterfaceUseCustomPort}
 										webInterfaceCustomPort={webInterfaceCustomPort}
 										setWebInterfaceUseCustomPort={setWebInterfaceUseCustomPort}

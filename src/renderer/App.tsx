@@ -16,7 +16,13 @@ import { DebugWizardModal } from './components/DebugWizardModal';
 import { DebugPackageModal } from './components/DebugPackageModal';
 import { WindowsWarningModal } from './components/WindowsWarningModal';
 import { GistPublishModal } from './components/GistPublishModal';
-import { MaestroWizard, useWizard, WizardResumeModal } from './components/Wizard';
+import {
+	MaestroWizard,
+	useWizard,
+	WizardResumeModal,
+	type SerializableWizardState,
+	type WizardStep,
+} from './components/Wizard';
 import { TourOverlay } from './components/Wizard/tour';
 // CONDUCTOR_BADGES moved to useAutoRunAchievements hook
 import { EmptyStateView } from './components/EmptyStateView';
@@ -45,6 +51,8 @@ const CueModal = lazy(() => import('./components/CueModal').then((m) => ({ defau
 const CueYamlEditor = lazy(() =>
 	import('./components/CueYamlEditor').then((m) => ({ default: m.CueYamlEditor }))
 );
+
+import { captureException } from './utils/sentry';
 
 // SymphonyContributionData type moved to useSymphonyContribution hook
 
@@ -352,7 +360,7 @@ function MaestroConsoleInner() {
 	// --- WIZARD (onboarding wizard for new users) ---
 	const {
 		state: wizardState,
-		openWizard: openWizardModal,
+		openWizard: _baseOpenWizardModal,
 		restoreState: restoreWizardState,
 		loadResumeState: _loadResumeState,
 		clearResumeState,
@@ -361,6 +369,36 @@ function MaestroConsoleInner() {
 		goToStep: wizardGoToStep,
 	} = useWizard();
 
+	// Wrapper for openWizard that checks for resume state
+	const openWizardModal = useCallback(async () => {
+		try {
+			const saved = await window.maestro.settings.get('wizardResumeState');
+			// Validate saved state has a resumable step before casting
+			// These are the steps where we can resume the wizard (not agent-selection)
+			const resumableSteps: WizardStep[] = [
+				'directory-selection',
+				'conversation',
+				'preparing-plan',
+				'phase-review',
+			];
+			if (
+				saved &&
+				typeof saved === 'object' &&
+				'currentStep' in saved &&
+				typeof saved.currentStep === 'string' &&
+				resumableSteps.includes(saved.currentStep as WizardStep)
+			) {
+				useModalStore
+					.getState()
+					.openModal('wizardResume', { state: saved as SerializableWizardState });
+				return;
+			}
+		} catch (e) {
+			captureException(e, { extra: { context: 'openWizardModal', setting: 'wizardResumeState' } });
+			console.error('[App] Failed to check wizard resume state:', e);
+		}
+		_baseOpenWizardModal();
+	}, [_baseOpenWizardModal]);
 	// --- SETTINGS (from useSettings hook) ---
 	const settings = useSettings();
 	const {
@@ -1862,15 +1900,24 @@ function MaestroConsoleInner() {
 
 					const documents = (config.documents || []).map(
 						(doc: { filename: string; resetOnCompletion?: boolean }) => {
-							// Extract just the basename without .md extension.
-							// CLI sends full absolute paths (e.g., "/path/to/Auto Run Docs/temp.md")
-							// but the batch processor expects just the stem (e.g., "temp").
-							let name = doc.filename;
-							const lastSlash = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
-							if (lastSlash >= 0) {
-								name = name.substring(lastSlash + 1);
+							// Compute path relative to the session's autoRunFolderPath.
+							// CLI sends full absolute paths (e.g., "/path/to/Auto Run Docs/subdir/temp.md")
+							// but the batch processor expects the path relative to folderPath without .md
+							// (e.g., "subdir/temp").
+							let name = doc.filename.replace(/\.md$/i, '');
+							// Normalize separators to forward slash for comparison
+							const normalized = name.replace(/\\/g, '/');
+							const normalizedFolder = (folderPath || '').replace(/\\/g, '/');
+							// Case-insensitive prefix check for cross-platform compatibility (Windows drive letters)
+							const normalizedLower = normalized.toLowerCase();
+							const folderLower = normalizedFolder.toLowerCase();
+							if (normalizedFolder && normalizedLower.startsWith(folderLower + '/')) {
+								name = normalized.substring(normalizedFolder.length + 1);
+							} else {
+								// Fallback for paths not under folderPath: use basename only
+								const lastSlash = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
+								if (lastSlash >= 0) name = name.substring(lastSlash + 1);
 							}
-							name = name.replace(/\.md$/, '');
 							return {
 								id: generateId(),
 								filename: name,
