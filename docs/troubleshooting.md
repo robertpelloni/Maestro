@@ -210,7 +210,7 @@ git checkout -f
 
 For new projects, always clone to the Linux filesystem from the start.
 
-\*\*Fonts not found
+**Fonts not found**
 
 The Interface Font picker in the Settings dialog asks Linux fontconfig what fonts exist in the WSL environment. It is not querying native Windows fonts directly; it's using `fc-list` to resolve them, which by default only sees Linux-side fonts. To see Windows fonts, you need to teach fontconfig about `/mnt/c/Windows/Fonts`, then rebuild the font cache. Some fonts may also be stored in the user's `AppData\Local` folder.
 
