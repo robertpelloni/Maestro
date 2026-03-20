@@ -9,7 +9,12 @@ import { ProcessManager } from './process-manager';
 import { WebServer } from './web-server';
 import { AgentDetector } from './agents';
 import { CueEngine } from './cue/cue-engine';
-import { executeCuePrompt, recordCueHistoryEntry, stopCueRun } from './cue/cue-executor';
+import {
+	executeCuePrompt,
+	recordCueHistoryEntry,
+	stopCueRun,
+	getCueProcessList,
+} from './cue/cue-executor';
 import { logger } from './utils/logger';
 import { tunnelManager } from './tunnel-manager';
 import { powerManager } from './power-manager';
@@ -470,6 +475,8 @@ app.whenReady().then(async () => {
 				mainWindow.webContents.send('cue:activityUpdate', data);
 			}
 		},
+		onPreventSleep: (reason) => powerManager.addBlockReason(reason),
+		onAllowSleep: (reason) => powerManager.removeBlockReason(reason),
 	});
 
 	logger.info('Core services initialized', 'Startup');
@@ -686,6 +693,24 @@ function setupIpcHandlers() {
 		settingsStore: store,
 		getMainWindow: () => mainWindow,
 		sessionsStore,
+		getCueProcesses: () => {
+			// Always query the executor's active process map — processes may still be
+			// running even if the engine has been disabled (in-flight runs complete
+			// independently of engine state).
+			const processList = getCueProcessList();
+			if (processList.length === 0) return [];
+			const activeRuns = cueEngine?.getActiveRuns() ?? [];
+			// Merge PID/command data from executor with metadata from run manager
+			return processList.map((proc) => {
+				const run = activeRuns.find((r) => r.runId === proc.runId);
+				return {
+					...proc,
+					sessionName: run?.sessionName ?? '',
+					subscriptionName: run?.subscriptionName ?? '',
+					eventType: run?.event.type ?? '',
+				};
+			});
+		},
 	});
 
 	// Persistence operations - extracted to src/main/ipc/handlers/persistence.ts

@@ -97,6 +97,12 @@ export interface PipelineCanvasProps {
 	selectedEdgePipelineColor: string;
 	onUpdateEdge: (edgeId: string, updates: Partial<PipelineEdgeType>) => void;
 	onDeleteEdge: (edgeId: string) => void;
+	/** Callback to manually trigger a pipeline by name */
+	onTriggerPipeline?: (pipelineName: string) => void;
+	/** Whether the pipeline config has unsaved changes */
+	isDirty?: boolean;
+	/** Set of pipeline IDs that are currently running */
+	runningPipelineIds?: Set<string>;
 }
 
 export const PipelineCanvas = React.memo(function PipelineCanvas({
@@ -146,6 +152,9 @@ export const PipelineCanvas = React.memo(function PipelineCanvas({
 	selectedEdgePipelineColor,
 	onUpdateEdge,
 	onDeleteEdge,
+	onTriggerPipeline,
+	isDirty,
+	runningPipelineIds,
 }: PipelineCanvasProps) {
 	return (
 		<div className="flex-1 relative overflow-hidden">
@@ -353,21 +362,32 @@ export const PipelineCanvas = React.memo(function PipelineCanvas({
 			)}
 
 			{/* Config panels */}
-			{selectedNode && !selectedEdge && (
-				<NodeConfigPanel
-					selectedNode={selectedNode}
-					pipelines={pipelines}
-					hasOutgoingEdge={selectedNodeHasOutgoingEdge}
-					hasIncomingAgentEdges={hasIncomingAgentEdges}
-					incomingTriggerEdges={incomingTriggerEdges}
-					onUpdateNode={onUpdateNode}
-					onUpdateEdgePrompt={onUpdateEdgePrompt}
-					onDeleteNode={onDeleteNode}
-					onSwitchToAgent={onSwitchToSession}
-					triggerDrawerOpen={triggerDrawerOpenForConfig}
-					agentDrawerOpen={agentDrawerOpenForConfig}
-				/>
-			)}
+			{selectedNode &&
+				!selectedEdge &&
+				(() => {
+					const selectedPipeline = pipelines.find((pl) =>
+						pl.nodes.some((n) => n.id === selectedNode.id)
+					);
+					return (
+						<NodeConfigPanel
+							selectedNode={selectedNode}
+							pipelines={pipelines}
+							hasOutgoingEdge={selectedNodeHasOutgoingEdge}
+							hasIncomingAgentEdges={hasIncomingAgentEdges}
+							incomingTriggerEdges={incomingTriggerEdges}
+							onUpdateNode={onUpdateNode}
+							onUpdateEdgePrompt={onUpdateEdgePrompt}
+							onDeleteNode={onDeleteNode}
+							onSwitchToAgent={onSwitchToSession}
+							triggerDrawerOpen={triggerDrawerOpenForConfig}
+							agentDrawerOpen={agentDrawerOpenForConfig}
+							onTriggerPipeline={onTriggerPipeline}
+							pipelineName={selectedPipeline?.name}
+							isSaved={!isDirty}
+							isRunning={selectedPipeline ? runningPipelineIds?.has(selectedPipeline.id) : false}
+						/>
+					);
+				})()}
 			{selectedEdge && !selectedNode && (
 				<EdgeConfigPanel
 					selectedEdge={selectedEdge}
