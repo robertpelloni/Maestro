@@ -178,19 +178,23 @@ export const TriggerNode = memo(function TriggerNode({
 				)}
 
 				{/* Gear icon */}
-				<div
+				<button
+					type="button"
 					onClick={(e) => {
 						e.stopPropagation();
 						data.onConfigure?.(data.compositeId);
 					}}
+					aria-label="Configure"
 					style={{
 						display: 'flex',
 						alignItems: 'center',
 						justifyContent: 'center',
 						cursor: 'pointer',
 						color: selected ? color : `${color}60`,
-						padding: '4px 4px',
+						padding: 4,
 						borderRadius: 4,
+						border: 'none',
+						backgroundColor: 'transparent',
 						transition: 'color 0.15s',
 					}}
 					onMouseEnter={(e) => (e.currentTarget.style.color = color)}
@@ -198,7 +202,7 @@ export const TriggerNode = memo(function TriggerNode({
 					title="Configure"
 				>
 					<Settings size={14} />
-				</div>
+				</button>
 			</div>
 
 			<Handle

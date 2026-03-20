@@ -66,17 +66,17 @@ export interface CueProcessInfo {
 	startTime: number;
 }
 
-/** Maximum arg length before redaction (display-safe limit) */
-const MAX_SAFE_ARG_LENGTH = 200;
+const PROMPT_REDACTED = '<PROMPT_REDACTED>';
 
-/** Redacts sensitive/long values from spawn args for display in Process Monitor */
-function redactSpawnArgs(args: string[]): string[] {
-	return args.map((arg) => {
-		if (arg.length > MAX_SAFE_ARG_LENGTH) {
-			return `${arg.substring(0, 80)}… [${arg.length} chars redacted]`;
-		}
-		return arg;
-	});
+/**
+ * Build a display-safe copy of spawn args by replacing the prompt payload
+ * with a fixed placeholder. The prompt is typically the last positional arg
+ * (after '--') or embedded via promptArgs; we identify it by matching the
+ * substitutedPrompt value.
+ */
+function buildDisplayArgs(args: string[], prompt: string): string[] {
+	if (!prompt) return args;
+	return args.map((arg) => (arg === prompt ? PROMPT_REDACTED : arg));
 }
 
 /** Map of active Cue processes by runId */
@@ -350,7 +350,7 @@ export async function executeCuePrompt(config: CueExecutionConfig): Promise<CueR
 		activeProcesses.set(runId, {
 			child,
 			command,
-			args: redactSpawnArgs(spawnArgs),
+			args: buildDisplayArgs(spawnArgs, substitutedPrompt),
 			cwd: spawnCwd,
 			toolType,
 			startTime: Date.now(),
@@ -459,10 +459,11 @@ export function stopCueRun(runId: string): boolean {
 
 	entry.child.kill('SIGTERM');
 
-	// Escalate to SIGKILL after delay — check exitCode to confirm the process actually exited
-	// (child.killed only indicates a signal was sent, not that the process terminated)
+	// Escalate to SIGKILL after delay — only if the process hasn't actually exited.
+	// Check both exitCode and signalCode: either being non-null means the child has
+	// terminated. This avoids sending SIGKILL to a recycled PID.
 	setTimeout(() => {
-		if (entry.child.exitCode === null) {
+		if (entry.child.exitCode === null && entry.child.signalCode === null) {
 			entry.child.kill('SIGKILL');
 		}
 	}, SIGKILL_DELAY_MS);
