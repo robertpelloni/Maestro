@@ -182,6 +182,12 @@ export function useAgentCapabilities(
 			setLoading(true);
 
 			try {
+				if (!window.maestro?.agents) {
+					console.warn(`[Capabilities] window.maestro.agents not available for agent ${agentId}`);
+					setCapabilities(DEFAULT_CAPABILITIES);
+					return;
+				}
+
 				const result = await window.maestro.agents.getCapabilities(agentId);
 				// Merge with defaults to ensure all optional fields are defined
 				const fullCapabilities: AgentCapabilities = { ...DEFAULT_CAPABILITIES, ...result };

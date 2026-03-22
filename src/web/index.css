@@ -180,15 +180,7 @@ body,
 #root {
 	min-height: 100dvh;
 	min-height: -webkit-fill-available;
-}
-
-/* Fallback for browsers that don't support dvh */
-@supports not (min-height: 100dvh) {
-	html,
-	body,
-	#root {
-		min-height: 100vh;
-	}
+	height: var(--vh, 100vh);
 }
 
 /* iOS-specific fixes */

@@ -11,6 +11,7 @@ import { remarkFileLinks, buildFileTreeIndices } from '../utils/remarkFileLinks'
 import remarkFrontmatter from 'remark-frontmatter';
 import { remarkFrontmatterTable } from '../utils/remarkFrontmatterTable';
 import { REMARK_GFM_PLUGINS } from '../utils/markdownConfig';
+import { MermaidRenderer } from '../../shared/components/MermaidRenderer';
 
 // ============================================================================
 // LocalImage - Loads local images via IPC
@@ -360,6 +361,10 @@ export const MarkdownRenderer = memo(
 								const match = (className || '').match(/language-(\w+)/);
 								const language = match ? match[1] : 'text';
 								const codeContent = String(codeChildren).replace(/\n$/, '');
+
+								if (language === 'mermaid') {
+									return <MermaidRenderer chart={codeContent} theme={theme} />;
+								}
 
 								return (
 									<CodeBlockWithCopy

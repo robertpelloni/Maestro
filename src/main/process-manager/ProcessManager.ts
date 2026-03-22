@@ -43,6 +43,18 @@ export class ProcessManager extends EventEmitter {
 		this.childProcessSpawner = new ChildProcessSpawner(this.processes, this, this.bufferManager);
 		this.localCommandRunner = new LocalCommandRunner(this);
 		this.sshCommandRunner = new SshCommandRunner(this);
+
+		// Handle automatic retries for recoverable errors (e.g. SSH connection drops)
+		this.on('retry-required', (sessionId: string, managedProcess: ManagedProcess) => {
+			if (managedProcess.config) {
+				logger.info('[ProcessManager] Automatically restarting process', 'ProcessManager', {
+					sessionId,
+					retryCount: managedProcess.retryCount,
+				});
+				// Re-spawn with original config
+				this.spawn(managedProcess.config);
+			}
+		});
 	}
 
 	/**
@@ -205,6 +217,10 @@ export class ProcessManager extends EventEmitter {
 			this.bufferManager.flushDataBuffer(sessionId);
 
 			if (process.isTerminal && process.ptyProcess) {
+				const pid = process.ptyProcess.pid;
+				if (isWindows() && pid) {
+					this.killWindowsProcessTree(pid, sessionId);
+				}
 				process.ptyProcess.kill();
 			} else if (process.childProcess) {
 				const pid = process.childProcess.pid;

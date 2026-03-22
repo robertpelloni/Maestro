@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-Essential guidance for working with this codebase. For detailed architecture, see [ARCHITECTURE.md](ARCHITECTURE.md). For development setup and processes, see [CONTRIBUTING.md](CONTRIBUTING.md).
+Essential guidance for working with this codebase.
+
+> **CRITICAL MANDATE**: Read [docs/UNIVERSAL_LLM_INSTRUCTIONS.md](docs/UNIVERSAL_LLM_INSTRUCTIONS.md) before starting any task. It contains foundational behavioral and technical rules that apply to all AI models in this repository.
 
 ## Documentation Index
 
@@ -17,40 +19,6 @@ This guide has been split into focused sub-documents for progressive disclosure:
 | [[CLAUDE-SESSION.md]]                | Session interface (agent data model) and code conventions                                                   |
 | [[CLAUDE-PLATFORM.md]]               | Cross-platform concerns (Windows, Linux, macOS, SSH remote)                                                 |
 | [AGENT_SUPPORT.md](AGENT_SUPPORT.md) | Detailed agent integration guide                                                                            |
-
----
-
-## Agent Behavioral Guidelines
-
-Core behaviors for effective collaboration. Failures here cause the most rework.
-
-### Surface Assumptions Early
-
-Before implementing non-trivial work, explicitly state assumptions. Never silently fill in ambiguous requirements—the most common failure mode is guessing wrong and running with it. Format: "Assumptions: 1) X, 2) Y. Correct me now or I proceed."
-
-### Manage Confusion Actively
-
-When encountering inconsistencies, conflicting requirements, or unclear specs: **STOP**. Name the specific confusion, present the tradeoff, and wait for resolution. Bad: silently picking one interpretation. Good: "I see X in file A but Y in file B—which takes precedence?"
-
-### Push Back When Warranted
-
-Not a yes-machine. When an approach has clear problems: point out the issue directly, explain the concrete downside, propose an alternative, then accept the decision if overridden. Sycophancy ("Of course!") followed by implementing a bad idea helps no one.
-
-### Enforce Simplicity
-
-Natural tendency is to overcomplicate—actively resist. Before finishing: Can this be fewer lines? Are abstractions earning their complexity? Would a senior dev say "why didn't you just..."? Prefer the boring, obvious solution.
-
-### Maintain Scope Discipline
-
-Touch only what's asked. Do NOT: remove comments you don't understand, "clean up" orthogonal code, refactor adjacent systems as side effects, or delete seemingly-unused code without approval. Surgical precision, not unsolicited renovation.
-
-### Dead Code Hygiene
-
-After refactoring: identify now-unreachable code, list it explicitly, ask "Should I remove these now-unused elements: [list]?" Don't leave corpses. Don't delete without asking.
-
-### Validate Before Push
-
-Before pushing any branch, re-run the relevant formatting, lint, type-check, and test commands for the changes you made. Fix any issues those commands surface, include the fixes in the branch, and only then push or update the PR.
 
 ---
 

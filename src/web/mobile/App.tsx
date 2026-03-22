@@ -772,6 +772,23 @@ export default function MobileApp() {
 		connect,
 	});
 
+	// Viewport height adjustment for mobile browsers (fixes iOS Safari address bar/keyboard shifting)
+	useEffect(() => {
+		const updateVh = () => {
+			const vh = (window.visualViewport?.height || window.innerHeight) * 0.01;
+			document.documentElement.style.setProperty('--vh', `${vh * 100}px`);
+		};
+
+		updateVh();
+		window.visualViewport?.addEventListener('resize', updateVh);
+		window.addEventListener('resize', updateVh);
+
+		return () => {
+			window.visualViewport?.removeEventListener('resize', updateVh);
+			window.removeEventListener('resize', updateVh);
+		};
+	}, []);
+
 	// Handle opening All Sessions view
 	const handleOpenAllSessions = useCallback(() => {
 		setShowAllSessions(true);
@@ -1141,8 +1158,8 @@ export default function MobileApp() {
 	const containerStyle: React.CSSProperties = {
 		display: 'flex',
 		flexDirection: 'column',
-		height: '100dvh',
-		maxHeight: '100dvh',
+		height: 'var(--vh, 100dvh)',
+		maxHeight: 'var(--vh, 100dvh)',
 		overflow: 'hidden',
 		backgroundColor: colors.bgMain,
 		color: colors.textMain,

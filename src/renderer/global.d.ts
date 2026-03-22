@@ -936,9 +936,14 @@ interface MaestroAPI {
 	shell: {
 		openExternal: (url: string) => Promise<void>;
 		openPath: (itemPath: string) => Promise<void>;
-		trashItem: (itemPath: string) => Promise<void>;
-		showItemInFolder: (itemPath: string) => Promise<void>;
+		trashItem: (path: string) => Promise<void>;
+		showItemInFolder: (path: string) => Promise<void>;
+		yoloRun: (
+			command: string,
+			cwd?: string
+		) => Promise<{ stdout: string; stderr: string; exitCode: number }>;
 	};
+
 	tunnel: {
 		isCloudflaredInstalled: () => Promise<boolean>;
 		start: () => Promise<{ success: boolean; url?: string; error?: string }>;

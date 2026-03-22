@@ -1,6 +1,6 @@
 {
 	"name": "maestro",
-	"version": "0.15.3",
+	"version": "0.15.4",
 	"description": "Maestro hones fractured attention into focused intent.",
 	"main": "dist/main/index.js",
 	"author": {
@@ -314,10 +314,10 @@
 		"node": ">=22.0.0"
 	},
 	"lint-staged": {
-		"*": [
+		"**/*.{js,cjs,mjs,jsx,ts,tsx,mts,cts,json,md,css,scss,html}": [
 			"prettier --write"
 		],
-		"*.{js,cjs,mjs,jsx,ts,tsx,mts,cts}": [
+		"src/**/*.{js,cjs,mjs,jsx,ts,tsx,mts,cts}": [
 			"eslint --fix"
 		]
 	}

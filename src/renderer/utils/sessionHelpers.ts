@@ -122,6 +122,10 @@ export async function buildSpawnConfigForAgent(
 	} = options;
 
 	// Fetch the agent configuration from main process
+	if (!window.maestro?.agents) {
+		console.warn('[sessionHelpers] window.maestro.agents not available');
+		return null;
+	}
 	const agentConfig = await window.maestro.agents.get(toolType);
 
 	if (!agentConfig) {

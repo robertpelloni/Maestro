@@ -262,12 +262,20 @@ export function useModalHandlers(
 
 	const handleConfirmQuit = useCallback(() => {
 		getModalActions().setQuitConfirmModalOpen(false);
-		window.maestro.app.confirmQuit();
+		if (window.maestro?.app) {
+			window.maestro.app.confirmQuit();
+		} else {
+			console.warn('[ModalHandlers] window.maestro.app not available for confirmQuit');
+		}
 	}, []);
 
 	const handleCancelQuit = useCallback(() => {
 		getModalActions().setQuitConfirmModalOpen(false);
-		window.maestro.app.cancelQuit();
+		if (window.maestro?.app) {
+			window.maestro.app.cancelQuit();
+		} else {
+			console.warn('[ModalHandlers] window.maestro.app not available for cancelQuit');
+		}
 	}, []);
 
 	// ====================================================================

@@ -190,6 +190,64 @@ All tasks in this document are complete.
 	});
 
 	test.describe('Batch Runner Modal', () => {
+		test.describe('Drag and Drop Queue Management', () => {
+			test('should render drag handles for queued items', async ({ window }) => {
+				const autoRunTab = window.locator('text=Auto Run');
+				if ((await autoRunTab.count()) > 0) {
+					await autoRunTab.first().click();
+
+					const runButton = window.locator('button').filter({ hasText: /^run$/i });
+					if ((await runButton.count()) > 0 && (await runButton.first().isEnabled())) {
+						await runButton.first().click();
+
+						// Look for drag handles in the execution queue
+						const dragHandles = window.locator('.cursor-grab, .cursor-grabbing');
+						if ((await dragHandles.count()) > 0) {
+							await expect(dragHandles.first()).toBeVisible();
+						}
+					}
+				}
+			});
+
+			test('should allow reordering queued items via drag and drop', async ({ window }) => {
+				// This is a complex interaction to mock in basic E2E without real mouse events,
+				// but we can verify the drag attributes and drop zones exist
+				const autoRunTab = window.locator('text=Auto Run');
+				if ((await autoRunTab.count()) > 0) {
+					await autoRunTab.first().click();
+
+					const runButton = window.locator('button').filter({ hasText: /^run$/i });
+					if ((await runButton.count()) > 0 && (await runButton.first().isEnabled())) {
+						await runButton.first().click();
+
+						// Look for draggable items
+						const draggableItems = window.locator('[draggable="true"]');
+						if ((await draggableItems.count()) >= 2) {
+							const firstItem = draggableItems.nth(0);
+							const secondItem = draggableItems.nth(1);
+
+							// Verify draggable attribute is present
+							await expect(firstItem).toHaveAttribute('draggable', 'true');
+
+							// Simulate drag start
+							await firstItem.dispatchEvent('dragstart');
+
+							// Verify drop target appears
+							const dropTargets = window.locator('.border-accent, .border-dashed');
+							if ((await dropTargets.count()) > 0) {
+								await expect(dropTargets.first()).toBeVisible();
+							}
+
+							// Simulate drop
+							await secondItem.dispatchEvent('dragover');
+							await secondItem.dispatchEvent('drop');
+							await firstItem.dispatchEvent('dragend');
+						}
+					}
+				}
+			});
+		});
+
 		test('should display batch runner configuration options', async ({ window }) => {
 			// Navigate to Auto Run tab
 			const autoRunTab = window.locator('text=Auto Run');

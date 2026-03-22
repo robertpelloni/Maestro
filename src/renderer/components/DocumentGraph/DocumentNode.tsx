@@ -176,19 +176,19 @@ export const DocumentNode = memo(function DocumentNode({ data, selected }: Docum
 	// Warning icon style for broken links indicator
 	const warningIconStyle = useMemo(
 		() => ({
-			color: '#f59e0b', // Amber/warning color
+			color: theme.colors.warning,
 			flexShrink: 0,
 		}),
-		[]
+		[theme.colors.warning]
 	);
 
-	// Large file indicator style (blue info color)
+	// Large file indicator style
 	const largeFileIconStyle = useMemo(
 		() => ({
-			color: '#3b82f6', // Blue info color
+			color: theme.colors.accent,
 			flexShrink: 0,
 		}),
-		[]
+		[theme.colors.accent]
 	);
 
 	// Truncate title if too long

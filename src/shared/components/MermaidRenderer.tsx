@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import DOMPurify from 'dompurify';
-import type { Theme } from '../types';
+import type { Theme } from '../theme-types';
 
 // Track theme for mermaid initialization
 let lastThemeId: string | null = null;

@@ -227,7 +227,12 @@ function openOpenCodeDb(dbPath: string = OPENCODE_DB_PATH): Database.Database | 
 		return null;
 	}
 	try {
-		const db = new Database(dbPath, { readonly: true, fileMustExist: true });
+		// Use a 5-second timeout to wait for the database if it is locked/busy
+		const db = new Database(dbPath, {
+			readonly: true,
+			fileMustExist: true,
+			timeout: 5000,
+		});
 		return db;
 	} catch (error) {
 		logger.warn(`${LOG_CONTEXT} Failed to open OpenCode SQLite database at ${dbPath}: ${error}`);
