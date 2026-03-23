@@ -21,6 +21,7 @@ Deep technical documentation for Maestro's architecture and design patterns. For
 - [Execution Queue](#execution-queue)
 - [Navigation History](#navigation-history)
 - [Group Chat System](#group-chat-system)
+- [Borg Integration](#borg-integration)
 - [Web/Mobile Interface](#webmobile-interface)
 - [CLI Tool](#cli-tool)
 - [Shared Module](#shared-module)
@@ -29,7 +30,29 @@ Deep technical documentation for Maestro's architecture and design patterns. For
 
 ---
 
-## Architecture
+## Borg Integration
+
+Maestro is fully assimilated into the **Borg** ecosystem, using its unified JSON handoff protocol for state management. This integration replaces the legacy Markdown-based `active-session.md` system with an API-first coordination layer.
+
+### Architectural Core
+
+The integration is centered around the `BorgLiveProvider`, which acts as the authoritative state engine for the TechLead orchestrator.
+
+- **BorgLiveProvider** (`src/main/services/BorgLiveProvider.ts`): High-level service implementing the `IBorgProvider` interface. It coordinates between the remote API and the local cache.
+- **BorgCoreClient** (`src/main/services/BorgCoreClient.ts`): Low-level HTTP client that communicates with the **Borg Core Live Control Plane**.
+- **LocalCacheManager** (`src/main/services/LocalCacheManager.ts`): Manages the `.borg/handoffs/` directory as a high-fidelity local mirror for rapid reporting and offline status checks.
+
+### Data Flow
+
+1.  **State Mutation**: All changes to the orchestration state (phase transitions, agent handoffs) are committed to the Borg Core API via the `BorgLiveProvider`.
+2.  **Local Mirroring**: Every successful remote commit triggers an asynchronous update to the local `.borg/handoffs/latest.json` file.
+3.  **Unified Reporting**: CLI commands and extension reporting scripts read from the local Borg mirror to generate summaries without network latency.
+
+For detailed schema definitions, see [PROTOCOL.md](PROTOCOL.md).
+
+---
+
+## Web/Mobile Interface
 
 Maestro organizes work into **Agents** (workspaces), each with a **CLI Terminal** and multiple **AI Tabs**. Each tab can be connected to a **Provider Session** - either newly created or resumed from the session pool.
 

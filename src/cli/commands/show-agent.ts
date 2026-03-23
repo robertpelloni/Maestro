@@ -3,12 +3,13 @@
 
 import { getSessionById, readHistory, readGroups } from '../services/storage';
 import { formatAgentDetail, formatError } from '../output/formatter';
+import { LocalCacheManager } from '../../main/services/LocalCacheManager';
 
 interface ShowAgentOptions {
 	json?: boolean;
 }
 
-export function showAgent(agentId: string, options: ShowAgentOptions): void {
+export async function showAgent(agentId: string, options: ShowAgentOptions): Promise<void> {
 	try {
 		const agent = getSessionById(agentId);
 
@@ -22,6 +23,11 @@ export function showAgent(agentId: string, options: ShowAgentOptions): void {
 
 		// Get history entries for this agent
 		const history = readHistory(undefined, agent.id);
+
+		// Check for Borg handoff state
+		const cacheManager = new LocalCacheManager(process.cwd());
+		const borgHandoff = await cacheManager.getLatestHandoff();
+		const isBorgNative = borgHandoff && (borgHandoff.sessionId === agent.id || (agent.agentSessionId && borgHandoff.sessionId === agent.agentSessionId));
 
 		// Calculate aggregate stats from history
 		let totalInputTokens = 0;
@@ -63,6 +69,12 @@ export function showAgent(agentId: string, options: ShowAgentOptions): void {
 			groupId: agent.groupId,
 			groupName: group?.name,
 			autoRunFolderPath: agent.autoRunFolderPath,
+			borg: isBorgNative ? {
+				version: borgHandoff.version,
+				lastUpdated: borgHandoff.timestamp,
+				stats: borgHandoff.stats,
+				maestro: borgHandoff.maestro
+			} : undefined,
 			stats: {
 				historyEntries: history.length,
 				successCount,
@@ -89,6 +101,16 @@ export function showAgent(agentId: string, options: ShowAgentOptions): void {
 			console.log(JSON.stringify(output, null, 2));
 		} else {
 			console.log(formatAgentDetail(output));
+			if (isBorgNative) {
+				console.log('\n--- BORG ASSIMILATED STATE ---');
+				console.log(`Borg Version:  ${borgHandoff.version}`);
+				console.log(`Last Handoff:  ${new Date(borgHandoff.timestamp).toLocaleString()}`);
+				if (borgHandoff.maestro) {
+					console.log(`Maestro Status: ${borgHandoff.maestro.status}`);
+					console.log(`Current Phase:  ${borgHandoff.maestro.currentPhase}`);
+				}
+				console.log('------------------------------');
+			}
 		}
 	} catch (error) {
 		const message = error instanceof Error ? error.message : 'Unknown error';

@@ -3,13 +3,14 @@
 
 import { readSessions, readGroups, getSessionsByGroup, resolveGroupId } from '../services/storage';
 import { formatAgents, formatError, AgentDisplay } from '../output/formatter';
+import { LocalCacheManager } from '../../main/services/LocalCacheManager';
 
 interface ListAgentsOptions {
 	group?: string;
 	json?: boolean;
 }
 
-export function listAgents(options: ListAgentsOptions): void {
+export async function listAgents(options: ListAgentsOptions): Promise<void> {
 	try {
 		let sessions;
 		let groupName: string | undefined;
@@ -26,6 +27,11 @@ export function listAgents(options: ListAgentsOptions): void {
 			sessions = readSessions();
 		}
 
+		// Check for latest Borg handoff to identify the active native session
+		const cacheManager = new LocalCacheManager(process.cwd());
+		const latestHandoff = await cacheManager.getLatestHandoff();
+		const activeBorgSessionId = latestHandoff?.sessionId;
+
 		if (options.json) {
 			// JSON array output
 			const output = sessions.map((s) => ({
@@ -35,19 +41,25 @@ export function listAgents(options: ListAgentsOptions): void {
 				cwd: s.cwd,
 				groupId: s.groupId,
 				autoRunFolderPath: s.autoRunFolderPath,
+				isBorgActive: activeBorgSessionId === s.id || activeBorgSessionId === s.agentSessionId,
 			}));
 			console.log(JSON.stringify(output, null, 2));
 		} else {
 			// Human-readable output
-			const displayAgents: AgentDisplay[] = sessions.map((s) => ({
+			const displayAgents: (AgentDisplay & { isBorgActive?: boolean })[] = sessions.map((s) => ({
 				id: s.id,
 				name: s.name,
 				toolType: s.toolType,
 				cwd: s.cwd,
 				groupId: s.groupId,
 				autoRunFolderPath: s.autoRunFolderPath,
+				isBorgActive: activeBorgSessionId === s.id || activeBorgSessionId === s.agentSessionId,
 			}));
-			console.log(formatAgents(displayAgents, groupName));
+			console.log(formatAgents(displayAgents as any, groupName));
+			
+			if (activeBorgSessionId) {
+				console.log(`\n(Active Borg Session: ${activeBorgSessionId.slice(0, 8)})`);
+			}
 		}
 	} catch (error) {
 		const message = error instanceof Error ? error.message : 'Unknown error';
