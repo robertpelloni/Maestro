@@ -9,6 +9,7 @@
 
 import { logger } from '../../utils/logger';
 import type { LiveSessionInfo, AutoRunState } from '../types';
+import { IBorgProvider } from '../../../main/services/IBorgProvider';
 
 const LOG_CONTEXT = 'LiveSessionManager';
 
@@ -22,6 +23,8 @@ export interface LiveSessionBroadcastCallbacks {
 }
 
 export class LiveSessionManager {
+	constructor(private borgProvider: IBorgProvider) {}
+
 	// Live sessions - only these appear in the web interface
 	private liveSessions: Map<string, LiveSessionInfo> = new Map();
 
@@ -52,6 +55,16 @@ export class LiveSessionManager {
 			LOG_CONTEXT
 		);
 
+		// Verify Borg connection and ensure session is known to Core
+		this.borgProvider
+			.getStatus()
+			.then((status) => {
+				if (status.connected) {
+					logger.debug(`Borg Core connected (latency: ${status.latencyMs}ms)`, LOG_CONTEXT);
+				}
+			})
+			.catch((err) => logger.error(`Borg status check failed: ${err}`, LOG_CONTEXT));
+
 		// Broadcast to all connected clients
 		this.broadcastCallbacks?.broadcastSessionLive(sessionId, agentSessionId);
 	}
@@ -66,6 +79,13 @@ export class LiveSessionManager {
 				`Session ${sessionId} marked as offline (remaining: ${this.liveSessions.size})`,
 				LOG_CONTEXT
 			);
+
+			// Archive session in Borg Core
+			this.borgProvider
+				.archiveSession(sessionId)
+				.catch((err) =>
+					logger.error(`Borg session archiving failed for ${sessionId}: ${err}`, LOG_CONTEXT)
+				);
 
 			// Clean up any associated AutoRun state to prevent memory leaks
 			if (this.autoRunStates.has(sessionId)) {
