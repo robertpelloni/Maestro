@@ -77,7 +77,6 @@ show
 	.description('Show detailed information about a playbook')
 	.option('--json', 'Output as JSON (for scripting)')
 	.action(showPlaybook);
-
 // Status command
 program
 	.command('status')
@@ -85,6 +84,28 @@ program
 	.option('--json', 'Output as JSON (for scripting)')
 	.action(status);
 
+// Borg commands
+const borg = program.command('borg').description('Borg coordination features');
+
+borg
+	.command('status')
+	.description('Show Borg coordination status')
+	.option('--json', 'Output as JSON (for scripting)')
+	.action(async (options: Record<string, unknown>) => {
+		const { borgStatus } = await import('./commands/borg-status');
+		return borgStatus(options);
+	});
+
+borg
+	.command('sync')
+	.description('Synchronize Borg state with local environment')
+	.option('--json', 'Output as JSON (for scripting)')
+	.action(async (options: Record<string, unknown>) => {
+		const { borgSync } = await import('./commands/borg-sync');
+		return borgSync(options);
+	});
+
+program.parse();
 // Playbook command (lazy-loaded to avoid eager resolution of generated/prompts)
 program
 	.command('playbook <playbook-id>')

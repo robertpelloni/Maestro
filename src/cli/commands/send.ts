@@ -6,6 +6,8 @@ import { resolveAgentId, getSessionById } from '../services/storage';
 import { estimateContextUsage } from '../../main/parsers/usage-aggregator';
 import { getAgentDefinition } from '../../main/agents/definitions';
 import type { ToolType } from '../../shared/types';
+import { BorgLiveProvider } from '../../main/services/BorgLiveProvider';
+import { BorgHandoff } from '../../shared/borg-schema';
 
 interface SendOptions {
 	session?: string;
@@ -109,6 +111,54 @@ export async function send(
 	// Spawn agent — spawnAgent handles --resume vs --session-id internally
 	const result = await spawnAgent(agent.toolType, agent.cwd, message, options.session);
 	const response = buildResponse(agentId, agent.name, result, agent.toolType);
+
+	// Borg Handoff Integration
+	try {
+		const provider = new BorgLiveProvider();
+		const handoff: BorgHandoff = {
+			version: 'Borg-Maestro-v1',
+			timestamp: Date.now(),
+			sessionId: result.agentSessionId || agentId,
+			stats: {
+				totalCount: 1,
+				sessionCount: 1,
+				workingCount: 1,
+				longTermCount: 0,
+				observationCount: 1,
+				uniqueObservationCount: 1,
+				promptCount: 1,
+				sessionSummaryCount: 0,
+				session: Date.now(),
+				working: Date.now(),
+				long_term: 0,
+				user: 1,
+				agent: 1,
+				project: 1,
+				discovery: 0,
+				decision: 0,
+				progress: 1,
+				warning: 0,
+				fix: 0,
+			},
+			recentContext: [
+				{
+					content: message,
+					metadata: { source: 'user', tags: ['cli-send'] }
+				},
+				{
+					content: result.response || '',
+					metadata: { source: agent.name, tags: ['agent-response'] }
+				}
+			],
+			maestro: {
+				sessionId: agentId,
+				status: result.success ? 'completed' : 'failed'
+			}
+		};
+		await provider.commitHandoff(handoff);
+	} catch (err) {
+		// Non-blocking error for handoff commit in CLI
+	}
 
 	console.log(JSON.stringify(response, null, 2));
 
