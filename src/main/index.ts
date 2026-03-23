@@ -103,6 +103,8 @@ import {
 // Phase 2 refactoring - dependency injection
 import { createSafeSend, isWebContentsAvailable } from './utils/safe-send';
 import { createWebServerFactory } from './web-server/web-server-factory';
+import { BorgLiveProvider } from './services/BorgLiveProvider';
+import { setBorgProvider } from './group-chat/group-chat-router';
 // Phase 4 refactoring - app lifecycle
 import {
 	setupGlobalErrorHandlers,
@@ -239,6 +241,10 @@ const windowStateStore = getWindowStateStore();
 const claudeSessionOriginsStore = getClaudeSessionOriginsStore();
 const agentSessionOriginsStore = getAgentSessionOriginsStore();
 
+// Initialize Borg provider for state integration
+const borgProvider = new BorgLiveProvider();
+setBorgProvider(borgProvider);
+
 // Note: History storage is now handled by HistoryManager which uses per-session files
 // in the history/ directory. The legacy maestro-history.json file is migrated automatically.
 // See src/main/history-manager.ts for details.
@@ -278,6 +284,7 @@ const createWebServer = createWebServerFactory({
 	groupsStore,
 	getMainWindow: () => mainWindow,
 	getProcessManager: () => processManager,
+	borgProvider,
 });
 
 // createWindow is now handled by windowManager (Phase 4 refactoring)

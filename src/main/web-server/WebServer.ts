@@ -35,6 +35,7 @@ import { WebSocketMessageHandler } from './handlers';
 import { BroadcastService } from './services';
 import { ApiRoutes, StaticRoutes, WsRoute } from './routes';
 import { LiveSessionManager, CallbackRegistry } from './managers';
+import { IBorgProvider } from '../services/IBorgProvider';
 
 // Import shared types from canonical location
 import type {
@@ -107,7 +108,7 @@ export class WebServer {
 	private staticRoutes: StaticRoutes;
 	private wsRoute: WsRoute;
 
-	constructor(port: number = 0, securityToken?: string) {
+	constructor(borgProvider: IBorgProvider, port: number = 0, securityToken?: string) {
 		// Use port 0 to let OS assign a random available port
 		this.port = port;
 		this.server = Fastify({
@@ -129,7 +130,7 @@ export class WebServer {
 		this.webAssetsPath = this.resolveWebAssetsPath();
 
 		// Initialize managers
-		this.liveSessionManager = new LiveSessionManager();
+		this.liveSessionManager = new LiveSessionManager(borgProvider);
 		this.callbackRegistry = new CallbackRegistry();
 
 		// Initialize the WebSocket message handler

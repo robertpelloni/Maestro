@@ -44,6 +44,8 @@ import { groupChatParticipantRequestPrompt } from '../../prompts';
 import { wrapSpawnWithSsh } from '../utils/ssh-spawn-wrapper';
 import type { SshRemoteSettingsStore } from '../utils/ssh-remote-resolver';
 import { setGetCustomShellPathCallback, getWindowsSpawnConfig } from './group-chat-config';
+import { BorgHandoff } from '../../shared/borg-schema';
+import { IBorgProvider } from '../services/IBorgProvider';
 
 // Import emitters from IPC handlers (will be populated after handlers are registered)
 import { groupChatEmitters } from '../ipc/handlers/groupChat';
@@ -94,6 +96,9 @@ let getAgentConfigCallback: GetAgentConfigCallback | null = null;
 
 // Module-level SSH store for remote execution support
 let sshStore: SshRemoteSettingsStore | null = null;
+
+// Module-level Borg provider for state integration
+let borgProvider: IBorgProvider | null = null;
 
 /**
  * Tracks pending participant responses for each group chat.
@@ -180,6 +185,14 @@ export function setGetAgentConfigCallback(callback: GetAgentConfigCallback): voi
  */
 export function setSshStore(store: SshRemoteSettingsStore): void {
 	sshStore = store;
+}
+
+/**
+ * Sets the Borg provider for state integration.
+ * Called from index.ts during initialization.
+ */
+export function setBorgProvider(provider: IBorgProvider): void {
+	borgProvider = provider;
 }
 
 /**
@@ -1109,6 +1122,57 @@ export async function routeAgentResponse(
 		console.log(
 			`[GroupChatRouter] Added history entry for ${participantName}: ${summary.substring(0, 50)}...`
 		);
+
+		// Borg Handoff Integration
+		if (borgProvider) {
+			const handoff: BorgHandoff = {
+				version: 'Borg-Maestro-v1',
+				timestamp: Date.now(),
+				sessionId: groupChatId,
+				stats: {
+					totalCount: newMessageCount,
+					sessionCount: 1,
+					workingCount: 1,
+					longTermCount: 0,
+					observationCount: 1,
+					uniqueObservationCount: 1,
+					promptCount: 1,
+					sessionSummaryCount: 0,
+					session: Date.now(),
+					working: Date.now(),
+					long_term: 0,
+					user: 0,
+					agent: 1,
+					project: 1,
+					discovery: 1,
+					decision: 1,
+					progress: 1,
+					warning: 0,
+					fix: 0,
+				},
+				recentContext: [
+					{
+						content: message,
+						metadata: {
+							source: participantName,
+							tags: ['agent-response'],
+							preview: summary,
+						},
+					},
+				],
+				maestro: {
+					sessionId: groupChatId,
+					status: 'in_progress',
+				},
+			};
+
+			borgProvider.commitHandoff(handoff).catch((err) => {
+				logger.error(`Failed to commit Borg handoff for ${participantName}`, LOG_CONTEXT, {
+					err,
+					groupChatId,
+				});
+			});
+		}
 	} catch (error) {
 		logger.error(`Failed to add history entry for ${participantName}`, LOG_CONTEXT, {
 			error,

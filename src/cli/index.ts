@@ -13,6 +13,7 @@ import { showAgent } from './commands/show-agent';
 import { cleanPlaybooks } from './commands/clean-playbooks';
 import { send } from './commands/send';
 import { listSessions } from './commands/list-sessions';
+import { status } from './commands/status';
 
 // Read version from package.json at runtime
 function getVersion(): string {
@@ -76,6 +77,13 @@ show
 	.description('Show detailed information about a playbook')
 	.option('--json', 'Output as JSON (for scripting)')
 	.action(showPlaybook);
+
+// Status command
+program
+	.command('status')
+	.description('Display the current orchestration session status from Borg state')
+	.option('--json', 'Output as JSON (for scripting)')
+	.action(status);
 
 // Playbook command (lazy-loaded to avoid eager resolution of generated/prompts)
 program

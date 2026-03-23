@@ -40,6 +40,8 @@ export interface WebServerFactoryDependencies {
 	getMainWindow: () => BrowserWindow | null;
 	/** Function to get the process manager reference */
 	getProcessManager: () => ProcessManager | null;
+	/** Borg provider for state integration */
+	borgProvider: IBorgProvider;
 }
 
 /**
@@ -87,7 +89,7 @@ export function createWebServerFactory(deps: WebServerFactoryDependencies) {
 			}
 		}
 
-		const server = new WebServer(port, securityToken);
+		const server = new WebServer(borgProvider, port, securityToken);
 
 		// Set up callback for web server to fetch sessions list
 		server.setGetSessionsCallback(() => {
