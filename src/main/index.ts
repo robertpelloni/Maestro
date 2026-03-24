@@ -104,6 +104,8 @@ import {
 import { createSafeSend, isWebContentsAvailable } from './utils/safe-send';
 import { createWebServerFactory } from './web-server/web-server-factory';
 import { BorgLiveProvider } from './services/BorgLiveProvider';
+import { BorgCoreClient } from './services/BorgCoreClient';
+import { LocalCacheManager } from './services/LocalCacheManager';
 import { setBorgProvider } from './group-chat/group-chat-router';
 // Phase 4 refactoring - app lifecycle
 import {
@@ -242,7 +244,9 @@ const claudeSessionOriginsStore = getClaudeSessionOriginsStore();
 const agentSessionOriginsStore = getAgentSessionOriginsStore();
 
 // Initialize Borg provider for state integration
-const borgProvider = new BorgLiveProvider();
+const borgClient = new BorgCoreClient();
+const borgCache = new LocalCacheManager(app.getPath('userData'));
+const borgProvider = new BorgLiveProvider(borgClient, borgCache);
 setBorgProvider(borgProvider);
 
 // Note: History storage is now handled by HistoryManager which uses per-session files
