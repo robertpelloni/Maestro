@@ -594,7 +594,6 @@ export function CommandInputBar({
 						autoCorrect="off"
 						autoCapitalize="off"
 						spellCheck={false}
-						enterKeyHint="enter"
 						rows={1}
 						style={{
 							flex: 1,
@@ -713,7 +712,6 @@ export function CommandInputBar({
 									autoCorrect="off"
 									autoCapitalize="off"
 									spellCheck={false}
-									enterKeyHint="send"
 									style={{
 										flex: 1,
 										padding: 0,
@@ -793,7 +791,6 @@ export function CommandInputBar({
 								autoCorrect="off"
 								autoCapitalize="off"
 								spellCheck={false}
-								enterKeyHint="enter"
 								rows={1}
 								style={{
 									flex: shouldStackPhoneComposer ? 'none' : 1,

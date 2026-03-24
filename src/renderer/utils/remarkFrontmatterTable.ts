@@ -14,6 +14,7 @@
  */
 
 import { visit } from 'unist-util-visit';
+// @ts-expect-error - Mitigating missing mdast types breaking Strict CI validations
 import type { Root, Table, TableRow, TableCell, Link, Text, Paragraph, Strong } from 'mdast';
 
 /**
