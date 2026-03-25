@@ -1,7 +1,6 @@
 // Status command for Borg-assimilated Maestro
 // Displays the current orchestration session status from Borg state
 
-import path from 'path';
 import { LocalCacheManager } from '../../main/services/LocalCacheManager';
 import { formatError } from '../output/formatter';
 
@@ -14,12 +13,14 @@ export async function status(options: StatusOptions): Promise<void> {
 		// Use current directory as workspace root for local cache
 		const workspaceRoot = process.cwd();
 		const cacheManager = new LocalCacheManager(workspaceRoot);
-		
+
 		const handoff = await cacheManager.getLatestHandoff();
 
 		if (!handoff) {
 			if (options.json) {
-				console.log(JSON.stringify({ success: false, error: 'No active session found in Borg cache' }));
+				console.log(
+					JSON.stringify({ success: false, error: 'No active session found in Borg cache' })
+				);
 			} else {
 				console.log('No active session found. Start one with /maestro:orchestrate');
 			}
@@ -35,11 +36,13 @@ export async function status(options: StatusOptions): Promise<void> {
 			console.log(`VERSION: ${handoff.version}`);
 			console.log(`UPDATED: ${new Date(handoff.timestamp).toLocaleString()}`);
 			console.log('--------------------------------------------------');
-			
+
 			if (handoff.maestro) {
 				console.log(`MAESTRO STATUS: ${handoff.maestro.status || 'unknown'}`);
 				if (handoff.maestro.currentPhase) {
-					console.log(`CURRENT PHASE: ${handoff.maestro.currentPhase} of ${handoff.maestro.totalPhases || '?'}`);
+					console.log(
+						`CURRENT PHASE: ${handoff.maestro.currentPhase} of ${handoff.maestro.totalPhases || '?'}`
+					);
 				}
 			}
 
@@ -47,11 +50,13 @@ export async function status(options: StatusOptions): Promise<void> {
 			console.log(`  Total Messages: ${handoff.stats.totalCount}`);
 			console.log(`  Observations:   ${handoff.stats.observationCount}`);
 			console.log(`  Agent Runs:     ${handoff.stats.agent}`);
-			
+
 			if (handoff.recentContext.length > 0) {
 				console.log('\nRECENT CONTEXT:');
-				handoff.recentContext.slice(-3).forEach(item => {
-					console.log(`  [${item.metadata.source}] ${item.metadata.preview || item.content.substring(0, 50) + '...'}`);
+				handoff.recentContext.slice(-3).forEach((item) => {
+					console.log(
+						`  [${item.metadata.source}] ${item.metadata.preview || item.content.substring(0, 50) + '...'}`
+					);
 				});
 			}
 

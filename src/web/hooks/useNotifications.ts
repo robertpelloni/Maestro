@@ -12,6 +12,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { webLogger } from '../utils/logger';
+import { safeStorage } from '../utils/storage';
 
 /**
  * Notification permission states
@@ -101,13 +102,11 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
 	const [permission, setPermission] = useState<NotificationPermission>(getNotificationPermission());
 
 	const [hasPrompted, setHasPrompted] = useState<boolean>(() => {
-		if (typeof localStorage === 'undefined') return false;
-		return localStorage.getItem(NOTIFICATION_PROMPT_KEY) === 'true';
+		return safeStorage.getItem(NOTIFICATION_PROMPT_KEY) === 'true';
 	});
 
 	const [hasDeclined, setHasDeclined] = useState<boolean>(() => {
-		if (typeof localStorage === 'undefined') return false;
-		return localStorage.getItem(NOTIFICATION_DECLINED_KEY) === 'true';
+		return safeStorage.getItem(NOTIFICATION_DECLINED_KEY) === 'true';
 	});
 
 	/**
@@ -121,7 +120,7 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
 
 		// Mark that we've prompted the user
 		setHasPrompted(true);
-		localStorage.setItem(NOTIFICATION_PROMPT_KEY, 'true');
+		safeStorage.setItem(NOTIFICATION_PROMPT_KEY, 'true');
 
 		try {
 			const result = await Notification.requestPermission();
@@ -151,8 +150,8 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
 	const declineNotifications = useCallback(() => {
 		setHasDeclined(true);
 		setHasPrompted(true);
-		localStorage.setItem(NOTIFICATION_DECLINED_KEY, 'true');
-		localStorage.setItem(NOTIFICATION_PROMPT_KEY, 'true');
+		safeStorage.setItem(NOTIFICATION_DECLINED_KEY, 'true');
+		safeStorage.setItem(NOTIFICATION_PROMPT_KEY, 'true');
 		webLogger.debug('User declined via UI', 'Notifications');
 	}, []);
 
@@ -162,8 +161,8 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
 	const resetPromptState = useCallback(() => {
 		setHasPrompted(false);
 		setHasDeclined(false);
-		localStorage.removeItem(NOTIFICATION_PROMPT_KEY);
-		localStorage.removeItem(NOTIFICATION_DECLINED_KEY);
+		safeStorage.removeItem(NOTIFICATION_PROMPT_KEY);
+		safeStorage.removeItem(NOTIFICATION_DECLINED_KEY);
 		webLogger.debug('Prompt state reset', 'Notifications');
 	}, []);
 

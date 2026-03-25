@@ -6,6 +6,7 @@
  */
 
 import { webLogger } from './logger';
+import { safeStorage } from './storage';
 
 const STORAGE_KEY = 'maestro-web-view-state';
 const SCROLL_STORAGE_KEY = 'maestro-web-scroll-state';
@@ -85,7 +86,7 @@ export function saveViewState(state: Partial<ViewState>): void {
 			...state,
 			savedAt: Date.now(),
 		};
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
+		safeStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
 		webLogger.debug('Saved view state', 'ViewState');
 	} catch (error) {
 		webLogger.error('Failed to save view state', 'ViewState', error);
@@ -97,7 +98,7 @@ export function saveViewState(state: Partial<ViewState>): void {
  */
 export function loadViewState(): ViewState {
 	try {
-		const stored = localStorage.getItem(STORAGE_KEY);
+		const stored = safeStorage.getItem(STORAGE_KEY);
 		if (!stored) {
 			return DEFAULT_VIEW_STATE;
 		}
@@ -123,8 +124,8 @@ export function loadViewState(): ViewState {
  */
 export function clearViewState(): void {
 	try {
-		localStorage.removeItem(STORAGE_KEY);
-		localStorage.removeItem(SCROLL_STORAGE_KEY);
+		safeStorage.removeItem(STORAGE_KEY);
+		safeStorage.removeItem(SCROLL_STORAGE_KEY);
 		webLogger.debug('Cleared view state', 'ViewState');
 	} catch (error) {
 		webLogger.error('Failed to clear view state', 'ViewState', error);
@@ -141,7 +142,7 @@ export function saveScrollPosition(view: keyof ScrollState, position: number): v
 			...currentState,
 			[view]: position,
 		};
-		localStorage.setItem(SCROLL_STORAGE_KEY, JSON.stringify(newState));
+		safeStorage.setItem(SCROLL_STORAGE_KEY, JSON.stringify(newState));
 	} catch (error) {
 		webLogger.error('Failed to save scroll position', 'ViewState', error);
 	}
@@ -152,7 +153,7 @@ export function saveScrollPosition(view: keyof ScrollState, position: number): v
  */
 export function loadScrollState(): ScrollState {
 	try {
-		const stored = localStorage.getItem(SCROLL_STORAGE_KEY);
+		const stored = safeStorage.getItem(SCROLL_STORAGE_KEY);
 		if (!stored) {
 			return DEFAULT_SCROLL_STATE;
 		}

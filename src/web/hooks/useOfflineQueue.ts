@@ -14,6 +14,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { webLogger } from '../utils/logger';
+import { safeStorage } from '../utils/storage';
 
 /** Storage key for persisting offline queue */
 const STORAGE_KEY = 'maestro-offline-queue';
@@ -109,11 +110,11 @@ function generateId(): string {
 }
 
 /**
- * Load queue from localStorage
+ * Load queue from storage
  */
 function loadQueue(): QueuedCommand[] {
 	try {
-		const stored = localStorage.getItem(STORAGE_KEY);
+		const stored = safeStorage.getItem(STORAGE_KEY);
 		if (stored) {
 			const parsed = JSON.parse(stored);
 			if (Array.isArray(parsed)) {
@@ -127,11 +128,11 @@ function loadQueue(): QueuedCommand[] {
 }
 
 /**
- * Save queue to localStorage
+ * Save queue to storage
  */
 function saveQueue(queue: QueuedCommand[]): void {
 	try {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(queue));
+		safeStorage.setItem(STORAGE_KEY, JSON.stringify(queue));
 	} catch (error) {
 		webLogger.warn('Failed to save queue to storage', 'OfflineQueue', error);
 	}

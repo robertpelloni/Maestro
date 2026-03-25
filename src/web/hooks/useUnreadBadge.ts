@@ -13,6 +13,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { webLogger } from '../utils/logger';
+import { safeStorage } from '../utils/storage';
 
 /**
  * Storage key for persisting unread response IDs
@@ -59,12 +60,11 @@ export function isBadgeApiSupported(): boolean {
 }
 
 /**
- * Load unread IDs from localStorage
+ * Load unread IDs from storage
  */
 function loadUnreadIds(): Set<string> {
-	if (typeof localStorage === 'undefined') return new Set();
 	try {
-		const stored = localStorage.getItem(UNREAD_RESPONSES_KEY);
+		const stored = safeStorage.getItem(UNREAD_RESPONSES_KEY);
 		if (stored) {
 			const ids = JSON.parse(stored);
 			if (Array.isArray(ids)) {
@@ -78,12 +78,11 @@ function loadUnreadIds(): Set<string> {
 }
 
 /**
- * Save unread IDs to localStorage
+ * Save unread IDs to storage
  */
 function saveUnreadIds(ids: Set<string>): void {
-	if (typeof localStorage === 'undefined') return;
 	try {
-		localStorage.setItem(UNREAD_RESPONSES_KEY, JSON.stringify([...ids]));
+		safeStorage.setItem(UNREAD_RESPONSES_KEY, JSON.stringify([...ids]));
 	} catch (error) {
 		webLogger.error('Error saving unread IDs', 'UnreadBadge', error);
 	}
