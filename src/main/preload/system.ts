@@ -74,6 +74,7 @@ export function createShellApi() {
 		openPath: (itemPath: string) => ipcRenderer.invoke('shell:openPath', itemPath),
 		trashItem: (itemPath: string) => ipcRenderer.invoke('shell:trashItem', itemPath),
 		showItemInFolder: (itemPath: string) => ipcRenderer.invoke('shell:showItemInFolder', itemPath),
+		yoloRun: (command: string, cwd?: string) => ipcRenderer.invoke('system:yoloRun', command, cwd),
 	};
 }
 

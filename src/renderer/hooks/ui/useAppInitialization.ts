@@ -82,7 +82,13 @@ export function useAppInitialization(): AppInitializationReturn {
 
 	// --- GitHub CLI availability check ---
 	useEffect(() => {
-		window.maestro.git
+		if (!window.maestro?.git) {
+			console.warn('[AppInit] window.maestro?.git not available');
+			setGhCliAvailable(false);
+			return;
+		}
+
+		window.maestro?.git
 			.checkGhCli()
 			.then((status) => {
 				setGhCliAvailable(status.installed && status.authenticated);
@@ -102,7 +108,12 @@ export function useAppInitialization(): AppInitializationReturn {
 		if (suppressWindowsWarning) return;
 		if (windowsWarningShownRef.current) return;
 
-		window.maestro.power
+		if (!window.maestro?.power) {
+			console.warn('[AppInit] window.maestro?.power not available');
+			return;
+		}
+
+		window.maestro?.power
 			.getStatus()
 			.then((status) => {
 				if (status.platform === 'win32') {
@@ -117,7 +128,9 @@ export function useAppInitialization(): AppInitializationReturn {
 
 	// --- Load file gist URLs from settings ---
 	useEffect(() => {
-		window.maestro.settings
+		if (!window.maestro?.settings) return;
+
+		window.maestro?.settings
 			.get('fileGistUrls')
 			.then((savedUrls) => {
 				if (savedUrls && typeof savedUrls === 'object') {
@@ -134,22 +147,25 @@ export function useAppInitialization(): AppInitializationReturn {
 		const { fileGistUrls: current } = useTabStore.getState();
 		const updated = { ...current, [filePath]: gistInfo };
 		useTabStore.getState().setFileGistUrls(updated);
-		window.maestro.settings.set('fileGistUrls', updated);
+
+		if (window.maestro?.settings) {
+			window.maestro?.settings.set('fileGistUrls', updated);
+		}
 	}, []);
 
 	// --- Sync beta updates setting to electron-updater ---
 	useEffect(() => {
-		if (settingsLoaded) {
-			window.maestro.updates.setAllowPrerelease(enableBetaUpdates);
+		if (settingsLoaded && window.maestro?.updates) {
+			window.maestro?.updates.setAllowPrerelease(enableBetaUpdates);
 		}
 	}, [settingsLoaded, enableBetaUpdates]);
 
 	// --- Check for updates on startup ---
 	useEffect(() => {
-		if (settingsLoaded && checkForUpdatesOnStartup) {
+		if (settingsLoaded && checkForUpdatesOnStartup && window.maestro?.updates) {
 			const timer = setTimeout(async () => {
 				try {
-					const result = await window.maestro.updates.check(enableBetaUpdates);
+					const result = await window.maestro?.updates.check(enableBetaUpdates);
 					if (result.updateAvailable && !result.error) {
 						getModalActions().setUpdateCheckModalOpen(true);
 					}
@@ -163,7 +179,7 @@ export function useAppInitialization(): AppInitializationReturn {
 
 	// --- Leaderboard startup sync ---
 	useEffect(() => {
-		if (!settingsLoaded) return;
+		if (!settingsLoaded || !window.maestro?.leaderboard) return;
 		const { leaderboardRegistration } = useSettingsStore.getState();
 		const authToken = leaderboardRegistration?.authToken;
 		const email = leaderboardRegistration?.email;
@@ -171,7 +187,7 @@ export function useAppInitialization(): AppInitializationReturn {
 
 		const timer = setTimeout(async () => {
 			try {
-				const result = await window.maestro.leaderboard.sync({ email, authToken });
+				const result = await window.maestro?.leaderboard.sync({ email, authToken });
 
 				if (result.success && result.found && result.data) {
 					// Read fresh autoRunStats at call time
@@ -229,8 +245,10 @@ export function useAppInitialization(): AppInitializationReturn {
 	// Non-critical: SSH may not be configured. Failures are logged but not
 	// reported to Sentry since the app functions fully without SSH remotes.
 	useEffect(() => {
+		if (!window.maestro?.sshRemote) return;
+
 		window.maestro?.sshRemote
-			?.getConfigs()
+			.getConfigs()
 			.then((result) => {
 				if (result.success && result.configs) {
 					setSshRemoteConfigs(
@@ -248,8 +266,10 @@ export function useAppInitialization(): AppInitializationReturn {
 
 	// --- Stats DB corruption check ---
 	useEffect(() => {
+		if (!window.maestro?.stats) return;
+
 		window.maestro?.stats
-			?.getInitializationResult()
+			.getInitializationResult()
 			.then((result) => {
 				if (result?.userMessage) {
 					notifyToast({

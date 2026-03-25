@@ -60,6 +60,9 @@ const ProcessMonitor = lazy(() =>
 const UsageDashboardModal = lazy(() =>
 	import('./UsageDashboard').then((m) => ({ default: m.UsageDashboardModal }))
 );
+const VisualOrchestratorModal = lazy(() =>
+	import('./VisualOrchestrator').then((m) => ({ default: m.VisualOrchestratorModal }))
+);
 const GitDiffViewer = lazy(() =>
 	import('./GitDiffViewer').then((m) => ({ default: m.GitDiffViewer }))
 );
@@ -161,6 +164,10 @@ export interface AppInfoModalsProps {
 	defaultStatsTimeRange?: 'day' | 'week' | 'month' | 'year' | 'all';
 	/** Enable colorblind-friendly colors for dashboard charts */
 	colorBlindMode?: boolean;
+
+	// Visual Orchestrator
+	visualOrchestratorOpen: boolean;
+	onCloseVisualOrchestrator: () => void;
 }
 
 /**
@@ -172,6 +179,7 @@ export interface AppInfoModalsProps {
  * - UpdateCheckModal: Shows update status
  * - ProcessMonitor: Shows running processes
  * - UsageDashboardModal: Shows usage analytics and visualizations
+ * - VisualOrchestratorModal: Visual node-based orchestrator prototype
  *
  * NOTE: LogViewer is intentionally excluded - it's a content replacement component
  * that needs to be positioned in the flex layout, not an overlay modal.
@@ -210,6 +218,9 @@ export const AppInfoModals = memo(function AppInfoModals({
 	onCloseUsageDashboard,
 	defaultStatsTimeRange,
 	colorBlindMode,
+	// Visual Orchestrator
+	visualOrchestratorOpen,
+	onCloseVisualOrchestrator,
 }: AppInfoModalsProps) {
 	return (
 		<>
@@ -267,6 +278,16 @@ export const AppInfoModals = memo(function AppInfoModals({
 						defaultTimeRange={defaultStatsTimeRange}
 						colorBlindMode={colorBlindMode}
 						sessions={sessions}
+					/>
+				</Suspense>
+			)}
+
+			{/* --- VISUAL ORCHESTRATOR MODAL (lazy-loaded) --- */}
+			{visualOrchestratorOpen && (
+				<Suspense fallback={null}>
+					<VisualOrchestratorModal
+						isOpen={visualOrchestratorOpen}
+						onClose={onCloseVisualOrchestrator}
 					/>
 				</Suspense>
 			)}

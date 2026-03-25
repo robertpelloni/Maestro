@@ -52,6 +52,7 @@ interface QuickActionsModalProps {
 	setLogViewerOpen: (open: boolean) => void;
 	setProcessMonitorOpen: (open: boolean) => void;
 	setUsageDashboardOpen: (open: boolean) => void;
+	setVisualOrchestratorOpen?: (open: boolean) => void;
 	setAgentSessionsOpen: (open: boolean) => void;
 	setActiveAgentSessionId: (id: string | null) => void;
 	setGitDiffPreview: (diff: string | null) => void;
@@ -704,6 +705,19 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 				setQuickActionOpen(false);
 			},
 		},
+		...(setVisualOrchestratorOpen
+			? [
+					{
+						id: 'visualOrchestrator',
+						label: 'Visual Command Orchestrator (Experimental)',
+						subtext: 'View and manage concurrent agent tasks on a visual timeline',
+						action: () => {
+							setVisualOrchestratorOpen(true);
+							setQuickActionOpen(false);
+						},
+					},
+				]
+			: []),
 		...(activeSession && hasActiveSessionCapability?.('supportsSessionStorage')
 			? [
 					{

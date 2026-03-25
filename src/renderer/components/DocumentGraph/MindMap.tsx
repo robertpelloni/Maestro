@@ -13,6 +13,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Theme } from '../../types';
+import { getContrastColor } from '../../utils/colorUtils';
 import type { GraphNodeData, DocumentNodeData, ExternalLinkNodeData } from './graphDataBuilder';
 import {
 	type MindMapLayoutType,
@@ -432,8 +433,9 @@ function renderDocumentNode(
 	roundRect(ctx, nodeLeft, nodeTop, width, height, NODE_BORDER_RADIUS);
 	ctx.stroke();
 
-	// Title text (in header, white or light colored for contrast)
-	ctx.fillStyle = '#FFFFFF';
+	// Title text (in header, dynamic contrast)
+	const headerTextColor = getContrastColor(theme.colors.accent);
+	ctx.fillStyle = headerTextColor;
 	ctx.font = `600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'middle';
@@ -444,7 +446,8 @@ function renderDocumentNode(
 	// Open file icon (in header, right side)
 	const iconX = nodeLeft + width - OPEN_ICON_SIZE - OPEN_ICON_PADDING;
 	const iconY = nodeTop + (NODE_HEADER_HEIGHT - OPEN_ICON_SIZE) / 2;
-	drawOpenIcon(ctx, iconX, iconY, OPEN_ICON_SIZE, isHovered ? '#FFFFFF' : 'rgba(255,255,255,0.7)');
+	const iconColor = isHovered || isFocused || isSelected ? headerTextColor : `${headerTextColor}B3`; // 0.7 opacity
+	drawOpenIcon(ctx, iconX, iconY, OPEN_ICON_SIZE, iconColor);
 
 	// Sub-header: folder icon and path
 	const subHeaderY = nodeTop + NODE_HEADER_HEIGHT;

@@ -21,6 +21,8 @@ import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useThemeColors, useTheme } from '../components/ThemeProvider';
 import { triggerHaptic, HAPTIC_PATTERNS } from './constants';
 import { REMARK_GFM_PLUGINS } from '../../shared/markdownPlugins';
+import { MermaidRenderer } from '../../shared/components/MermaidRenderer';
+import { Theme } from '../../shared/theme-types';
 
 /**
  * Props for MobileMarkdownRenderer
@@ -250,6 +252,17 @@ export const MobileMarkdownRenderer = memo(
 								const match = (className || '').match(/language-(\w+)/);
 								const language = match ? match[1] : 'text';
 								const codeContent = String(codeChildren).replace(/\n$/, '');
+
+								if (language === 'mermaid') {
+									// Construct a partial Theme object for the renderer
+									const theme: Theme = {
+										id: 'custom',
+										name: 'Mobile',
+										mode: isDark ? 'dark' : 'light',
+										colors: colors as any,
+									};
+									return <MermaidRenderer chart={codeContent} theme={theme} />;
+								}
 
 								return (
 									<CodeBlockWithCopy

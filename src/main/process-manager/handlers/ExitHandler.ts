@@ -158,6 +158,21 @@ export class ExitHandler {
 
 			const sshError = matchSshErrorPattern(combinedOutput);
 			if (sshError) {
+				// Check if we should automatically retry (e.g. for connection reset/timeout)
+				const retryCount = managedProcess.retryCount || 0;
+				const maxRetries = 3;
+
+				if (sshError.recoverable && retryCount < maxRetries && managedProcess.config) {
+					managedProcess.retryCount = retryCount + 1;
+					logger.info('[ProcessManager] Recoverable SSH error, signaling retry', 'ProcessManager', {
+						sessionId,
+						retryCount: managedProcess.retryCount,
+						errorType: sshError.type,
+					});
+					this.emitter.emit('retry-required', sessionId, managedProcess);
+					return; // Stop exit processing, wait for retry spawn
+				}
+
 				managedProcess.errorEmitted = true;
 				const agentError: AgentError = {
 					type: sshError.type,

@@ -316,7 +316,15 @@ export function useSettings(): UseSettingsReturn {
 
 	// Load settings on mount
 	useEffect(() => {
-		loadAllSettings();
+		if (window.maestro?.settings) {
+			loadAllSettings();
+		} else {
+			console.warn(
+				'[Settings] window.maestro.settings not available on mount, skipping loadAllSettings'
+			);
+			// Ensure splash screen can still hide even if settings fail to load
+			useSettingsStore.getState().setSettingsLoaded(true);
+		}
 	}, []);
 
 	// Reload settings when system resumes from sleep/suspend

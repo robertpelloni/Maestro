@@ -55,7 +55,7 @@ vi.mock('../../renderer/components/AutoRunnerHelpModal', () => ({
 	),
 }));
 
-vi.mock('../../renderer/components/MermaidRenderer', () => ({
+vi.mock('../../shared/components/MermaidRenderer', () => ({
 	MermaidRenderer: ({ chart }: { chart: string }) => (
 		<div data-testid="mermaid-renderer">{chart}</div>
 	),

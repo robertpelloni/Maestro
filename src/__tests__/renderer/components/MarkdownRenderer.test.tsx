@@ -21,6 +21,13 @@ vi.mock('lucide-react', () => ({
 	ImageOff: () => <span data-testid="image-off-icon">ImageOff</span>,
 }));
 
+// Mock MermaidRenderer
+vi.mock('../../../shared/components/MermaidRenderer', () => ({
+	MermaidRenderer: ({ chart }: { chart: string }) => (
+		<div data-testid="mermaid-renderer">{chart}</div>
+	),
+}));
+
 const mockTheme = {
 	id: 'test-theme',
 	colors: {
@@ -128,6 +135,27 @@ describe('MarkdownRenderer', () => {
 				<MarkdownRenderer {...defaultProps} content={maliciousContent} allowRawHtml={true} />
 			);
 			expect(container.innerHTML).not.toContain('javascript:');
+		});
+	});
+
+	describe('mermaid diagrams', () => {
+		it('renders MermaidRenderer for mermaid code blocks', () => {
+			const content = '```mermaid\ngraph TD\n  A --> B\n```';
+			render(<MarkdownRenderer {...defaultProps} content={content} />);
+
+			const mermaidElement = screen.getByTestId('mermaid-renderer');
+			expect(mermaidElement).toBeInTheDocument();
+			expect(mermaidElement).toHaveTextContent('graph TD');
+			expect(mermaidElement).toHaveTextContent('A --> B');
+		});
+
+		it('renders standard syntax highlighter for non-mermaid code blocks', () => {
+			const content = '```typescript\nconst x = 1;\n```';
+			render(<MarkdownRenderer {...defaultProps} content={content} />);
+
+			expect(screen.queryByTestId('mermaid-renderer')).not.toBeInTheDocument();
+			expect(screen.getByTestId('syntax-highlighter')).toBeInTheDocument();
+			expect(screen.getByText(/const x = 1/)).toBeInTheDocument();
 		});
 	});
 });

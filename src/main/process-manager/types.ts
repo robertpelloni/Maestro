@@ -74,6 +74,10 @@ export interface ManagedProcess {
 	sshRemoteHost?: string;
 	dataBuffer?: string;
 	dataBufferTimeout?: NodeJS.Timeout;
+	/** Original configuration used to spawn the process (for retries) */
+	config?: ProcessConfig;
+	/** Number of times this process has been automatically restarted */
+	retryCount?: number;
 }
 
 export interface UsageTotals {

@@ -42,7 +42,7 @@ import { useLayerStack } from '../contexts/LayerStackContext';
 import { MODAL_PRIORITIES } from '../constants/modalPriorities';
 import { useClickOutside } from '../hooks/ui/useClickOutside';
 import { Modal, ModalFooter } from './ui/Modal';
-import { MermaidRenderer } from './MermaidRenderer';
+import { MermaidRenderer } from '../../shared/components/MermaidRenderer';
 import { CsvTableRenderer } from './CsvTableRenderer';
 import { getEncoder, formatTokenCount } from '../utils/tokenCounter';
 import { formatShortcutKeys } from '../utils/shortcutFormatter';

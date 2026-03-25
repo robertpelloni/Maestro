@@ -1400,7 +1400,7 @@ describe('Loop Mode Additional Controls', () => {
 // but testing this requires complex async timing that causes timeouts in the test environment
 
 // NOTE: Worktree UI has moved to WorktreeConfigModal - these tests no longer apply to BatchRunnerModal
-describe.skip('Playbook with Worktree Settings', () => {
+describe.todo('Playbook with Worktree Settings', () => {
 	beforeEach(() => {
 		(window.maestro.git as Record<string, unknown>).isRepo = vi.fn().mockResolvedValue(true);
 		(window.maestro.git as Record<string, unknown>).branches = vi
@@ -1925,7 +1925,7 @@ describe('Click Outside Dropdown Handlers', () => {
 	});
 
 	// NOTE: Worktree UI has moved to WorktreeConfigModal - this test no longer applies to BatchRunnerModal
-	it.skip('closes branch dropdown when clicking outside', async () => {
+	it.todo('closes branch dropdown when clicking outside', async () => {
 		(window.maestro.git as Record<string, unknown>).isRepo = vi.fn().mockResolvedValue(true);
 		(window.maestro.git as Record<string, unknown>).branches = vi
 			.fn()

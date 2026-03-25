@@ -104,7 +104,7 @@ const mockClickOutsideEnabled = {
 };
 
 // Mock MermaidRenderer
-vi.mock('../../../renderer/components/MermaidRenderer', () => ({
+vi.mock('../../../shared/components/MermaidRenderer', () => ({
 	MermaidRenderer: () => <div data-testid="mermaid-renderer">Mermaid</div>,
 }));
 

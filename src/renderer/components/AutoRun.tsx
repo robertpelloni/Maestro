@@ -40,7 +40,7 @@ import type { BatchRunState, SessionState, Theme, Shortcut } from '../types';
 import type { FileNode } from '../types/fileTree';
 import { AutoRunnerHelpModal } from './AutoRunnerHelpModal';
 import { ResetTasksConfirmModal } from './ResetTasksConfirmModal';
-import { MermaidRenderer } from './MermaidRenderer';
+import { MermaidRenderer } from '../../shared/components/MermaidRenderer';
 import { AutoRunDocumentSelector, DocumentTaskCount } from './AutoRunDocumentSelector';
 import { AutoRunLightbox } from './AutoRunLightbox';
 import { AutoRunSearchBar } from './AutoRunSearchBar';
@@ -1647,23 +1647,26 @@ const AutoRunInner = forwardRef<AutoRunHandle, AutoRunProps>(function AutoRunInn
 							<Maximize2 className="w-3.5 h-3.5" />
 						</button>
 					)}
-					{/* Image upload button - hidden for now, can be re-enabled when needed
-        <button
-          onClick={() => mode === 'edit' && !isLocked && fileInputRef.current?.click()}
-          disabled={mode !== 'edit' || isLocked}
-          className={`flex items-center justify-center w-8 h-8 rounded text-xs transition-colors ${
-            mode === 'edit' && !isLocked ? 'hover:opacity-80' : 'opacity-30 cursor-not-allowed'
-          }`}
-          style={{
-            backgroundColor: 'transparent',
-            color: theme.colors.textDim,
-            border: `1px solid ${theme.colors.border}`
-          }}
-          title={mode === 'edit' && !isLocked ? 'Add image (or paste from clipboard)' : 'Switch to Edit mode to add images'}
-        >
-          <Image className="w-3.5 h-3.5" />
-        </button>
-        */}
+					{/* Image upload button */}
+					<button
+						onClick={() => mode === 'edit' && !isLocked && fileInputRef.current?.click()}
+						disabled={mode !== 'edit' || isLocked}
+						className={`flex items-center justify-center w-8 h-8 rounded text-xs transition-colors ${
+							mode === 'edit' && !isLocked ? 'hover:opacity-80' : 'opacity-30 cursor-not-allowed'
+						}`}
+						style={{
+							backgroundColor: 'transparent',
+							color: theme.colors.textDim,
+							border: `1px solid ${theme.colors.border}`,
+						}}
+						title={
+							mode === 'edit' && !isLocked
+								? 'Add image (or paste from clipboard)'
+								: 'Switch to Edit mode to add images'
+						}
+					>
+						<Image className="w-3.5 h-3.5" />
+					</button>
 					<button
 						onClick={() => !isLocked && switchMode('edit')}
 						disabled={isLocked}

@@ -385,7 +385,7 @@ function HistoryDetailView({
 				top: 0,
 				left: 0,
 				right: 0,
-				bottom: 0,
+				height: 'var(--vh, 100dvh)',
 				backgroundColor: colors.bgMain,
 				zIndex: 210, // Higher than MobileHistoryPanel (200) to overlay it
 				display: 'flex',

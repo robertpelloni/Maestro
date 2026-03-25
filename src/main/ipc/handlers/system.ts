@@ -15,9 +15,13 @@
  */
 
 import { ipcMain, dialog, shell, BrowserWindow, App } from 'electron';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 import * as path from 'path';
 import * as fsSync from 'fs';
 import Store from 'electron-store';
+
+const execAsync = promisify(exec);
 import { execFileNoThrow } from '../../utils/execFile';
 import { logger } from '../../utils/logger';
 import { detectShells } from '../../utils/shellDetector';
@@ -57,6 +61,21 @@ export interface SystemHandlerDependencies {
  */
 export function registerSystemHandlers(deps: SystemHandlerDependencies): void {
 	const { getMainWindow, app, settingsStore, tunnelManager, getWebServer } = deps;
+
+	ipcMain.handle('system:yoloRun', async (_event, command: string, cwd?: string) => {
+		try {
+			logger.info(`[YOLO] Running command: ${command}`, 'System', { cwd });
+			const { stdout, stderr } = await execAsync(command, { cwd });
+			return { stdout, stderr, exitCode: 0 };
+		} catch (error: any) {
+			logger.error(`[YOLO] Command failed: ${command}`, 'System', { error });
+			return {
+				stdout: error.stdout || '',
+				stderr: error.stderr || error.message,
+				exitCode: error.code || 1,
+			};
+		}
+	});
 
 	// ============ Dialog Handlers ============
 

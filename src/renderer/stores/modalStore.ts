@@ -205,6 +205,7 @@ export type ModalId =
 	| 'logViewer'
 	| 'processMonitor'
 	| 'usageDashboard'
+	| 'visualOrchestrator'
 	// Confirmations
 	| 'confirm'
 	| 'quitConfirm'
@@ -542,6 +543,10 @@ export function getModalActions() {
 		// Usage Dashboard
 		setUsageDashboardOpen: (open: boolean) =>
 			open ? openModal('usageDashboard') : closeModal('usageDashboard'),
+
+		// Visual Orchestrator
+		setVisualOrchestratorOpen: (open: boolean) =>
+			open ? openModal('visualOrchestrator') : closeModal('visualOrchestrator'),
 
 		// Keyboard Mastery Celebration
 		setPendingKeyboardMasteryLevel: (level: number | null) =>

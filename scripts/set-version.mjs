@@ -28,7 +28,15 @@ function getGitHash() {
 	}
 }
 
-function getPackageVersion() {
+function getVersion() {
+	try {
+		// Prioritize the VERSION file if it exists
+		const versionFile = readFileSync(join(__dirname, '..', 'VERSION'), 'utf-8').trim();
+		if (versionFile) return versionFile;
+	} catch {
+		// Fallback to package.json if VERSION file is missing or unreadable
+	}
+
 	try {
 		const packageJson = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
 		return packageJson.version;
@@ -38,7 +46,7 @@ function getPackageVersion() {
 }
 
 const gitHash = getGitHash();
-const packageVersion = getPackageVersion();
+const packageVersion = getVersion();
 const version = `${packageVersion} ${gitHash} (local)`;
 
 // Set environment variable

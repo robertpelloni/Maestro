@@ -153,7 +153,7 @@ export const useAgentStore = create<AgentStore>()((set, get) => ({
 	// --- Actions ---
 
 	refreshAgents: async (sshRemoteId?) => {
-		const agents = await window.maestro.agents.detect(sshRemoteId);
+		const agents = await window.maestro?.agents?.detect(sshRemoteId);
 		set({ availableAgents: agents, agentsDetected: true });
 	},
 
@@ -177,7 +177,7 @@ export const useAgentStore = create<AgentStore>()((set, get) => ({
 			};
 		});
 		// Close the agent error modal if open
-		window.maestro.agentError.clearError(sessionId).catch((err) => {
+		window.maestro?.agentError.clearError(sessionId).catch((err) => {
 			console.error('Failed to clear agent error:', err);
 		});
 	},
@@ -213,7 +213,7 @@ export const useAgentStore = create<AgentStore>()((set, get) => ({
 
 		// Kill any existing AI process
 		try {
-			await window.maestro.process.kill(`${sessionId}-ai`);
+			await window.maestro?.process.kill(`${sessionId}-ai`);
 		} catch {
 			// Process may not exist
 		}
@@ -275,7 +275,7 @@ export const useAgentStore = create<AgentStore>()((set, get) => ({
 
 		try {
 			// Get agent configuration for this session's tool type
-			const agent = await window.maestro.agents.get(session.toolType);
+			const agent = await window.maestro?.agents.get(session.toolType);
 			if (!agent) throw new Error(`Agent not found for toolType: ${session.toolType}`);
 
 			// Get the TARGET TAB's agentSessionId for session continuity
@@ -332,7 +332,7 @@ export const useAgentStore = create<AgentStore>()((set, get) => ({
 					args: spawnArgs,
 				});
 
-				await window.maestro.process.spawn({
+				await window.maestro?.process.spawn({
 					sessionId: targetSessionId,
 					toolType: session.toolType,
 					cwd: session.cwd,
@@ -420,7 +420,7 @@ export const useAgentStore = create<AgentStore>()((set, get) => ({
 					}));
 
 					// Spawn agent with the prompt
-					await window.maestro.process.spawn({
+					await window.maestro?.process.spawn({
 						sessionId: targetSessionId,
 						toolType: session.toolType,
 						cwd: session.cwd,
@@ -512,7 +512,7 @@ export const useAgentStore = create<AgentStore>()((set, get) => ({
 	killAgent: async (sessionId, suffix?) => {
 		const target = suffix ? `${sessionId}-${suffix}` : `${sessionId}-ai`;
 		try {
-			await window.maestro.process.kill(target);
+			await window.maestro?.process.kill(target);
 		} catch {
 			// Process may not exist
 		}
@@ -520,7 +520,7 @@ export const useAgentStore = create<AgentStore>()((set, get) => ({
 
 	interruptAgent: async (sessionId) => {
 		try {
-			await window.maestro.process.interrupt(sessionId);
+			await window.maestro?.process.interrupt(sessionId);
 		} catch {
 			// Process may not exist
 		}

@@ -199,7 +199,11 @@ export function useAppHandlers(deps: UseAppHandlersDeps): UseAppHandlersReturn {
 					useModalStore.getState().openModal('confirm', {
 						message: `Open "${node.name}" in external application?`,
 						onConfirm: async () => {
-							await window.maestro.shell.openPath(fullPath);
+							if (window.maestro?.shell) {
+								await window.maestro.shell.openPath(fullPath);
+							} else {
+								console.error('[AppHandlers] window.maestro.shell not available');
+							}
 						},
 					});
 					return;
@@ -215,6 +219,11 @@ export function useAppHandlers(deps: UseAppHandlersDeps): UseAppHandlersReturn {
 				try {
 					// Pass SSH remote ID for remote sessions
 					// Fetch both content and stat for lastModified timestamp
+					if (!window.maestro?.fs) {
+						console.error('[AppHandlers] window.maestro.fs not available');
+						return;
+					}
+
 					const [content, stat] = await Promise.all([
 						window.maestro.fs.readFile(fullPath, sshRemoteId),
 						window.maestro.fs.stat(fullPath, sshRemoteId),

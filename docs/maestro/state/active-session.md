@@ -1,18 +1,18 @@
 ---
-session_id: 2026-03-23-maestro-borg-assimilation
-task: prepare Maestro for full assimilation into Borg
-created: '2026-03-23T20:21:55.543Z'
-updated: '2026-03-23T20:58:35.543Z'
+session_id: 2026-03-25-global-synchronization
+task: implement multi-device synchronization for playbooks and settings via Borg Core
+created: '2026-03-25T23:13:42.449Z'
+updated: '2026-03-25T23:16:47.313Z'
 status: in_progress
 workflow_mode: standard
-design_document: docs/maestro/plans/2026-03-23-maestro-borg-assimilation-design.md
-implementation_plan: docs/maestro/plans/2026-03-23-maestro-borg-assimilation-impl-plan.md
+design_document: docs/maestro/plans/2026-03-25-global-synchronization-design.md
+implementation_plan: docs/maestro/plans/2026-03-25-global-synchronization-impl-plan.md
 current_phase: 2
-total_phases: 7
+total_phases: 4
 execution_mode: sequential
 execution_backend: native
 current_batch: null
-task_complexity: complex
+task_complexity: medium
 token_usage:
   total_input: 0
   total_output: 0
@@ -20,39 +20,38 @@ token_usage:
   by_agent: {}
 phases:
   - id: 1
-    name: Protocol & Schema Foundation
+    name: API Contract for Sync
     status: completed
     agents:
-      - architect
+      - api_designer
     parallel: false
-    started: '2026-03-23T20:21:55.543Z'
-    completed: '2026-03-23T20:58:35.543Z'
+    started: '2026-03-25T23:13:42.449Z'
+    completed: '2026-03-25T23:16:47.313Z'
     blocked_by: []
     files_created: []
     files_modified: []
     files_deleted: []
     downstream_context:
-      integration_points:
-        - src/shared/borg-schema.ts (Validation)
-        - src/main/services/IBorgProvider.ts (Contract)
       warnings:
-        - Zod dependency must be managed in subsequent build steps.
+        - none
       key_interfaces_introduced:
-        - BorgHandoffSchema
-        - IBorgProvider
+        - BorgSettingsPayload
+        - BorgPlaybooksPayload
+      integration_points:
+        - src/shared/borg-schema.ts
       assumptions:
-        - The Borg Core engine preserves the 'maestro' metadata namespace during handoffs.
+        - The Borg Core API will accept and return the new settings and playbooks schemas.
       patterns_established:
-        - Zod-based schema extension for Borg handoffs
+        - Zod schemas for new API endpoints.
     errors: []
     retry_count: 0
   - id: 2
-    name: API Client & Connectivity
+    name: BorgCoreClient Extension
     status: in_progress
     agents:
-      - api_designer
+      - coder
     parallel: false
-    started: '2026-03-23T20:58:35.543Z'
+    started: '2026-03-25T23:16:47.313Z'
     completed: null
     blocked_by: []
     files_created: []
@@ -67,7 +66,7 @@ phases:
     errors: []
     retry_count: 0
   - id: 3
-    name: BorgLiveProvider & Local Cache
+    name: SyncManager Implementation
     status: pending
     agents:
       - coder
@@ -87,46 +86,6 @@ phases:
     errors: []
     retry_count: 0
   - id: 4
-    name: Main Process Integration
-    status: pending
-    agents:
-      - coder
-    parallel: false
-    started: null
-    completed: null
-    blocked_by: []
-    files_created: []
-    files_modified: []
-    files_deleted: []
-    downstream_context:
-      key_interfaces_introduced: []
-      patterns_established: []
-      integration_points: []
-      assumptions: []
-      warnings: []
-    errors: []
-    retry_count: 0
-  - id: 5
-    name: CLI & Reporting Refactor
-    status: pending
-    agents:
-      - coder
-    parallel: false
-    started: null
-    completed: null
-    blocked_by: []
-    files_created: []
-    files_modified: []
-    files_deleted: []
-    downstream_context:
-      key_interfaces_introduced: []
-      patterns_established: []
-      integration_points: []
-      assumptions: []
-      warnings: []
-    errors: []
-    retry_count: 0
-  - id: 6
     name: Integration Validation
     status: pending
     agents:
@@ -146,26 +105,6 @@ phases:
       warnings: []
     errors: []
     retry_count: 0
-  - id: 7
-    name: Documentation & Handoff
-    status: pending
-    agents:
-      - technical_writer
-    parallel: false
-    started: null
-    completed: null
-    blocked_by: []
-    files_created: []
-    files_modified: []
-    files_deleted: []
-    downstream_context:
-      key_interfaces_introduced: []
-      patterns_established: []
-      integration_points: []
-      assumptions: []
-      warnings: []
-    errors: []
-    retry_count: 0
 ---
 
-# prepare Maestro for full assimilation into Borg Orchestration Log
+# implement multi-device synchronization for playbooks and settings via Borg Core Orchestration Log

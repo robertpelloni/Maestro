@@ -616,7 +616,14 @@ export function createWizardBubbleMarkdownComponents(theme: Theme): Partial<Comp
 					type: 'button',
 					className: 'underline',
 					style: { color: theme.colors.accent },
-					onClick: () => href && window.maestro.shell.openExternal(href),
+					onClick: () => {
+						if (!href) return;
+						if (window.maestro?.shell) {
+							window.maestro.shell.openExternal(href);
+						} else {
+							window.open(href, '_blank');
+						}
+					},
 				},
 				children
 			),

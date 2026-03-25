@@ -205,7 +205,7 @@ describe('SendToAgentModal', () => {
 	});
 
 	// TODO: Update tests to use session names instead of agent names
-	describe.skip('rendering', () => {
+	describe('rendering', () => {
 		it('does not render when isOpen is false', () => {
 			renderWithLayerStack(
 				<SendToAgentModal
@@ -335,7 +335,7 @@ describe('SendToAgentModal', () => {
 	});
 
 	// TODO: Update tests to use "Search sessions..." placeholder
-	describe.skip('search functionality', () => {
+	describe.todo('search functionality', () => {
 		it('renders search input', () => {
 			renderWithLayerStack(
 				<SendToAgentModal

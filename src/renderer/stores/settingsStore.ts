@@ -3,7 +3,7 @@
  *
  * Replaces the 2,088-line useSettings hook with a centralized Zustand store.
  * All settings are loaded once from electron-store via loadAllSettings() and
- * persisted back on each mutation via window.maestro.settings.set().
+ * persisted back on each mutation via window.maestro?.settings?.set().
  *
  * Key advantages:
  * - Selector-based subscriptions: components only re-render when their slice changes
@@ -484,203 +484,203 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 		setConductorProfile: (value) => {
 			const trimmed = value.slice(0, 1000);
 			set({ conductorProfile: trimmed });
-			window.maestro.settings.set('conductorProfile', trimmed);
+			window.maestro?.settings?.set('conductorProfile', trimmed);
 		},
 
 		setLlmProvider: (value) => {
 			set({ llmProvider: value });
-			window.maestro.settings.set('llmProvider', value);
+			window.maestro?.settings?.set('llmProvider', value);
 		},
 
 		setModelSlug: (value) => {
 			set({ modelSlug: value });
-			window.maestro.settings.set('modelSlug', value);
+			window.maestro?.settings?.set('modelSlug', value);
 		},
 
 		setApiKey: (value) => {
 			set({ apiKey: value });
-			window.maestro.settings.set('apiKey', value);
+			window.maestro?.settings?.set('apiKey', value);
 		},
 
 		setDefaultShell: (value) => {
 			set({ defaultShell: value });
-			window.maestro.settings.set('defaultShell', value);
+			window.maestro?.settings?.set('defaultShell', value);
 		},
 
 		setCustomShellPath: (value) => {
 			set({ customShellPath: value });
-			window.maestro.settings.set('customShellPath', value);
+			window.maestro?.settings?.set('customShellPath', value);
 		},
 
 		setShellArgs: (value) => {
 			set({ shellArgs: value });
-			window.maestro.settings.set('shellArgs', value);
+			window.maestro?.settings?.set('shellArgs', value);
 		},
 
 		setShellEnvVars: (value) => {
 			set({ shellEnvVars: value });
-			window.maestro.settings.set('shellEnvVars', value);
+			window.maestro?.settings?.set('shellEnvVars', value);
 		},
 
 		setGhPath: (value) => {
 			set({ ghPath: value });
-			window.maestro.settings.set('ghPath', value);
+			window.maestro?.settings?.set('ghPath', value);
 		},
 
 		setFontFamily: (value) => {
 			set({ fontFamily: value });
-			window.maestro.settings.set('fontFamily', value);
+			window.maestro?.settings?.set('fontFamily', value);
 		},
 
 		setFontSize: (value) => {
 			set({ fontSize: value });
-			window.maestro.settings.set('fontSize', value);
+			window.maestro?.settings?.set('fontSize', value);
 		},
 
 		setActiveThemeId: (value) => {
 			set({ activeThemeId: value });
-			window.maestro.settings.set('activeThemeId', value);
+			window.maestro?.settings?.set('activeThemeId', value);
 		},
 
 		setCustomThemeColors: (value) => {
 			set({ customThemeColors: value });
-			window.maestro.settings.set('customThemeColors', value);
+			window.maestro?.settings?.set('customThemeColors', value);
 		},
 
 		setCustomThemeBaseId: (value) => {
 			set({ customThemeBaseId: value });
-			window.maestro.settings.set('customThemeBaseId', value);
+			window.maestro?.settings?.set('customThemeBaseId', value);
 		},
 
 		setEnterToSendAI: (value) => {
 			set({ enterToSendAI: value });
-			window.maestro.settings.set('enterToSendAI', value);
+			window.maestro?.settings?.set('enterToSendAI', value);
 		},
 
 		setEnterToSendTerminal: (value) => {
 			set({ enterToSendTerminal: value });
-			window.maestro.settings.set('enterToSendTerminal', value);
+			window.maestro?.settings?.set('enterToSendTerminal', value);
 		},
 
 		setDefaultSaveToHistory: (value) => {
 			set({ defaultSaveToHistory: value });
-			window.maestro.settings.set('defaultSaveToHistory', value);
+			window.maestro?.settings?.set('defaultSaveToHistory', value);
 		},
 
 		setDefaultShowThinking: (value) => {
 			set({ defaultShowThinking: value });
-			window.maestro.settings.set('defaultShowThinking', value);
+			window.maestro?.settings?.set('defaultShowThinking', value);
 		},
 
 		setLeftSidebarWidth: (value) => {
 			const clamped = Math.max(256, Math.min(600, value));
 			set({ leftSidebarWidth: clamped });
-			window.maestro.settings.set('leftSidebarWidth', clamped);
+			window.maestro?.settings?.set('leftSidebarWidth', clamped);
 		},
 
 		setRightPanelWidth: (value) => {
 			set({ rightPanelWidth: value });
-			window.maestro.settings.set('rightPanelWidth', value);
+			window.maestro?.settings?.set('rightPanelWidth', value);
 		},
 
 		setMarkdownEditMode: (value) => {
 			set({ markdownEditMode: value });
-			window.maestro.settings.set('markdownEditMode', value);
+			window.maestro?.settings?.set('markdownEditMode', value);
 		},
 
 		setChatRawTextMode: (value) => {
 			set({ chatRawTextMode: value });
-			window.maestro.settings.set('chatRawTextMode', value);
+			window.maestro?.settings?.set('chatRawTextMode', value);
 		},
 
 		setShowHiddenFiles: (value) => {
 			set({ showHiddenFiles: value });
-			window.maestro.settings.set('showHiddenFiles', value);
+			window.maestro?.settings?.set('showHiddenFiles', value);
 		},
 
 		setTerminalWidth: (value) => {
 			set({ terminalWidth: value });
-			window.maestro.settings.set('terminalWidth', value);
+			window.maestro?.settings?.set('terminalWidth', value);
 		},
 
 		setMaxOutputLines: (value) => {
 			set({ maxOutputLines: value });
-			window.maestro.settings.set('maxOutputLines', value);
+			window.maestro?.settings?.set('maxOutputLines', value);
 		},
 
 		setOsNotificationsEnabled: (value) => {
 			set({ osNotificationsEnabled: value });
-			window.maestro.settings.set('osNotificationsEnabled', value);
+			window.maestro?.settings?.set('osNotificationsEnabled', value);
 		},
 
 		setAudioFeedbackEnabled: (value) => {
 			set({ audioFeedbackEnabled: value });
-			window.maestro.settings.set('audioFeedbackEnabled', value);
+			window.maestro?.settings?.set('audioFeedbackEnabled', value);
 		},
 
 		setAudioFeedbackCommand: (value) => {
 			set({ audioFeedbackCommand: value });
-			window.maestro.settings.set('audioFeedbackCommand', value);
+			window.maestro?.settings?.set('audioFeedbackCommand', value);
 		},
 
 		setToastDuration: (value) => {
 			set({ toastDuration: value });
-			window.maestro.settings.set('toastDuration', value);
+			window.maestro?.settings?.set('toastDuration', value);
 		},
 
 		setCheckForUpdatesOnStartup: (value) => {
 			set({ checkForUpdatesOnStartup: value });
-			window.maestro.settings.set('checkForUpdatesOnStartup', value);
+			window.maestro?.settings?.set('checkForUpdatesOnStartup', value);
 		},
 
 		setEnableBetaUpdates: (value) => {
 			set({ enableBetaUpdates: value });
-			window.maestro.settings.set('enableBetaUpdates', value);
+			window.maestro?.settings?.set('enableBetaUpdates', value);
 		},
 
 		setCrashReportingEnabled: (value) => {
 			set({ crashReportingEnabled: value });
-			window.maestro.settings.set('crashReportingEnabled', value);
+			window.maestro?.settings?.set('crashReportingEnabled', value);
 		},
 
 		setLogViewerSelectedLevels: (value) => {
 			set({ logViewerSelectedLevels: value });
-			window.maestro.settings.set('logViewerSelectedLevels', value);
+			window.maestro?.settings?.set('logViewerSelectedLevels', value);
 		},
 
 		setShortcuts: (value) => {
 			set({ shortcuts: value });
-			window.maestro.settings.set('shortcuts', value);
+			window.maestro?.settings?.set('shortcuts', value);
 		},
 
 		setTabShortcuts: (value) => {
 			set({ tabShortcuts: value });
-			window.maestro.settings.set('tabShortcuts', value);
+			window.maestro?.settings?.set('tabShortcuts', value);
 		},
 
 		setCustomAICommands: (value) => {
 			set({ customAICommands: value });
-			window.maestro.settings.set('customAICommands', value);
+			window.maestro?.settings?.set('customAICommands', value);
 		},
 
 		setUngroupedCollapsed: (value) => {
 			set({ ungroupedCollapsed: value });
-			window.maestro.settings.set('ungroupedCollapsed', value);
+			window.maestro?.settings?.set('ungroupedCollapsed', value);
 		},
 
 		setTourCompleted: (value) => {
 			set({ tourCompleted: value });
-			window.maestro.settings.set('tourCompleted', value);
+			window.maestro?.settings?.set('tourCompleted', value);
 		},
 
 		setFirstAutoRunCompleted: (value) => {
 			set({ firstAutoRunCompleted: value });
-			window.maestro.settings.set('firstAutoRunCompleted', value);
+			window.maestro?.settings?.set('firstAutoRunCompleted', value);
 		},
 
 		setLeaderboardRegistration: (value) => {
 			set({ leaderboardRegistration: value });
-			window.maestro.settings.set('leaderboardRegistration', value);
+			window.maestro?.settings?.set('leaderboardRegistration', value);
 		},
 
 		setPersistentWebLink: async (value) => {
@@ -692,7 +692,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 					// persistCurrentToken writes both webAuthToken and persistentWebLink
 					// on the main side — the factory ignores webAuthToken unless
 					// persistentWebLink is also true, so partial writes are safe
-					const result = await window.maestro.live.persistCurrentToken();
+					const result = await window.maestro?.live?.persistCurrentToken();
 					if (requestSeq !== persistentWebLinkRequestSeq) {
 						// Stale: another call was made while this IPC was in-flight.
 						// The IPC handler already wrote the token and flag in main —
@@ -702,7 +702,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 						// second call — the handler is idempotent.
 						if (!get().persistentWebLink) {
 							try {
-								await window.maestro.live.clearPersistentToken();
+								await window.maestro?.live?.clearPersistentToken();
 							} catch (clearError) {
 								console.error('[Settings] Failed to clear stale persistent web link:', clearError);
 							}
@@ -724,7 +724,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 			} else {
 				try {
 					// Atomically clear both keys on the main side
-					const result = await window.maestro.live.clearPersistentToken();
+					const result = await window.maestro?.live?.clearPersistentToken();
 					if (requestSeq !== persistentWebLinkRequestSeq) {
 						// Stale: user re-enabled while this clear was in-flight.
 						// The enable path will handle persisting — nothing to undo here.
@@ -748,7 +748,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 
 		setWebInterfaceUseCustomPort: (value) => {
 			set({ webInterfaceUseCustomPort: value });
-			window.maestro.settings.set('webInterfaceUseCustomPort', value);
+			window.maestro?.settings?.set('webInterfaceUseCustomPort', value);
 		},
 
 		setWebInterfaceCustomPort: (value) => {
@@ -756,136 +756,136 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 			set({ webInterfaceCustomPort: value });
 			// Only persist valid port values
 			if (value >= 1024 && value <= 65535) {
-				window.maestro.settings.set('webInterfaceCustomPort', value);
+				window.maestro?.settings?.set('webInterfaceCustomPort', value);
 			}
 		},
 
 		setColorBlindMode: (value) => {
 			set({ colorBlindMode: value });
-			window.maestro.settings.set('colorBlindMode', value);
+			window.maestro?.settings?.set('colorBlindMode', value);
 		},
 
 		setDocumentGraphShowExternalLinks: (value) => {
 			set({ documentGraphShowExternalLinks: value });
-			window.maestro.settings.set('documentGraphShowExternalLinks', value);
+			window.maestro?.settings?.set('documentGraphShowExternalLinks', value);
 		},
 
 		setDocumentGraphMaxNodes: (value) => {
 			const clamped = Math.max(50, Math.min(1000, value));
 			set({ documentGraphMaxNodes: clamped });
-			window.maestro.settings.set('documentGraphMaxNodes', clamped);
+			window.maestro?.settings?.set('documentGraphMaxNodes', clamped);
 		},
 
 		setDocumentGraphPreviewCharLimit: (value) => {
 			const clamped = Math.max(50, Math.min(500, value));
 			set({ documentGraphPreviewCharLimit: clamped });
-			window.maestro.settings.set('documentGraphPreviewCharLimit', clamped);
+			window.maestro?.settings?.set('documentGraphPreviewCharLimit', clamped);
 		},
 
 		setDocumentGraphLayoutType: (value) => {
 			const layoutType = DOCUMENT_GRAPH_LAYOUT_TYPES.includes(value) ? value : 'mindmap';
 			set({ documentGraphLayoutType: layoutType });
-			window.maestro.settings.set('documentGraphLayoutType', layoutType);
+			window.maestro?.settings?.set('documentGraphLayoutType', layoutType);
 		},
 
 		setStatsCollectionEnabled: (value) => {
 			set({ statsCollectionEnabled: value });
-			window.maestro.settings.set('statsCollectionEnabled', value);
+			window.maestro?.settings?.set('statsCollectionEnabled', value);
 		},
 
 		setDefaultStatsTimeRange: (value) => {
 			set({ defaultStatsTimeRange: value });
-			window.maestro.settings.set('defaultStatsTimeRange', value);
+			window.maestro?.settings?.set('defaultStatsTimeRange', value);
 		},
 
 		setDisableGpuAcceleration: (value) => {
 			set({ disableGpuAcceleration: value });
-			window.maestro.settings.set('disableGpuAcceleration', value);
+			window.maestro?.settings?.set('disableGpuAcceleration', value);
 		},
 
 		setDisableConfetti: (value) => {
 			set({ disableConfetti: value });
-			window.maestro.settings.set('disableConfetti', value);
+			window.maestro?.settings?.set('disableConfetti', value);
 		},
 
 		setLocalIgnorePatterns: (value) => {
 			set({ localIgnorePatterns: value });
-			window.maestro.settings.set('localIgnorePatterns', value);
+			window.maestro?.settings?.set('localIgnorePatterns', value);
 		},
 
 		setLocalHonorGitignore: (value) => {
 			set({ localHonorGitignore: value });
-			window.maestro.settings.set('localHonorGitignore', value);
+			window.maestro?.settings?.set('localHonorGitignore', value);
 		},
 
 		setSshRemoteIgnorePatterns: (value) => {
 			set({ sshRemoteIgnorePatterns: value });
-			window.maestro.settings.set('sshRemoteIgnorePatterns', value);
+			window.maestro?.settings?.set('sshRemoteIgnorePatterns', value);
 		},
 
 		setSshRemoteHonorGitignore: (value) => {
 			set({ sshRemoteHonorGitignore: value });
-			window.maestro.settings.set('sshRemoteHonorGitignore', value);
+			window.maestro?.settings?.set('sshRemoteHonorGitignore', value);
 		},
 
 		setAutomaticTabNamingEnabled: (value) => {
 			set({ automaticTabNamingEnabled: value });
-			window.maestro.settings.set('automaticTabNamingEnabled', value);
+			window.maestro?.settings?.set('automaticTabNamingEnabled', value);
 		},
 
 		setFileTabAutoRefreshEnabled: (value) => {
 			set({ fileTabAutoRefreshEnabled: value });
-			window.maestro.settings.set('fileTabAutoRefreshEnabled', value);
+			window.maestro?.settings?.set('fileTabAutoRefreshEnabled', value);
 		},
 
 		setSuppressWindowsWarning: (value) => {
 			set({ suppressWindowsWarning: value });
-			window.maestro.settings.set('suppressWindowsWarning', value);
+			window.maestro?.settings?.set('suppressWindowsWarning', value);
 		},
 
 		setAutoScrollAiMode: (value) => {
 			set({ autoScrollAiMode: value });
-			window.maestro.settings.set('autoScrollAiMode', value);
+			window.maestro?.settings?.set('autoScrollAiMode', value);
 		},
 
 		setUserMessageAlignment: (value) => {
 			set({ userMessageAlignment: value });
-			window.maestro.settings.set('userMessageAlignment', value);
+			window.maestro?.settings?.set('userMessageAlignment', value);
 		},
 
 		setEncoreFeatures: (value) => {
 			set({ encoreFeatures: value });
-			window.maestro.settings.set('encoreFeatures', value);
+			window.maestro?.settings?.set('encoreFeatures', value);
 		},
 
 		setDirectorNotesSettings: (value) => {
 			set({ directorNotesSettings: value });
-			window.maestro.settings.set('directorNotesSettings', value);
+			window.maestro?.settings?.set('directorNotesSettings', value);
 		},
 
 		setWakatimeApiKey: (value) => {
 			set({ wakatimeApiKey: value });
-			window.maestro.settings.set('wakatimeApiKey', value);
+			window.maestro?.settings?.set('wakatimeApiKey', value);
 		},
 
 		setWakatimeEnabled: (value) => {
 			set({ wakatimeEnabled: value });
-			window.maestro.settings.set('wakatimeEnabled', value);
+			window.maestro?.settings?.set('wakatimeEnabled', value);
 		},
 
 		setWakatimeDetailedTracking: (value) => {
 			set({ wakatimeDetailedTracking: value });
-			window.maestro.settings.set('wakatimeDetailedTracking', value);
+			window.maestro?.settings?.set('wakatimeDetailedTracking', value);
 		},
 
 		setUseNativeTitleBar: (value) => {
 			set({ useNativeTitleBar: value });
-			window.maestro.settings.set('useNativeTitleBar', value);
+			window.maestro?.settings?.set('useNativeTitleBar', value);
 		},
 
 		setAutoHideMenuBar: (value) => {
 			set({ autoHideMenuBar: value });
-			window.maestro.settings.set('autoHideMenuBar', value);
+			window.maestro?.settings?.set('autoHideMenuBar', value);
 		},
 
 		// ============================================================================
@@ -894,20 +894,20 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 
 		setLogLevel: async (value) => {
 			set({ logLevel: value });
-			await window.maestro.logger.setLogLevel(value);
+			await window.maestro?.logger?.setLogLevel(value);
 		},
 
 		setMaxLogBuffer: async (value) => {
 			set({ maxLogBuffer: value });
-			await window.maestro.logger.setMaxLogBuffer(value);
+			await window.maestro?.logger?.setMaxLogBuffer(value);
 		},
 
 		setPreventSleepEnabled: async (value) => {
 			const prev = get().preventSleepEnabled;
 			set({ preventSleepEnabled: value });
 			try {
-				await window.maestro.settings.set('preventSleepEnabled', value);
-				await window.maestro.power.setEnabled(value);
+				await window.maestro?.settings?.set('preventSleepEnabled', value);
+				await window.maestro?.power?.setEnabled(value);
 			} catch (error) {
 				// Rollback on failure so UI stays in sync with actual power state
 				set({ preventSleepEnabled: prev });
@@ -921,14 +921,14 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 
 		setTotalActiveTimeMs: (value) => {
 			set({ totalActiveTimeMs: value });
-			window.maestro.settings.set('totalActiveTimeMs', value);
+			window.maestro?.settings?.set('totalActiveTimeMs', value);
 		},
 
 		addTotalActiveTimeMs: (delta) => {
 			const prev = get().totalActiveTimeMs;
 			const updated = prev + delta;
 			set({ totalActiveTimeMs: updated });
-			window.maestro.settings.set('totalActiveTimeMs', updated);
+			window.maestro?.settings?.set('totalActiveTimeMs', updated);
 		},
 
 		// ============================================================================
@@ -951,7 +951,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 				maxQueueDepth: Math.max(prev.maxQueueDepth, value.maxQueueDepth ?? 0),
 			};
 			set({ usageStats: updated });
-			window.maestro.settings.set('usageStats', updated);
+			window.maestro?.settings?.set('usageStats', updated);
 		},
 
 		updateUsageStats: (currentValues) => {
@@ -977,7 +977,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 				updated.maxSimultaneousQueries !== prev.maxSimultaneousQueries ||
 				updated.maxQueueDepth !== prev.maxQueueDepth
 			) {
-				window.maestro.settings.set('usageStats', updated);
+				window.maestro?.settings?.set('usageStats', updated);
 			}
 			set({ usageStats: updated });
 		},
@@ -988,7 +988,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 
 		setAutoRunStats: (value) => {
 			set({ autoRunStats: value });
-			window.maestro.settings.set('autoRunStats', value);
+			window.maestro?.settings?.set('autoRunStats', value);
 		},
 
 		recordAutoRunComplete: (elapsedTimeMs) => {
@@ -1029,7 +1029,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 			};
 
 			set({ autoRunStats: updated });
-			window.maestro.settings.set('autoRunStats', updated);
+			window.maestro?.settings?.set('autoRunStats', updated);
 
 			return { newBadgeLevel, isNewRecord };
 		},
@@ -1069,7 +1069,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 			};
 
 			set({ autoRunStats: updated });
-			window.maestro.settings.set('autoRunStats', updated);
+			window.maestro?.settings?.set('autoRunStats', updated);
 
 			// Note: isNewRecord is always false during progress - we don't know total run time yet
 			return { newBadgeLevel, isNewRecord: false };
@@ -1082,7 +1082,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 				lastAcknowledgedBadgeLevel: Math.max(level, prev.lastAcknowledgedBadgeLevel ?? 0),
 			};
 			set({ autoRunStats: updated });
-			window.maestro.settings.set('autoRunStats', updated);
+			window.maestro?.settings?.set('autoRunStats', updated);
 		},
 
 		getUnacknowledgedBadgeLevel: () => {
@@ -1101,7 +1101,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 
 		setOnboardingStats: (value) => {
 			set({ onboardingStats: value });
-			window.maestro.settings.set('onboardingStats', value);
+			window.maestro?.settings?.set('onboardingStats', value);
 		},
 
 		recordWizardStart: () => {
@@ -1111,7 +1111,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 				wizardStartCount: prev.wizardStartCount + 1,
 			};
 			set({ onboardingStats: updated });
-			window.maestro.settings.set('onboardingStats', updated);
+			window.maestro?.settings?.set('onboardingStats', updated);
 		},
 
 		recordWizardComplete: (durationMs, conversationExchanges, phasesGenerated, tasksGenerated) => {
@@ -1146,7 +1146,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 					newTotalPhases > 0 ? Math.round((newTotalTasks / newTotalPhases) * 10) / 10 : 0,
 			};
 			set({ onboardingStats: updated });
-			window.maestro.settings.set('onboardingStats', updated);
+			window.maestro?.settings?.set('onboardingStats', updated);
 		},
 
 		recordWizardAbandon: () => {
@@ -1156,7 +1156,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 				wizardAbandonCount: prev.wizardAbandonCount + 1,
 			};
 			set({ onboardingStats: updated });
-			window.maestro.settings.set('onboardingStats', updated);
+			window.maestro?.settings?.set('onboardingStats', updated);
 		},
 
 		recordWizardResume: () => {
@@ -1166,7 +1166,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 				wizardResumeCount: prev.wizardResumeCount + 1,
 			};
 			set({ onboardingStats: updated });
-			window.maestro.settings.set('onboardingStats', updated);
+			window.maestro?.settings?.set('onboardingStats', updated);
 		},
 
 		recordTourStart: () => {
@@ -1176,7 +1176,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 				tourStartCount: prev.tourStartCount + 1,
 			};
 			set({ onboardingStats: updated });
-			window.maestro.settings.set('onboardingStats', updated);
+			window.maestro?.settings?.set('onboardingStats', updated);
 		},
 
 		recordTourComplete: (stepsViewed) => {
@@ -1193,7 +1193,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 					totalTours > 0 ? Math.round((newTotalStepsViewed / totalTours) * 10) / 10 : stepsViewed,
 			};
 			set({ onboardingStats: updated });
-			window.maestro.settings.set('onboardingStats', updated);
+			window.maestro?.settings?.set('onboardingStats', updated);
 		},
 
 		recordTourSkip: (stepsViewed) => {
@@ -1210,7 +1210,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 					totalTours > 0 ? Math.round((newTotalStepsViewed / totalTours) * 10) / 10 : stepsViewed,
 			};
 			set({ onboardingStats: updated });
-			window.maestro.settings.set('onboardingStats', updated);
+			window.maestro?.settings?.set('onboardingStats', updated);
 		},
 
 		getOnboardingAnalytics: () => {
@@ -1238,14 +1238,14 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 
 		setContextManagementSettings: (value) => {
 			set({ contextManagementSettings: value });
-			window.maestro.settings.set('contextManagementSettings', value);
+			window.maestro?.settings?.set('contextManagementSettings', value);
 		},
 
 		updateContextManagementSettings: (partial) => {
 			const prev = get().contextManagementSettings;
 			const updated = { ...prev, ...partial };
 			set({ contextManagementSettings: updated });
-			window.maestro.settings.set('contextManagementSettings', updated);
+			window.maestro?.settings?.set('contextManagementSettings', updated);
 		},
 
 		// ============================================================================
@@ -1254,7 +1254,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 
 		setKeyboardMasteryStats: (value) => {
 			set({ keyboardMasteryStats: value });
-			window.maestro.settings.set('keyboardMasteryStats', value);
+			window.maestro?.settings?.set('keyboardMasteryStats', value);
 		},
 
 		recordShortcutUsage: (shortcutId) => {
@@ -1283,7 +1283,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 			};
 
 			set({ keyboardMasteryStats: updated });
-			window.maestro.settings.set('keyboardMasteryStats', updated);
+			window.maestro?.settings?.set('keyboardMasteryStats', updated);
 
 			return { newLevel };
 		},
@@ -1295,7 +1295,7 @@ export const useSettingsStore = create<SettingsStore>()((set, get) => {
 				lastAcknowledgedLevel: Math.max(level, prev.lastAcknowledgedLevel),
 			};
 			set({ keyboardMasteryStats: updated });
-			window.maestro.settings.set('keyboardMasteryStats', updated);
+			window.maestro?.settings?.set('keyboardMasteryStats', updated);
 		},
 
 		getUnacknowledgedKeyboardMasteryLevel: () => {
@@ -1388,12 +1388,18 @@ function migrateShortcuts(
  */
 export async function loadAllSettings(): Promise<void> {
 	try {
+		if (!window.maestro?.settings || !window.maestro?.logger) {
+			console.warn('[Settings] window.maestro settings/logger APIs not available');
+			useSettingsStore.getState().setSettingsLoaded(true); // Mark as loaded to clear splash
+			return;
+		}
+
 		// Batch load all settings in a single IPC call
-		const allSettings = (await window.maestro.settings.getAll()) as Record<string, unknown>;
+		const allSettings = (await window.maestro?.settings?.getAll()) as Record<string, unknown>;
 
 		// Logger settings need separate calls (different IPC channel)
-		const savedLogLevel = await window.maestro.logger.getLogLevel();
-		const savedMaxLogBuffer = await window.maestro.logger.getMaxLogBuffer();
+		const savedLogLevel = await window.maestro?.logger?.getLogLevel();
+		const savedMaxLogBuffer = await window.maestro?.logger?.getMaxLogBuffer();
 
 		// Build a single patch to apply to the store
 		const patch: Partial<SettingsStoreState> = {};
@@ -1532,7 +1538,7 @@ export async function loadAllSettings(): Promise<void> {
 						keys: shortcut.keys.map((key) => MAC_ALT_CHAR_MAP[key] || key),
 					};
 				}
-				window.maestro.settings.set('shortcuts', migratedRaw);
+				window.maestro?.settings?.set('shortcuts', migratedRaw);
 			}
 		}
 
@@ -1552,7 +1558,7 @@ export async function loadAllSettings(): Promise<void> {
 						keys: shortcut.keys.map((key) => MAC_ALT_CHAR_MAP[key] || key),
 					};
 				}
-				window.maestro.settings.set('tabShortcuts', migratedRaw);
+				window.maestro?.settings?.set('tabShortcuts', migratedRaw);
 			}
 		}
 
@@ -1592,7 +1598,7 @@ export async function loadAllSettings(): Promise<void> {
 				| undefined;
 			if (legacyGlobalStats?.totalActiveTimeMs && legacyGlobalStats.totalActiveTimeMs > 0) {
 				patch.totalActiveTimeMs = legacyGlobalStats.totalActiveTimeMs;
-				window.maestro.settings.set('totalActiveTimeMs', legacyGlobalStats.totalActiveTimeMs);
+				window.maestro?.settings?.set('totalActiveTimeMs', legacyGlobalStats.totalActiveTimeMs);
 			}
 		}
 
@@ -1611,8 +1617,8 @@ export async function loadAllSettings(): Promise<void> {
 					...stats,
 					cumulativeTimeMs: stats.cumulativeTimeMs + THREE_HOURS_MS,
 				};
-				window.maestro.settings.set('autoRunStats', stats);
-				window.maestro.settings.set('concurrentAutoRunTimeMigrationApplied', true);
+				window.maestro?.settings?.set('autoRunStats', stats);
+				window.maestro?.settings?.set('concurrentAutoRunTimeMigrationApplied', true);
 				console.log(
 					'[Settings] Applied concurrent Auto Run time migration: added 3 hours to cumulative time'
 				);

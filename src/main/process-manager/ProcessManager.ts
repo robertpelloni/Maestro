@@ -18,6 +18,8 @@ import { SshCommandRunner } from './runners/SshCommandRunner';
 import { logger } from '../utils/logger';
 import { isWindows } from '../../shared/platformDetection';
 import type { SshRemoteConfig } from '../../shared/types';
+import { BorgGuard } from '../services/BorgGuard';
+import { BorgEnvironment } from '../services/BorgEnvironment';
 
 /**
  * ProcessManager orchestrates spawning and managing processes for sessions.
@@ -43,12 +45,39 @@ export class ProcessManager extends EventEmitter {
 		this.childProcessSpawner = new ChildProcessSpawner(this.processes, this, this.bufferManager);
 		this.localCommandRunner = new LocalCommandRunner(this);
 		this.sshCommandRunner = new SshCommandRunner(this);
+
+		// Handle automatic retries for recoverable errors (e.g. SSH connection drops)
+		this.on('retry-required', async (sessionId: string, managedProcess: ManagedProcess) => {
+			if (managedProcess.config) {
+				logger.info('[ProcessManager] Automatically restarting process', 'ProcessManager', {
+					sessionId,
+					retryCount: managedProcess.retryCount,
+				});
+				// Re-spawn with original config
+				await this.spawn(managedProcess.config);
+			}
+		});
 	}
 
 	/**
 	 * Spawn a new process for a session
 	 */
-	spawn(config: ProcessConfig): SpawnResult {
+	async spawn(config: ProcessConfig): Promise<SpawnResult> {
+		// 1. Detect environment (Borg sandbox detection)
+		// We use the projectPath if available, otherwise default to process.cwd()
+		const envInfo = await BorgEnvironment.detect(config.projectPath);
+
+		// 2. Validate against security policy
+		const guardResult = BorgGuard.validate(config, envInfo);
+		if (!guardResult.allowed) {
+			logger.error('[ProcessManager] Spawn blocked by BorgGuard', 'ProcessManager', {
+				sessionId: config.sessionId,
+				reason: guardResult.reason,
+				command: config.command,
+			});
+			return { success: false, pid: -1 };
+		}
+
 		const usePty = this.shouldUsePty(config);
 
 		if (usePty) {
@@ -205,6 +234,10 @@ export class ProcessManager extends EventEmitter {
 			this.bufferManager.flushDataBuffer(sessionId);
 
 			if (process.isTerminal && process.ptyProcess) {
+				const pid = process.ptyProcess.pid;
+				if (isWindows() && pid) {
+					this.killWindowsProcessTree(pid, sessionId);
+				}
 				process.ptyProcess.kill();
 			} else if (process.childProcess) {
 				const pid = process.childProcess.pid;

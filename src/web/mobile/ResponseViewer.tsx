@@ -631,7 +631,7 @@ export function ResponseViewer({
 				top: 0,
 				left: 0,
 				right: 0,
-				bottom: 0,
+				height: 'var(--vh, 100dvh)',
 				zIndex: 1000,
 				display: 'flex',
 				flexDirection: 'column',
