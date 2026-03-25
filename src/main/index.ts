@@ -106,6 +106,7 @@ import { createWebServerFactory } from './web-server/web-server-factory';
 import { BorgLiveProvider } from './services/BorgLiveProvider';
 import { BorgCoreClient } from './services/BorgCoreClient';
 import { LocalCacheManager } from './services/LocalCacheManager';
+import { SyncManager } from './services/SyncManager';
 import { setBorgProvider } from './group-chat/group-chat-router';
 // Phase 4 refactoring - app lifecycle
 import {
@@ -248,6 +249,10 @@ const borgClient = new BorgCoreClient();
 const borgCache = new LocalCacheManager(app.getPath('userData'));
 const borgProvider = new BorgLiveProvider(borgClient, borgCache);
 setBorgProvider(borgProvider);
+
+// Start periodic synchronization of settings and playbooks
+const syncManager = new SyncManager(borgProvider, store);
+syncManager.start(5 * 60 * 1000); // 5 minutes interval
 
 // Note: History storage is now handled by HistoryManager which uses per-session files
 // in the history/ directory. The legacy maestro-history.json file is migrated automatically.
