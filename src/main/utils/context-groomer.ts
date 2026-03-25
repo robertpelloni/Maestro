@@ -215,8 +215,7 @@ export async function groomContext(
 	const resolvedCommand = sessionCustomPath || agent.command;
 
 	// Create a promise that collects the response
-	return new Promise<GroomContextResult>((resolve, reject) => {
-		let responseBuffer = '';
+	return new Promise<GroomContextResult>(async (resolve, reject) => {		let responseBuffer = '';
 		let lastDataTime = Date.now();
 		let idleCheckInterval: NodeJS.Timeout | null = null;
 		let resolved = false;
@@ -330,7 +329,7 @@ export async function groomContext(
 		processManager.on('agent-error', onError);
 
 		// Spawn the process in batch mode
-		const spawnResult = processManager.spawn({
+		const spawnResult = await processManager.spawn({
 			sessionId: groomerSessionId,
 			toolType: agentType,
 			cwd: projectRoot,
