@@ -10,9 +10,8 @@ import { getThemeById } from '../themes';
 import { getHistoryManager } from '../history-manager';
 import { logger } from '../utils/logger';
 import { isWebContentsAvailable } from '../utils/safe-send';
-import type { IBorgProvider } from '../services/IBorgProvider';
 import type { ProcessManager } from '../process-manager';
-import type { IBorgProvider } from '../services/IBorgProvider';
+import { IBorgProvider } from '../services/IBorgProvider';
 import type { StoredSession, SettingsStoreInterface as SettingsStore } from '../stores/types';
 import type { Group } from '../../shared/types';
 

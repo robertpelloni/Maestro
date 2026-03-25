@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { logger } from './logger';
 import { buildAgentArgs, applyAgentConfigOverrides } from './agent-args';
 import type { AgentDetector } from '../agents';
+import { SpawnResult } from '../process-manager/types';
 
 const LOG_CONTEXT = '[ContextGroomer]';
 
@@ -41,7 +42,7 @@ export interface GroomingProcessManager {
 		};
 		// Custom environment variables (resolved via applyAgentConfigOverrides)
 		customEnvVars?: Record<string, string>;
-	}): Promise<{ pid: number; success?: boolean } | null>;
+	}): Promise<SpawnResult>;
 	on(event: string, handler: (...args: unknown[]) => void): void;
 	off(event: string, handler: (...args: unknown[]) => void): void;
 	kill(sessionId: string): void;
@@ -215,7 +216,7 @@ export async function groomContext(
 	const resolvedCommand = sessionCustomPath || agent.command;
 
 	// Create a promise that collects the response
-	return new Promise<GroomContextResult>((resolve, reject) => {
+	return new Promise<GroomContextResult>(async (resolve, reject) => {
 		let responseBuffer = '';
 		let lastDataTime = Date.now();
 		let idleCheckInterval: NodeJS.Timeout | null = null;
