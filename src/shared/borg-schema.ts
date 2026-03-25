@@ -36,6 +36,14 @@ export const BorgContextItemSchema = z.object({
   }).catchall(z.any()),
 });
 
+export const BorgKnowledgeItemSchema = z.object({
+  type: z.enum(['discovery', 'decision', 'fix', 'warning', 'pattern']),
+  content: z.string(),
+  source: z.string(),
+  timestamp: z.number(),
+  metadata: z.record(z.string(), z.any()).optional(),
+});
+
 export const MaestroMetadataSchema = z.object({
   teamLogic: z.string().optional(),
   phaseDependencies: z.array(z.string()).optional(),
@@ -52,8 +60,10 @@ export const BorgHandoffSchema = z.object({
   sessionId: z.string(),
   stats: BorgStatsSchema,
   recentContext: z.array(BorgContextItemSchema),
+  knowledge: z.array(BorgKnowledgeItemSchema).optional(),
   notes: z.string().optional(),
   maestro: MaestroMetadataSchema.optional(),
 });
 
 export type BorgHandoff = z.infer<typeof BorgHandoffSchema>;
+export type BorgKnowledgeItem = z.infer<typeof BorgKnowledgeItemSchema>;

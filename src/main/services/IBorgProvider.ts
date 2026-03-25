@@ -5,6 +5,7 @@ export interface IBorgProvider {
   commitHandoff(handoff: BorgHandoff): Promise<void>;
   getHandoff(sessionId: string): Promise<BorgHandoff>;
   transitionPhase(sessionId: string, completedPhaseId: number, nextPhaseId?: number): Promise<void>;
+  listSessions(): Promise<Array<{ sessionId: string; task: string; status: string }>>;
   archiveSession(sessionId: string): Promise<void>;
   getStatus(): Promise<{ connected: boolean; latencyMs?: number }>;
 }

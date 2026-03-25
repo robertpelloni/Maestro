@@ -27,6 +27,18 @@ export class BorgCoreClient {
     return data.sessionId;
   }
 
+  async listSessions(): Promise<Array<{ sessionId: string; task: string; status: string }>> {
+    const response = await fetch(`${this.baseUrl}/v1/sessions`);
+
+    if (!response.ok) {
+      const errorMsg = `Failed to list Borg sessions: ${response.status} ${response.statusText}`;
+      logger.error(errorMsg, LOG_CONTEXT);
+      throw new Error(errorMsg);
+    }
+
+    return await response.json() as Array<{ sessionId: string; task: string; status: string }>;
+  }
+
   async getHandoff(sessionId: string): Promise<BorgHandoff> {
     const response = await fetch(`${this.baseUrl}/v1/handoffs/${sessionId}`);
 

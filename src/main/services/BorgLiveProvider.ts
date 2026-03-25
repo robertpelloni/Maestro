@@ -10,14 +10,19 @@ export class BorgLiveProvider implements IBorgProvider {
   private client: BorgCoreClient;
   private cache: LocalCacheManager;
 
-  constructor(client: BorgCoreClient, cache: LocalCacheManager) {
-    this.client = client;
-    this.cache = cache;
+  constructor(client?: BorgCoreClient, cache?: LocalCacheManager) {
+    this.client = client || new BorgCoreClient();
+    this.cache = cache || new LocalCacheManager(process.cwd());
   }
 
   async createSession(task: string, initialMetadata?: Record<string, any>): Promise<string> {
     logger.info(`Creating Borg session for task: ${task}`, LOG_CONTEXT);
     return await this.client.createSession(task, initialMetadata);
+  }
+
+  async listSessions(): Promise<Array<{ sessionId: string; task: string; status: string }>> {
+    logger.info('Listing Borg sessions', LOG_CONTEXT);
+    return await this.client.listSessions();
   }
 
   async commitHandoff(handoff: BorgHandoff): Promise<void> {

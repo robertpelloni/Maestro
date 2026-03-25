@@ -105,6 +105,25 @@ borg
 		return borgSync(options);
 	});
 
+borg
+	.command('list')
+	.description('List Borg coordination sessions')
+	.option('--json', 'Output as JSON (for scripting)')
+	.action(async (options: Record<string, unknown>) => {
+		const { borgList } = await import('./commands/borg-list');
+		return borgList(options);
+	});
+
+borg
+	.command('graph [session-id]')
+	.description('Generate a graph of the session phases and knowledge')
+	.option('--json', 'Output as JSON')
+	.option('--dot', 'Output as DOT representation')
+	.action(async (sessionId: string | undefined, options: Record<string, unknown>) => {
+		const { borgGraph } = await import('./commands/borg-graph');
+		return borgGraph(sessionId, options);
+	});
+
 // Playbook command (lazy-loaded to avoid eager resolution of generated/prompts)
 program
 	.command('playbook <playbook-id>')
