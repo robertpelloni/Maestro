@@ -10,6 +10,7 @@ import { getThemeById } from '../themes';
 import { getHistoryManager } from '../history-manager';
 import { logger } from '../utils/logger';
 import { isWebContentsAvailable } from '../utils/safe-send';
+import type { IBorgProvider } from '../services/IBorgProvider';
 import type { ProcessManager } from '../process-manager';
 import type { StoredSession, SettingsStoreInterface as SettingsStore } from '../stores/types';
 import type { Group } from '../../shared/types';
@@ -49,7 +50,14 @@ export interface WebServerFactoryDependencies {
  * This allows dependency injection and makes the code more testable.
  */
 export function createWebServerFactory(deps: WebServerFactoryDependencies) {
-	const { settingsStore, sessionsStore, groupsStore, getMainWindow, getProcessManager } = deps;
+	const {
+		settingsStore,
+		sessionsStore,
+		groupsStore,
+		getMainWindow,
+		getProcessManager,
+		borgProvider,
+	} = deps;
 
 	/**
 	 * Create and configure the web server with all necessary callbacks.

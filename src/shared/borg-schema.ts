@@ -1,69 +1,79 @@
 import { z } from 'zod';
 
 export const BorgStatsSchema = z.object({
-  totalCount: z.number(),
-  sessionCount: z.number(),
-  workingCount: z.number(),
-  longTermCount: z.number(),
-  observationCount: z.number(),
-  uniqueObservationCount: z.number(),
-  promptCount: z.number(),
-  sessionSummaryCount: z.number(),
-  session: z.number(),
-  working: z.number(),
-  long_term: z.number(),
-  user: z.number(),
-  agent: z.number(),
-  project: z.number(),
-  discovery: z.number(),
-  decision: z.number(),
-  progress: z.number(),
-  warning: z.number(),
-  fix: z.number(),
+	totalCount: z.number(),
+	sessionCount: z.number(),
+	workingCount: z.number(),
+	longTermCount: z.number(),
+	observationCount: z.number(),
+	uniqueObservationCount: z.number(),
+	promptCount: z.number(),
+	sessionSummaryCount: z.number(),
+	session: z.number(),
+	working: z.number(),
+	long_term: z.number(),
+	user: z.number(),
+	agent: z.number(),
+	project: z.number(),
+	discovery: z.number(),
+	decision: z.number(),
+	progress: z.number(),
+	warning: z.number(),
+	fix: z.number(),
 });
 
 export const BorgContextItemSchema = z.object({
-  content: z.string(),
-  metadata: z.object({
-    source: z.string(),
-    tags: z.array(z.string()),
-    toolName: z.string().optional(),
-    query: z.string().optional(),
-    matchedPaths: z.array(z.string()).optional(),
-    observationCount: z.number().optional(),
-    summaryCount: z.number().optional(),
-    preview: z.string().optional(),
-  }).catchall(z.any()),
+	content: z.string(),
+	metadata: z
+		.object({
+			source: z.string(),
+			tags: z.array(z.string()),
+			toolName: z.string().optional(),
+			query: z.string().optional(),
+			matchedPaths: z.array(z.string()).optional(),
+			observationCount: z.number().optional(),
+			summaryCount: z.number().optional(),
+			preview: z.string().optional(),
+		})
+		.catchall(z.any()),
 });
 
 export const BorgKnowledgeItemSchema = z.object({
-  type: z.enum(['discovery', 'decision', 'fix', 'warning', 'pattern']),
-  content: z.string(),
-  source: z.string(),
-  timestamp: z.number(),
-  metadata: z.record(z.string(), z.any()).optional(),
+	type: z.enum(['discovery', 'decision', 'fix', 'warning', 'pattern']),
+	content: z.string(),
+	source: z.string(),
+	timestamp: z.number(),
+	metadata: z.record(z.string(), z.any()).optional(),
 });
 
 export const MaestroMetadataSchema = z.object({
-  teamLogic: z.string().optional(),
-  phaseDependencies: z.array(z.string()).optional(),
-  currentPhase: z.number().optional(),
-  totalPhases: z.number().optional(),
-  sessionId: z.string(),
-  workflowMode: z.enum(['standard', 'express']).optional(),
-  status: z.string().optional(),
+	teamLogic: z.string().optional(),
+	phaseDependencies: z.array(z.string()).optional(),
+	currentPhase: z.number().optional(),
+	totalPhases: z.number().optional(),
+	sessionId: z.string(),
+	workflowMode: z.enum(['standard', 'express']).optional(),
+	status: z.string().optional(),
 });
 
 export const BorgHandoffSchema = z.object({
-  version: z.string(),
-  timestamp: z.number(),
-  sessionId: z.string(),
-  stats: BorgStatsSchema,
-  recentContext: z.array(BorgContextItemSchema),
-  knowledge: z.array(BorgKnowledgeItemSchema).optional(),
-  notes: z.string().optional(),
-  maestro: MaestroMetadataSchema.optional(),
+	version: z.string(),
+	timestamp: z.number(),
+	sessionId: z.string(),
+	stats: BorgStatsSchema,
+	recentContext: z.array(BorgContextItemSchema),
+	knowledge: z.array(BorgKnowledgeItemSchema).optional(),
+	notes: z.string().optional(),
+	maestro: MaestroMetadataSchema.optional(),
 });
+
+export const BorgSettingsPayloadSchema = z.object({
+	settings: z.record(z.string(), z.any()),
+});
+
+export const BorgPlaybooksPayloadSchema = z.array(z.record(z.string(), z.any()));
 
 export type BorgHandoff = z.infer<typeof BorgHandoffSchema>;
 export type BorgKnowledgeItem = z.infer<typeof BorgKnowledgeItemSchema>;
+export type BorgSettingsPayload = z.infer<typeof BorgSettingsPayloadSchema>;
+export type BorgPlaybooksPayload = z.infer<typeof BorgPlaybooksPayloadSchema>;
