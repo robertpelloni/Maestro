@@ -20,7 +20,7 @@ import ReactMarkdown from 'react-markdown';
 import rehypeSlug from 'rehype-slug';
 import { Eye, Edit, ChevronDown, ChevronRight, X, Loader2 } from 'lucide-react';
 import type { Theme } from '../../../types';
-import { MermaidRenderer } from '../../MermaidRenderer';
+import { MermaidRenderer } from '../../../../shared/components/MermaidRenderer';
 import type { GeneratedDocument } from '../WizardContext';
 import { DocumentSelector } from './DocumentSelector';
 import {

@@ -40,7 +40,7 @@ import type { BatchRunState, SessionState, Theme, Shortcut } from '../types';
 import type { FileNode } from '../types/fileTree';
 import { AutoRunnerHelpModal } from './AutoRunnerHelpModal';
 import { ResetTasksConfirmModal } from './ResetTasksConfirmModal';
-import { MermaidRenderer } from './MermaidRenderer';
+import { MermaidRenderer } from '../../shared/components/MermaidRenderer';
 import { AutoRunDocumentSelector, DocumentTaskCount } from './AutoRunDocumentSelector';
 import { AutoRunLightbox } from './AutoRunLightbox';
 import { AutoRunSearchBar } from './AutoRunSearchBar';

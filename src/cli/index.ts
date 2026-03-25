@@ -105,7 +105,6 @@ borg
 		return borgSync(options);
 	});
 
-program.parse();
 // Playbook command (lazy-loaded to avoid eager resolution of generated/prompts)
 program
 	.command('playbook <playbook-id>')
