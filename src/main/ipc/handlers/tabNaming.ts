@@ -204,7 +204,7 @@ export function registerTabNamingHandlers(deps: TabNamingHandlerDependencies): v
 					}
 
 					// Create a promise that resolves when we get the tab name
-					return new Promise<string | null>(async (resolve) => {
+					const resultPromise = new Promise<string | null>((resolve) => {
 						let output = '';
 						let resolved = false;
 
@@ -273,11 +273,13 @@ export function registerTabNamingHandlers(deps: TabNamingHandlerDependencies): v
 
 						processManager.on('data', onData);
 						processManager.on('exit', onExit);
+					});
 
-						// Spawn the process
-						// When using SSH with stdin, pass the flag so ChildProcessSpawner
-						// sends the prompt via stdin instead of command line args
-						await processManager.spawn({
+					// Spawn the process (async call OUTSIDE the promise executor)
+					// When using SSH with stdin, pass the flag so ChildProcessSpawner
+					// sends the prompt via stdin instead of command line args
+					processManager
+						.spawn({
 							sessionId,
 							toolType: config.agentType,
 							cwd,
@@ -286,8 +288,15 @@ export function registerTabNamingHandlers(deps: TabNamingHandlerDependencies): v
 							prompt: fullPrompt,
 							customEnvVars,
 							sendPromptViaStdin: shouldSendPromptViaStdin,
+						})
+						.catch((err) => {
+							logger.error('Failed to spawn tab naming process', LOG_CONTEXT, {
+								sessionId,
+								error: String(err),
+							});
 						});
-					});
+
+					return resultPromise;
 				} catch (error) {
 					logger.error('Tab naming request failed', LOG_CONTEXT, {
 						sessionId,

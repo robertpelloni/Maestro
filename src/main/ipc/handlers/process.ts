@@ -778,6 +778,7 @@ export function registerProcessHandlers(deps: ProcessHandlerDependencies): void 
 
 				return processManager.spawnTerminalTab({
 					sessionId: config.sessionId,
+					toolType: 'terminal',
 					cwd: config.cwd,
 					shell: shellToUse,
 					shellArgs: config.shellArgs || settingsStore.get('shellArgs', ''),

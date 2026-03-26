@@ -231,7 +231,7 @@ export async function groomContext(
 	const resolvedCommand = sessionCustomPath || agent.command;
 
 	// Create a promise that collects the response
-	return new Promise<GroomContextResult>(async (resolve, reject) => {
+	const resultPromise = new Promise<GroomContextResult>((resolve, reject) => {
 		let responseBuffer = '';
 		let lastDataTime = Date.now();
 		let idleCheckInterval: NodeJS.Timeout | null = null;
@@ -354,33 +354,6 @@ export async function groomContext(
 		processManager.on('exit', onExit);
 		processManager.on('agent-error', onError);
 
-		// Spawn the process in batch mode
-		const spawnResult = await processManager.spawn({
-			sessionId: groomerSessionId,
-			toolType: agentType,
-			cwd: projectRoot,
-			command: resolvedCommand,
-			args: resolvedArgs,
-			prompt: prompt, // Triggers batch mode (no PTY)
-			promptArgs: agent.promptArgs, // For agents using flag-based prompt (e.g., OpenCode -p)
-			noPromptSeparator: agent.noPromptSeparator,
-			// Pass SSH config for remote execution support
-			sessionSshRemoteConfig,
-			// Pass resolved env vars (merged from agent defaults + agent config + session overrides)
-			customEnvVars: resolvedEnvVars,
-		});
-
-		if (!spawnResult || spawnResult.pid <= 0) {
-			cleanup();
-			reject(new Error(`Failed to spawn grooming process for ${agentType}`));
-			return;
-		}
-
-		logger.debug('Spawned grooming batch process', LOG_CONTEXT, {
-			groomerSessionId,
-			pid: spawnResult.pid,
-		});
-
 		// Set up idle check
 		idleCheckInterval = setInterval(() => {
 			const idleTime = Date.now() - lastDataTime;
@@ -407,6 +380,45 @@ export async function groomContext(
 			}
 		}, timeoutMs);
 	});
+
+	// Spawn the process in batch mode (async call OUTSIDE the promise executor)
+	processManager
+		.spawn({
+			sessionId: groomerSessionId,
+			toolType: agentType,
+			cwd: projectRoot,
+			command: resolvedCommand,
+			args: resolvedArgs,
+			prompt: prompt, // Triggers batch mode (no PTY)
+			promptArgs: agent.promptArgs, // For agents using flag-based prompt (e.g., OpenCode -p)
+			noPromptSeparator: agent.noPromptSeparator,
+			// Pass SSH config for remote execution support
+			sessionSshRemoteConfig,
+			// Pass resolved env vars (merged from agent defaults + agent config + session overrides)
+			customEnvVars: resolvedEnvVars,
+		})
+		.then((spawnResult) => {
+			if (!spawnResult || spawnResult.pid <= 0) {
+				logger.error('Failed to spawn grooming process', LOG_CONTEXT, {
+					groomerSessionId,
+					agentType,
+				});
+				// The onExit handler will trigger with code 1 if spawn failed
+			} else {
+				logger.debug('Spawned grooming batch process', LOG_CONTEXT, {
+					groomerSessionId,
+					pid: spawnResult.pid,
+				});
+			}
+		})
+		.catch((err) => {
+			logger.error('Error during grooming spawn', LOG_CONTEXT, {
+				groomerSessionId,
+				error: String(err),
+			});
+		});
+
+	return resultPromise;
 }
 
 /**

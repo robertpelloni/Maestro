@@ -10,8 +10,9 @@ export interface ProcessConfig {
 	sessionId: string;
 	toolType: string;
 	cwd: string;
-	command: string;
-	args: string[];
+	command?: string;
+	args?: string[];
+	readOnlyMode?: boolean;
 	requiresPty?: boolean;
 	prompt?: string;
 	shell?: string;
@@ -61,7 +62,7 @@ export interface ManagedProcess {
 	resultEmitted?: boolean;
 	errorEmitted?: boolean;
 	startTime: number;
-	outputParser?: AgentOutputParser;
+	outputParser?: AgentOutputParser | null;
 	stderrBuffer?: string;
 	stdoutBuffer?: string;
 	streamedText?: string;

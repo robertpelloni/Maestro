@@ -87,6 +87,16 @@ export class ProcessManager extends EventEmitter {
 		}
 	}
 
+	/**
+	 * Spawn a persistent terminal tab (alias for spawn with toolType: terminal)
+	 */
+	async spawnTerminalTab(config: ProcessConfig): Promise<SpawnResult> {
+		return this.spawn({
+			...config,
+			toolType: 'terminal',
+		});
+	}
+
 	private shouldUsePty(config: ProcessConfig): boolean {
 		const { toolType, requiresPty, prompt } = config;
 		return (toolType === 'terminal' || requiresPty === true) && !prompt;
@@ -149,7 +159,7 @@ export class ProcessManager extends EventEmitter {
 	 * Send interrupt signal (SIGINT/Ctrl+C) to a process.
 	 * For child processes, escalates to kill() if the process doesn't exit
 	 * within a short timeout (Claude Code may not immediately exit on SIGINT).
- *
+	 *
 	 * On Windows, POSIX signals are not supported for shell-spawned processes,
 	 * so we write Ctrl+C (\x03) to stdin instead. If that doesn't work, the
 	 * escalation timer falls through to kill() which uses taskkill /t /f.

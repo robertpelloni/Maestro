@@ -38,6 +38,13 @@ export class DataBufferManager {
 	}
 
 	/**
+	 * Alias for emitDataBuffered (used by PTY sessions)
+	 */
+	appendToDataBuffer(sessionId: string, data: string): void {
+		this.emitDataBuffered(sessionId, data);
+	}
+
+	/**
 	 * Flush the data buffer for a session
 	 */
 	flushDataBuffer(sessionId: string): void {

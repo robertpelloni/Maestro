@@ -34,6 +34,8 @@ export class PtySpawner {
 			customEnvVars,
 		} = config;
 
+		const safeArgs = args || [];
+		const safeCommand = command || '';
 		const isTerminal = toolType === 'terminal';
 
 		try {
@@ -43,8 +45,8 @@ export class PtySpawner {
 			if (isTerminal) {
 				if (!shell) {
 					// No shell specified — use the explicit command/args directly (e.g. ssh for remote terminals)
-					ptyCommand = command;
-					ptyArgs = args;
+					ptyCommand = safeCommand;
+					ptyArgs = safeArgs;
 				} else {
 					// Full shell emulation: launch the shell with login+interactive flags
 					ptyCommand = shell;
@@ -72,8 +74,8 @@ export class PtySpawner {
 				}
 			} else {
 				// Spawn the AI agent directly with PTY support
-				ptyCommand = command;
-				ptyArgs = args;
+				ptyCommand = safeCommand;
+				ptyArgs = safeArgs;
 			}
 
 			// Build environment for PTY process
@@ -103,10 +105,10 @@ export class PtySpawner {
 
 			const ptyProcess = pty.spawn(ptyCommand, ptyArgs, {
 				name: 'xterm-256color',
-				cols: config.cols || 100,
-				rows: config.rows || 30,
-				cwd: cwd,
-				env: ptyEnv as Record<string, string>,
+				cols: config.cols || 80,
+				rows: config.rows || 24,
+				cwd,
+				env: ptyEnv,
 			});
 
 			const managedProcess: ManagedProcess = {
@@ -115,85 +117,40 @@ export class PtySpawner {
 				ptyProcess,
 				cwd,
 				pid: ptyProcess.pid,
-				isTerminal: true,
+				isTerminal,
 				startTime: Date.now(),
-				command: ptyCommand,
-				args: ptyArgs,
+				command: safeCommand,
+				args: safeArgs,
+				querySource: config.querySource,
+				tabId: config.tabId,
+				projectPath: config.projectPath,
+				sshRemoteId: config.sshRemoteId,
+				sshRemoteHost: config.sshRemoteHost,
+				config, // Store for retries
+				retryCount: 0,
 			};
 
 			this.processes.set(sessionId, managedProcess);
 
-			// Terminal tab session IDs use the format {sessionId}-terminal-{tabId}.
-			// xterm.js renders escape sequences itself, so raw PTY data must be forwarded
-			// without any stripping. All other sessions go through stripControlSequences.
-			const isTerminalTab = sessionId.includes('-terminal-');
-
-			// Handle output
 			ptyProcess.onData((data) => {
-				if (isTerminalTab) {
-					// Raw pass-through for xterm.js terminal tabs — no filtering
-					if (data.length > 0) {
-						logger.debug('[ProcessManager] PTY onData (raw)', 'ProcessManager', {
-							sessionId,
-							pid: ptyProcess.pid,
-							dataLength: data.length,
-						});
-						this.bufferManager.emitDataBuffered(sessionId, data);
-					}
-				} else {
-					const managedProc = this.processes.get(sessionId);
-					const cleanedData = stripControlSequences(data, managedProc?.lastCommand, isTerminal);
-					logger.debug('[ProcessManager] PTY onData', 'ProcessManager', {
-						sessionId,
-						pid: ptyProcess.pid,
-						dataPreview: cleanedData.substring(0, 100),
-					});
-					// Only emit if there's actual content after filtering
-					if (cleanedData.trim()) {
-						this.bufferManager.emitDataBuffered(sessionId, cleanedData);
-					}
-				}
+				// For terminal sessions, we pass data through untouched (ANSI preserved)
+				// For AI agents using PTY (TTY support), we strip control sequences for the log
+				const filteredData = isTerminal ? data : stripControlSequences(data);
+				this.bufferManager.emitDataBuffered(sessionId, filteredData);
 			});
 
 			ptyProcess.onExit(({ exitCode }) => {
-				// Flush any remaining buffered data before exit
-				this.bufferManager.flushDataBuffer(sessionId);
-
-				logger.debug('[ProcessManager] PTY onExit', 'ProcessManager', {
-					sessionId,
-					exitCode,
-				});
 				this.emitter.emit('exit', sessionId, exitCode);
 				this.processes.delete(sessionId);
 			});
 
-			logger.debug('[ProcessManager] PTY process created', 'ProcessManager', {
-				sessionId,
-				toolType,
-				isTerminal,
-				requiresPty: config.requiresPty || false,
-				pid: ptyProcess.pid,
-				command: ptyCommand,
-				args: ptyArgs,
-				cwd,
-			});
-
 			return { pid: ptyProcess.pid, success: true };
 		} catch (error) {
-			logger.error('[ProcessManager] Failed to spawn PTY process', 'ProcessManager', {
-				error: String(error),
+			logger.error('[ProcessManager] PTY Spawn failed', 'ProcessManager', {
 				sessionId,
-				toolType,
-				command,
-				args,
-				cwd,
-				shell: shell ?? '(none)',
-				isTerminal,
-				// Include errno/code when available (e.g., ENOENT, EMFILE)
-				...(error instanceof Error && 'code' in error && { code: (error as any).code }),
-				...(error instanceof Error && 'errno' in error && { errno: (error as any).errno }),
+				error: String(error),
 			});
-			return { pid: -1, success: false };
+			return { success: false, pid: -1 };
 		}
 	}
 }

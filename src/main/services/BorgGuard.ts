@@ -60,6 +60,8 @@ export class BorgGuard {
 			sshStdinScript,
 		} = config;
 
+		const safeCommand = command || '';
+
 		// 1. Path Containment (CWD)
 		// projectPath is mandatory in sandboxed mode to define the boundary
 		if (!projectPath) {
@@ -89,13 +91,13 @@ export class BorgGuard {
 		// 2. Shell Command Integrity
 		// If running in a shell, validate the command string for injection patterns
 		if (runInShell || shell) {
-			if (this.FORBIDDEN_SHELL_CHARS.test(command)) {
+			if (this.FORBIDDEN_SHELL_CHARS.test(safeCommand)) {
 				return { allowed: false, reason: 'Command contains forbidden shell characters' };
 			}
 		}
 
 		// Validate the command executable itself
-		const cmdBase = path.basename(command).toLowerCase();
+		const cmdBase = path.basename(safeCommand).toLowerCase();
 		if (this.FORBIDDEN_COMMANDS.includes(cmdBase)) {
 			return { allowed: false, reason: `Command '${cmdBase}' is forbidden in sandboxed mode` };
 		}

@@ -61,6 +61,12 @@ export interface AgentCapabilities {
 	/** Agent supports --input-format stream-json for image input via stdin */
 	supportsStreamJsonInput: boolean;
 
+	/** Agent supports passing local image file paths directly (vs base64) */
+	supportsImageFiles: boolean;
+
+	/** Agent requires stdin to be closed to signal end of input (even with CLI args) */
+	requiresStdinEnd: boolean;
+
 	/** Agent emits streaming thinking/reasoning content that can be displayed */
 	supportsThinkingDisplay: boolean;
 
@@ -116,6 +122,8 @@ export const DEFAULT_CAPABILITIES: AgentCapabilities = {
 	supportsGroupChatModeration: false,
 	usesJsonLineOutput: false,
 	usesCombinedContextWindow: false,
+	supportsImageFiles: false,
+	requiresStdinEnd: false,
 };
 
 /**
@@ -151,6 +159,8 @@ export const AGENT_CAPABILITIES: Record<string, AgentCapabilities> = {
 		supportsResultMessages: true, // "result" event type
 		supportsModelSelection: false, // Model is configured via Anthropic account
 		supportsStreamJsonInput: true, // --input-format stream-json for images via stdin
+		supportsImageFiles: false, // Claude Code prefers base64 in stream-json
+		requiresStdinEnd: true, // Claude Code --print mode may hang if stdin not closed
 		supportsThinkingDisplay: true, // Emits streaming assistant messages
 		supportsContextMerge: true, // Can receive merged context via prompts
 		supportsContextExport: true, // Session storage supports context export
@@ -181,6 +191,8 @@ export const AGENT_CAPABILITIES: Record<string, AgentCapabilities> = {
 		supportsResultMessages: false,
 		supportsModelSelection: false,
 		supportsStreamJsonInput: false,
+		supportsImageFiles: false,
+		requiresStdinEnd: false,
 		supportsThinkingDisplay: false, // Terminal is not an AI agent
 		supportsContextMerge: false, // Terminal is not an AI agent
 		supportsContextExport: false, // Terminal has no AI context
@@ -214,6 +226,8 @@ export const AGENT_CAPABILITIES: Record<string, AgentCapabilities> = {
 		supportsResultMessages: false, // All messages are agent_message type (no distinct result) - Verified
 		supportsModelSelection: true, // -m, --model flag - Documented
 		supportsStreamJsonInput: false, // Uses -i, --image flag instead
+		supportsImageFiles: true, // -i flag accepts local file paths
+		requiresStdinEnd: false,
 		supportsThinkingDisplay: true, // Emits reasoning tokens (o3/o4-mini)
 		supportsContextMerge: true, // Can receive merged context via prompts
 		supportsContextExport: true, // Session storage supports context export
@@ -247,6 +261,8 @@ export const AGENT_CAPABILITIES: Record<string, AgentCapabilities> = {
 		supportsResultMessages: false,
 		supportsModelSelection: false, // Not yet investigated
 		supportsStreamJsonInput: false,
+		supportsImageFiles: true, // Most modern CLIs support direct file paths
+		requiresStdinEnd: false,
 		supportsThinkingDisplay: false, // Not yet investigated
 		supportsContextMerge: false, // Not yet investigated - PLACEHOLDER
 		supportsContextExport: false, // Not yet investigated - PLACEHOLDER
@@ -279,6 +295,8 @@ export const AGENT_CAPABILITIES: Record<string, AgentCapabilities> = {
 		supportsResultMessages: false,
 		supportsModelSelection: false, // Not yet investigated
 		supportsStreamJsonInput: false,
+		supportsImageFiles: false,
+		requiresStdinEnd: false,
 		supportsThinkingDisplay: false, // Not yet investigated
 		supportsContextMerge: false, // Not yet investigated - PLACEHOLDER
 		supportsContextExport: false, // Not yet investigated - PLACEHOLDER
@@ -312,6 +330,8 @@ export const AGENT_CAPABILITIES: Record<string, AgentCapabilities> = {
 		supportsResultMessages: true, // step_finish with part.reason:"stop" - Verified
 		supportsModelSelection: true, // --model provider/model (e.g., 'ollama/qwen3:8b') - Verified
 		supportsStreamJsonInput: false, // Uses positional arguments for prompt
+		supportsImageFiles: true, // -f flag accepts local file paths
+		requiresStdinEnd: false,
 		supportsThinkingDisplay: true, // Emits streaming text chunks
 		supportsContextMerge: true, // Can receive merged context via prompts
 		supportsContextExport: true, // Session storage supports context export
@@ -344,6 +364,8 @@ export const AGENT_CAPABILITIES: Record<string, AgentCapabilities> = {
 		supportsResultMessages: true, // Can detect end of conversation
 		supportsModelSelection: true, // -m, --model flag - Verified
 		supportsStreamJsonInput: true, // --input-format stream-json - Verified
+		supportsImageFiles: true, // -f flag accepts local file paths
+		requiresStdinEnd: false,
 		supportsThinkingDisplay: true, // Emits thinking content in messages - Verified
 		supportsContextMerge: true, // Can receive merged context via prompts
 		supportsContextExport: true, // Session files are exportable
@@ -377,9 +399,11 @@ export const AGENT_CAPABILITIES: Record<string, AgentCapabilities> = {
 		supportsResultMessages: false,
 		supportsModelSelection: false,
 		supportsStreamJsonInput: false,
-		supportsThinkingDisplay: false,
-		supportsContextMerge: false,
-		supportsContextExport: false,
+		supportsImageFiles: false,
+		requiresStdinEnd: false,
+		supportsThinkingDisplay: false, // Not yet investigated
+		supportsContextMerge: false, // Not yet investigated - PLACEHOLDER
+		supportsContextExport: false, // Not yet investigated - PLACEHOLDER
 		supportsWizard: false, // PLACEHOLDER
 		supportsGroupChatModeration: false, // PLACEHOLDER
 		usesJsonLineOutput: false, // PLACEHOLDER
