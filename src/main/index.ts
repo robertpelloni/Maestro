@@ -694,6 +694,11 @@ function setupIpcHandlers() {
 		getCueEngine: () => cueEngine,
 	});
 
+	// Cue - event-driven automation engine
+	registerCueHandlers({
+		getCueEngine: () => cueEngine,
+	});
+
 	// Agent management operations - extracted to src/main/ipc/handlers/agents.ts
 	registerAgentsHandlers({
 		getAgentDetector: () => agentDetector,

@@ -2928,6 +2928,126 @@ interface MaestroAPI {
 		) => () => void;
 	};
 
+	// Cue API (event-driven automation)
+	cue: {
+		getStatus: () => Promise<
+			Array<{
+				sessionId: string;
+				sessionName: string;
+				toolType: string;
+				projectRoot: string;
+				enabled: boolean;
+				subscriptionCount: number;
+				activeRuns: number;
+				lastTriggered?: string;
+				nextTrigger?: string;
+			}>
+		>;
+		getGraphData: () => Promise<
+			Array<{
+				sessionId: string;
+				sessionName: string;
+				toolType: string;
+				subscriptions: Array<{
+					name: string;
+					event:
+						| 'time.interval'
+						| 'file.changed'
+						| 'agent.completed'
+						| 'github.pull_request'
+						| 'github.issue'
+						| 'task.pending';
+					enabled: boolean;
+					prompt: string;
+					interval_minutes?: number;
+					watch?: string;
+					source_session?: string | string[];
+					fan_out?: string[];
+					filter?: Record<string, string | number | boolean>;
+					repo?: string;
+					poll_minutes?: number;
+				}>;
+			}>
+		>;
+		getActiveRuns: () => Promise<
+			Array<{
+				runId: string;
+				sessionId: string;
+				sessionName: string;
+				subscriptionName: string;
+				event: {
+					id: string;
+					type: 'time.interval' | 'file.changed' | 'agent.completed';
+					timestamp: string;
+					triggerName: string;
+					payload: Record<string, unknown>;
+				};
+				status: 'running' | 'completed' | 'failed' | 'timeout' | 'stopped';
+				stdout: string;
+				stderr: string;
+				exitCode: number | null;
+				durationMs: number;
+				startedAt: string;
+				endedAt: string;
+			}>
+		>;
+		getActivityLog: (limit?: number) => Promise<
+			Array<{
+				runId: string;
+				sessionId: string;
+				sessionName: string;
+				subscriptionName: string;
+				event: {
+					id: string;
+					type: 'time.interval' | 'file.changed' | 'agent.completed';
+					timestamp: string;
+					triggerName: string;
+					payload: Record<string, unknown>;
+				};
+				status: 'running' | 'completed' | 'failed' | 'timeout' | 'stopped';
+				stdout: string;
+				stderr: string;
+				exitCode: number | null;
+				durationMs: number;
+				startedAt: string;
+				endedAt: string;
+			}>
+		>;
+		enable: () => Promise<void>;
+		disable: () => Promise<void>;
+		stopRun: (runId: string) => Promise<boolean>;
+		stopAll: () => Promise<void>;
+		getQueueStatus: () => Promise<Record<string, number>>;
+		refreshSession: (sessionId: string, projectRoot: string) => Promise<void>;
+		readYaml: (projectRoot: string) => Promise<string | null>;
+		writeYaml: (projectRoot: string, content: string) => Promise<void>;
+		validateYaml: (content: string) => Promise<{ valid: boolean; errors: string[] }>;
+		savePipelineLayout: (layout: Record<string, unknown>) => Promise<void>;
+		loadPipelineLayout: () => Promise<Record<string, unknown> | null>;
+		onActivityUpdate: (
+			callback: (data: {
+				runId: string;
+				sessionId: string;
+				sessionName: string;
+				subscriptionName: string;
+				event: {
+					id: string;
+					type: 'time.interval' | 'file.changed' | 'agent.completed';
+					timestamp: string;
+					triggerName: string;
+					payload: Record<string, unknown>;
+				};
+				status: 'running' | 'completed' | 'failed' | 'timeout' | 'stopped';
+				stdout: string;
+				stderr: string;
+				exitCode: number | null;
+				durationMs: number;
+				startedAt: string;
+				endedAt: string;
+			}) => void
+		) => () => void;
+	};
+
 	// WakaTime API (CLI check, API key validation)
 	wakatime: {
 		checkCli: () => Promise<{ available: boolean; version?: string }>;

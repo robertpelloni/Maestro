@@ -1,24 +1,34 @@
-# Project Memory & Architectural Observations
+# Architectural Memory
 
-## Core Architecture
+## Integrated Feature: Borg Assimilation (March 25, 2026)
 
-- **Dual-Process System**: Strict Electron main/renderer split. The renderer has zero Node.js access. All communication routes through a highly secured `window.maestro` contextBridge in `preload.ts`.
-- **Process Manager**: Handles both `node-pty` (interactive terminals) and standard child processes (AI agents via batch/stream-json mode).
-- **Tab System**: Unified tab system (`UnifiedTabRef`) that gracefully interweaves AI chat tabs and File preview tabs. State is persisted so scroll position and edits survive app restarts.
+Maestro has been fully refactored to serve as an API-first service layer within the Borg ecosystem. Key components include:
 
-## Coding Conventions
+- **BorgLiveProvider**: Real-time synchronization service connecting Maestro's local state with Borg Core.
+- **BorgGuard**: Security validation layer enforcing path containment and restricted binary blocking.
+- **Async Process Spawning**: `ProcessManager` now supports `async` spawns, integrated with `BorgGuard` validation.
+- **CLI Borg Extensions**: New `borg` command group for status, sync, and session listing.
 
-- **Indentation**: Tabs, absolutely NO spaces.
-- **Error Handling**:
-  - Main Process: Let critical errors throw so Sentry captures them. Handle expected errors explicitly.
-  - Renderer/Services: Never throw. Catch and return safe fallback UI states to prevent white-screens.
-- **Strict Scope Discipline**: Surgical precision is demanded. "Cleanups" of orthogonal code are prohibited unless explicitly authorized.
+## Integrated Feature: Remote Execution (SSH)
 
-## Agent Integration
+Maestro now supports full SSH remote execution for both AI agents and terminal sessions.
 
-- Agents are treated as external CLIs running in batch mode (`--print --output-format json`). Maestro handles the UI, routing, and PTY management, while the agent handles the LLM interaction.
-- The `Group Chat` system uses a powerful Moderator AI pattern to route questions via `@mentions` and synthesizes answers when all sub-agents complete their runs.
+- **SSH Command Runner**: Integrated into `ProcessManager`.
+- **Stdin Bypass**: Critical for SSH execution to avoid shell escaping issues with complex prompt text.
+- **Remote CWD Tracking**: Correctly resolves and tracks working directories on remote hosts.
 
-## Constraints & Limitations
+## Core Refactor: Zustand Store Migration
 
-- **Headless Shell Execution**: In certain CI/AI environments, arbitrary shell execution (`run_shell_command`) is denied by policy. This heavily restricts autonomous git operations and testing via AI agents. Testing and commits must often be handled manually by the user or through internal application integrations (like OpenSpec/SpecKit).
+Replaced the complex `useSettings` hook (~2,000 lines) with a centralized Zustand store (`src/renderer/stores/settingsStore.ts`).
+
+- **Performance**: Selector-based subscriptions minimize UI re-renders.
+- **Consistency**: Synchronous state access across all components and services.
+- **Atomicity**: Single source of truth for application settings and statistics.
+
+## Version 0.15.5 Integration
+
+Consolidated multiple feature branches into a stable release:
+
+- **rc**: Integrated new UI features, including `Maestro Symphony` and `Director's Notes`.
+- **cue-polish**: Refined event-driven automation logic and YAML configuration.
+- **opencode-sqlite-sessions**: Shifted OpenCode session management to a robust SQLite-backed storage model.

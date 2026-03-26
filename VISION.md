@@ -1,21 +1,24 @@
-# Maestro Project Vision
+# Vision
 
-## Ultimate Goal
+Maestro aims to become the definitive multi-agent orchestration layer for modern software engineering. Our goal is to unify specialized AI assistants into a cohesive, high-performance ecosystem.
 
-Maestro aims to be the ultimate cross-platform desktop application for orchestrating fleets of AI agents and projects. It is designed specifically for power users, hackers, and developers who juggle multiple projects simultaneously and prefer a high-velocity, keyboard-first interface.
+## Core Pillars
 
-Maestro hones fractured attention into focused intent by acting as a highly efficient pass-through to underlying AI providers (Claude Code, OpenAI Codex, OpenCode, Factory Droid, etc.).
+1.  **Seamless Integration**: Absolute operational parity between local and remote environments via SSH and Borg protocols.
+2.  **Architectural Rigor**: Clean, type-safe abstractions that allow for rapid integration of new AI models and tools.
+3.  **State Unification**: A global, shared memory and context system that allows agents to collaborate with superhuman efficiency.
+4.  **Security by Design**: Native sandboxing and validation layers (`BorgGuard`) ensuring safe interaction with sensitive codebases.
 
-## Core Design Philosophy
+## Roadmap 2026-2027
 
-1. **Keyboard-First Interface**: Maximum velocity via shortcuts (`Cmd+K` command palettes, tab switching). Mouse interaction is secondary.
-2. **Parallel Execution via Workspaces**: Unlimited parallel agents, isolated contexts, and Git Worktree integration allowing true parallel development without conflicts.
-3. **Automated Workflows (Auto Run)**: Markdown-based checklists converted into deterministic, repeatable, and unsupervised workflows (Playbooks).
-4. **Agent Collaboration (Group Chat)**: Multi-agent coordination supervised by a Moderator AI to solve cross-disciplinary problems.
-5. **Universal Tooling**: Any MCP tools, skills, or permissions configured in the underlying AI provider must work identically inside Maestro.
+### Phase 1: Assimilation (Complete)
 
-## Future Horizons
+Full integration with Borg Core, establishing the API-first service foundation.
 
-- Expanding the roster of supported agents to include Gemini CLI, Qwen3 Coder, and other emergent CLI-based AI assistants.
-- Expanding **Maestro Symphony** to revolutionize open-source contributions by allowing users to donate token and compute cycles to OSS projects automatically.
-- Moving towards a fully extensible plugin ecosystem, moving experimental "Encore Features" into community-driven extensions.
+### Phase 2: Orchestration (Current)
+
+Expanding `Maestro Symphony` and `Director's Notes` to provide deep architectural insights and multi-agent coordination.
+
+### Phase 3: Autonomous Evolution
+
+Implementing self-improving agents that can refactor their own tools and protocols based on performance data and user feedback.
