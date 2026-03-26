@@ -37,6 +37,7 @@ export interface SessionInfo {
 	projectRoot: string;
 	autoRunFolderPath?: string;
 	agentSessionId?: string;
+	customModel?: string;
 }
 
 // Usage statistics from AI agent CLI (Claude Code, Codex, etc.)
@@ -56,7 +57,7 @@ export interface UsageStats {
 }
 
 // History entry types for the History panel
-export type HistoryEntryType = 'AUTO' | 'USER';
+export type HistoryEntryType = 'AUTO' | 'USER' | 'CUE';
 
 export interface HistoryEntry {
 	id: string;
@@ -73,6 +74,9 @@ export interface HistoryEntry {
 	success?: boolean;
 	elapsedTimeMs?: number;
 	validated?: boolean;
+	cueTriggerName?: string;
+	cueEventType?: string;
+	cueSourceSession?: string;
 }
 
 // Document entry within a playbook
@@ -372,6 +376,25 @@ export interface AgentSshRemoteConfig {
 
 	/** Override working directory for this agent */
 	workingDirOverride?: string;
+}
+
+// ============================================================================
+// Deep Link Types
+// ============================================================================
+
+/**
+ * Parsed deep link from a maestro:// URL.
+ * Used by both main process (URL parsing) and renderer (navigation dispatch).
+ */
+export interface ParsedDeepLink {
+	/** The type of navigation action */
+	action: 'focus' | 'session' | 'group';
+	/** Maestro session ID (for action: 'session') */
+	sessionId?: string;
+	/** Tab ID within the session (for action: 'session') */
+	tabId?: string;
+	/** Group ID (for action: 'group') */
+	groupId?: string;
 }
 
 // ============================================================================

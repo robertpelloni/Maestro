@@ -8,10 +8,12 @@ import { MODAL_PRIORITIES } from '../constants/modalPriorities';
 import { gitService } from '../services/git';
 import { formatShortcutKeys } from '../utils/shortcutFormatter';
 import { safeClipboardWrite } from '../utils/clipboard';
+import { getOpenInLabel } from '../utils/platformUtils';
 import type { WizardStep } from './Wizard/WizardContext';
 import { useListNavigation } from '../hooks';
 import { useUIStore } from '../stores/uiStore';
 import { useFileExplorerStore } from '../stores/fileExplorerStore';
+import { buildMaestroUrl } from '../utils/buildMaestroUrl';
 
 interface QuickAction {
 	id: string;
@@ -29,7 +31,7 @@ interface QuickActionsModalProps {
 	groups: Group[];
 	setGroups: React.Dispatch<React.SetStateAction<Group[]>>;
 	shortcuts: Record<string, Shortcut>;
-	initialMode?: 'main' | 'move-to-group';
+	initialMode?: 'main' | 'move-to-group' | 'agents';
 	setQuickActionOpen: (open: boolean) => void;
 	setActiveSessionId: (id: string) => void;
 	setRenameInstanceModalOpen: (open: boolean) => void;
@@ -51,7 +53,7 @@ interface QuickActionsModalProps {
 	setAboutModalOpen: (open: boolean) => void;
 	setLogViewerOpen: (open: boolean) => void;
 	setProcessMonitorOpen: (open: boolean) => void;
-	setUsageDashboardOpen: (open: boolean) => void;
+	setUsageDashboardOpen?: (open: boolean) => void;
 	setVisualOrchestratorOpen?: (open: boolean) => void;
 	setAgentSessionsOpen: (open: boolean) => void;
 	setActiveAgentSessionId: (id: string | null) => void;
@@ -92,6 +94,8 @@ interface QuickActionsModalProps {
 	onOpenSendToAgent?: () => void;
 	// Remote control
 	onToggleRemoteControl?: () => void;
+	// Worktree creation (from command palette)
+	onQuickCreateWorktree?: (session: Session) => void;
 	// Worktree PR creation
 	onOpenCreatePR?: (session: Session) => void;
 	// Summarize and continue
@@ -119,6 +123,9 @@ interface QuickActionsModalProps {
 	onOpenSymphony?: () => void;
 	// Director's Notes
 	onOpenDirectorNotes?: () => void;
+	// Maestro Cue
+	onOpenMaestroCue?: () => void;
+	onConfigureCue?: (session: Session) => void;
 	// Auto-scroll
 	autoScrollAiMode?: boolean;
 	setAutoScrollAiMode?: (value: boolean) => void;
@@ -188,6 +195,7 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 		hasActiveSessionCapability,
 		onOpenMergeSession,
 		onOpenSendToAgent,
+		onQuickCreateWorktree,
 		onOpenCreatePR,
 		onSummarizeAndContinue,
 		canSummarizeActiveTab,
@@ -206,6 +214,8 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 		onOpenLastDocumentGraph,
 		onOpenSymphony,
 		onOpenDirectorNotes,
+		onOpenMaestroCue,
+		onConfigureCue,
 		autoScrollAiMode,
 		setAutoScrollAiMode,
 	} = props;
@@ -218,7 +228,7 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 	const storeSetHistorySearchFilterOpen = useUIStore((s) => s.setHistorySearchFilterOpen);
 
 	const [search, setSearch] = useState('');
-	const [mode, setMode] = useState<'main' | 'move-to-group'>(initialMode);
+	const [mode, setMode] = useState<'main' | 'move-to-group' | 'agents'>(initialMode);
 	const [renamingSession, setRenamingSession] = useState(false);
 	const [renameValue, setRenameValue] = useState('');
 	const [firstVisibleIndex, setFirstVisibleIndex] = useState(0);
@@ -619,6 +629,19 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 					},
 				]
 			: []),
+		...(activeSession && !activeSession.sshRemote
+			? [
+					{
+						id: 'openWorkingDirectory',
+						label: `${getOpenInLabel(window.maestro?.platform || 'darwin')}: Working Directory`,
+						subtext: activeSession.projectRoot,
+						action: () => {
+							window.maestro?.shell?.openPath(activeSession.fullPath || activeSession.projectRoot);
+							setQuickActionOpen(false);
+						},
+					},
+				]
+			: []),
 		...(activeSession
 			? [
 					{
@@ -701,7 +724,9 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 			label: 'Usage Dashboard',
 			shortcut: shortcuts.usageDashboard,
 			action: () => {
-				setUsageDashboardOpen(true);
+				if (setUsageDashboardOpen) {
+					setUsageDashboardOpen(true);
+				}
 				setQuickActionOpen(false);
 			},
 		},
@@ -848,6 +873,26 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 					},
 				]
 			: []),
+		// Create Worktree - for git repos (resolves parent if already in a worktree)
+		...(activeSession && activeSession.isGitRepo && onQuickCreateWorktree
+			? [
+					{
+						id: 'createWorktree',
+						label: 'Create Worktree',
+						subtext: activeSession.parentSessionId
+							? `New worktree under ${sessions.find((s) => s.id === activeSession.parentSessionId)?.name || 'parent'}`
+							: 'Create a new git worktree branch',
+						action: () => {
+							// If in a worktree child, resolve to parent session
+							const targetSession = activeSession.parentSessionId
+								? sessions.find((s) => s.id === activeSession.parentSessionId) || activeSession
+								: activeSession;
+							onQuickCreateWorktree(targetSession);
+							setQuickActionOpen(false);
+						},
+					},
+				]
+			: []),
 		// Create PR - only for worktree child sessions
 		...(activeSession &&
 		activeSession.parentSessionId &&
@@ -899,7 +944,7 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 			label: 'Maestro Website',
 			subtext: 'Open the Maestro website',
 			action: () => {
-				window.maestro.shell.openExternal('https://runmaestro.ai/');
+				window.maestro.shell.openExternal(buildMaestroUrl('https://runmaestro.ai/'));
 				setQuickActionOpen(false);
 			},
 		},
@@ -908,7 +953,7 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 			label: 'Documentation and User Guide',
 			subtext: 'Open the Maestro documentation',
 			action: () => {
-				window.maestro.shell.openExternal('https://docs.runmaestro.ai/');
+				window.maestro.shell.openExternal(buildMaestroUrl('https://docs.runmaestro.ai/'));
 				setQuickActionOpen(false);
 			},
 		},
@@ -917,7 +962,7 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 			label: 'Join Discord',
 			subtext: 'Join the Maestro community',
 			action: () => {
-				window.maestro.shell.openExternal('https://runmaestro.ai/discord');
+				window.maestro.shell.openExternal(buildMaestroUrl('https://runmaestro.ai/discord'));
 				setQuickActionOpen(false);
 			},
 		},
@@ -1044,6 +1089,35 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 						subtext: 'View unified history and AI synopsis across all sessions',
 						action: () => {
 							onOpenDirectorNotes();
+							setQuickActionOpen(false);
+						},
+					},
+				]
+			: []),
+		// Maestro Cue - event-driven automation dashboard
+		...(onOpenMaestroCue
+			? [
+					{
+						id: 'maestro-cue',
+						label: 'Maestro Cue',
+						shortcut: shortcuts.maestroCue,
+						subtext: 'Event-driven automation dashboard',
+						action: () => {
+							onOpenMaestroCue();
+							setQuickActionOpen(false);
+						},
+					},
+				]
+			: []),
+		// Configure Maestro Cue YAML for active agent
+		...(onConfigureCue && activeSession
+			? [
+					{
+						id: 'configure-cue',
+						label: `Configure Maestro Cue: ${activeSession.name}`,
+						subtext: 'Open YAML editor for event-driven automation',
+						action: () => {
+							onConfigureCue(activeSession);
 							setQuickActionOpen(false);
 						},
 					},
@@ -1373,7 +1447,35 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 		{ id: 'create-new', label: '+ Create New Group', action: handleCreateGroup },
 	];
 
-	const actions = mode === 'main' ? mainActions : groupActions;
+	// Agent switcher mode: clean names only, no "Jump to:" prefix
+	const agentActions: QuickAction[] = [
+		...sessions.map((s) => ({
+			id: `jump-${s.id}`,
+			label: s.name,
+			action: () => {
+				setActiveSessionId(s.id);
+				if (s.groupId) {
+					setGroups((prev) =>
+						prev.map((g) => (g.id === s.groupId && g.collapsed ? { ...g, collapsed: false } : g))
+					);
+				}
+			},
+			subtext: s.state.toUpperCase(),
+		})),
+		...(groupChats && onOpenGroupChat
+			? groupChats.map((gc) => ({
+					id: `groupchat-${gc.id}`,
+					label: gc.name,
+					action: () => {
+						onOpenGroupChat(gc.id);
+						setQuickActionOpen(false);
+					},
+					subtext: `GROUP CHAT · ${gc.participants.length} participant${gc.participants.length !== 1 ? 's' : ''}`,
+				}))
+			: []),
+	];
+
+	const actions = mode === 'agents' ? agentActions : mode === 'main' ? mainActions : groupActions;
 
 	// Filter actions - hide "Debug:" prefixed commands unless user explicitly types "debug"
 	const searchLower = search.toLowerCase();
@@ -1388,7 +1490,15 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 			}
 			return a.label.toLowerCase().includes(searchLower);
 		})
-		.sort((a, b) => a.label.localeCompare(b.label));
+		.sort((a, b) => {
+			// In agents mode, sort agents first (alphabetically), then group chats at the bottom
+			if (mode === 'agents') {
+				const aIsGroup = a.id.startsWith('groupchat-');
+				const bIsGroup = b.id.startsWith('groupchat-');
+				if (aIsGroup !== bIsGroup) return aIsGroup ? 1 : -1;
+			}
+			return a.label.localeCompare(b.label);
+		});
 
 	// Use a ref for filtered actions so the onSelect callback stays stable
 	const filteredRef = useRef(filtered);
@@ -1403,7 +1513,7 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 			// Don't close modal if action switches modes
 			const switchesModes = selectedAction.id === 'moveToGroup' || selectedAction.id === 'back';
 			selectedAction.action();
-			if (!renamingSession && mode === 'main' && !switchesModes) {
+			if (!renamingSession && (mode === 'main' || mode === 'agents') && !switchesModes) {
 				setQuickActionOpen(false);
 			}
 		},
@@ -1473,7 +1583,7 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 				ref={modalRef}
 				role="dialog"
 				aria-modal="true"
-				aria-label="Quick Actions"
+				aria-label={mode === 'agents' ? 'Switch Agent' : 'Quick Actions'}
 				tabIndex={-1}
 				className="w-[600px] rounded-xl shadow-2xl border overflow-hidden flex flex-col max-h-[550px] outline-none"
 				style={{ backgroundColor: theme.colors.bgActivity, borderColor: theme.colors.border }}
@@ -1501,7 +1611,9 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 							placeholder={
 								mode === 'move-to-group'
 									? `Move ${activeSession?.name || 'session'} to...`
-									: 'Type a command or jump to agent...'
+									: mode === 'agents'
+										? 'Jump to agent...'
+										: 'Type a command or jump to agent...'
 							}
 							style={{ color: theme.colors.textMain }}
 							value={search}
@@ -1539,7 +1651,8 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 									onClick={() => {
 										const switchesModes = a.id === 'moveToGroup' || a.id === 'back';
 										a.action();
-										if (mode === 'main' && !switchesModes) setQuickActionOpen(false);
+										if ((mode === 'main' || mode === 'agents') && !switchesModes)
+											setQuickActionOpen(false);
 									}}
 									className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-opacity-10 ${i === selectedIndex ? 'bg-opacity-10' : ''}`}
 									style={{
