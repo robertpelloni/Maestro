@@ -1,30 +1,25 @@
-# Universal LLM Instructions
+# Universal AI Instructions for Maestro
 
-This document serves as the single source of truth for all AI agents (Claude Code, Codex, OpenCode, Factory Droid, etc.) interacting with the Maestro repository.
+All AI models (Claude, Gemini, GPT, Copilot, etc.) must adhere to these baseline instructions when working on the Maestro codebase.
 
-## Operational Mandates
+## 1. Core Mandates
 
-1.  **Process Preservation**: NEVER terminate the Vite development server (port 5173) or the Electron main process.
-2.  **I/O Safety**: Use dedicated file-writing tools (`write_file`, `replace`). Avoid shell redirection (`>`) to prevent encoding corruption.
-3.  **Borg Protocol**: Maestro is a Borg-native service. All architectural decisions must align with the Borg Service Layer specification.
-4.  **Version Consistency**: Use the `VERSION` file as the absolute source of truth for the project version.
+- **Security First**: Never log or commit `.env` secrets. Ensure paths are safely escaped when using file system or SSH operations.
+- **Zero-Noise execution**: Provide strictly high-signal outputs. Avoid conversational filler unless explicitly asking for clarification.
+- **State Log Headers**: All broad phase transitions (e.g., from Research to Implementation) must be prefixed with a standard `Topic: <Phase> : <Summary>` header in the chat output.
 
-## Technical Architecture
+## 2. Architectural Guidelines
 
-- **Main Process**: Entry point is `src/main/index.ts`. Coordinates PTY sessions, IPC handlers, and Borg synchronization.
-- **Renderer**: React + Vite + Tailwind. State management via Zustand stores (`src/renderer/stores/`).
-- **Borg Integration**: Uses `BorgLiveProvider` for real-time state sync and `BorgGuard` for security validation.
-- **Process Manager**: Handles both local PTY/ChildProcess spawns and remote SSH execution.
+- **Wails Hybrid Architecture**: Maestro is migrating from Electron to a Wails v3 (Go/TypeScript) stack. Any new backend service must be written in Go under `/go/internal/`. Avoid creating new `ipcMain.handle` endpoints in `src/main`.
+- **React & Zustand**: The frontend uses React with Zustand for state management. Avoid introducing Redux or Context API for global state.
+- **TailwindCSS & Framer Motion**: All UI components must use Tailwind for styling and Framer Motion for complex animations.
 
-## Coding Standards
+## 3. Submodules & Dependencies
 
-- **TypeScript**: Strict mode enabled. Prefer explicit types over `any`.
-- **State**: Favor selector-based subscriptions to Zustand stores to minimize re-renders.
-- **Tests**: All new features require Vitest unit tests in `src/__tests__`.
+- Maestro is currently a monorepo. When instructed to add a large dependency or plugin, do so as a Git Submodule in the `/submodules/` directory.
 
-## Documentation
+## 4. Version Control Protocol
 
-- `VISION.md`: Long-term project roadmap and philosophical alignment.
-- `MEMORY.md`: Persistent log of major architectural changes and integrated features.
-- `CHANGELOG.md`: Detailed, version-specific history of changes.
-- `HANDOFF.md`: Current session state and immediate next steps.
+- The canonical version number is stored in `package.json` and mirrored in `CHANGELOG.md` and `VERSION.md`.
+- Always increment the version and document changes in `CHANGELOG.md` when completing a feature.
+- Commit messages must follow conventional commits (e.g., `feat: ...`, `fix: ...`, `chore: ...`) and reference the version bump if applicable.

@@ -1,34 +1,13 @@
-# Architectural Memory
+# Maestro Codebase Memory & Observations
 
-## Integrated Feature: Borg Assimilation (March 25, 2026)
+## Architectural State (v0.15.6)
 
-Maestro has been fully refactored to serve as an API-first service layer within the Borg ecosystem. Key components include:
+- **Hybrid Migration**: The codebase is currently living in two worlds. The frontend (`src/renderer`) is highly stable, but the backend is split between legacy Node.js IPC handlers (`src/main`) and the new high-performance Go services (`/go/internal`).
+- **State Management**: Zustand is the standard for frontend state. React Context is used sparingly.
+- **Data Persistence**: The Go `PersistenceService` is replacing `electron-store`. Avoid direct `localStorage` calls in the React frontend, as they conflict with sandboxed environments and extensions (e.g., Obsidian Clipper issues).
+- **Process Management**: The terminal implementation relies heavily on `xterm.js`. The backend uses `github.com/creack/pty` in Go, which correctly handles ANSI escape codes and terminal resizing.
 
-- **BorgLiveProvider**: Real-time synchronization service connecting Maestro's local state with Borg Core.
-- **BorgGuard**: Security validation layer enforcing path containment and restricted binary blocking.
-- **Async Process Spawning**: `ProcessManager` now supports `async` spawns, integrated with `BorgGuard` validation.
-- **CLI Borg Extensions**: New `borg` command group for status, sync, and session listing.
+## Technical Debt & Refactoring Targets
 
-## Integrated Feature: Remote Execution (SSH)
-
-Maestro now supports full SSH remote execution for both AI agents and terminal sessions.
-
-- **SSH Command Runner**: Integrated into `ProcessManager`.
-- **Stdin Bypass**: Critical for SSH execution to avoid shell escaping issues with complex prompt text.
-- **Remote CWD Tracking**: Correctly resolves and tracks working directories on remote hosts.
-
-## Core Refactor: Zustand Store Migration
-
-Replaced the complex `useSettings` hook (~2,000 lines) with a centralized Zustand store (`src/renderer/stores/settingsStore.ts`).
-
-- **Performance**: Selector-based subscriptions minimize UI re-renders.
-- **Consistency**: Synchronous state access across all components and services.
-- **Atomicity**: Single source of truth for application settings and statistics.
-
-## Version 0.15.5 Integration
-
-Consolidated multiple feature branches into a stable release:
-
-- **rc**: Integrated new UI features, including `Maestro Symphony` and `Director's Notes`.
-- **cue-polish**: Refined event-driven automation logic and YAML configuration.
-- **opencode-sqlite-sessions**: Shifted OpenCode session management to a robust SQLite-backed storage model.
+- **shellLogs Deprecation**: Multiple hooks (`useInputProcessing`, `useAgentListeners`) still rely on the legacy `shellLogs` array. These must be migrated to the new persistent PTY-backed terminal tabs.
+- **Duplicate Types**: We frequently encounter duplicate type definitions between the frontend TS types and the Go structs. A unified generation pipeline (like `go-to-ts`) should be considered.

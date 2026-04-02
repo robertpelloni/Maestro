@@ -1,23 +1,23 @@
-# Creative Ideas & Experimental Concepts
+# Maestro Ideas & Creative Improvements
 
-This document contains brainstorming ideas for future iterations of the Maestro project.
+This document contains a running list of creative ideas, refactoring opportunities, and potential pivots for the Maestro project, generated through autonomous codebase analysis.
 
-## 1. Visual Node-Based Playbook Editor
+## 1. P2P Agent Swarms
 
-Instead of just writing Markdown files for Auto Run playbooks, we could build a ReactFlow-based visual editor. Users could drag and drop tasks, set conditional branching (e.g., "If tests fail, route to Debugger Agent"), and visually design complex multi-agent pipelines.
+Instead of relying strictly on central API providers, Maestro could implement a WebRTC or libp2p layer (via the new Go backend) to allow local agents on different developer machines to collaborate on the same Symphony playbook in real-time, effectively creating a distributed AI cluster.
 
-## 2. P2P Group Chat (Swarm Mode)
+## 2. Visual Playbook Builder
 
-Allow Group Chats to span across different users' machines. Two developers working on the same project could link their Maestro instances, allowing their respective local AI agents to converse and solve problems together over WebRTC.
+Currently, Auto Run playbooks are defined via JSON/Markdown. We could build a node-based visual editor (leveraging the existing ReactFlow dependencies used for `DocumentGraphView`) allowing users to drag and drop agent nodes, assign LLM models, and draw execution paths.
 
-## 3. Dynamic AI-Generated Themes
+## 3. Sandboxed Code Execution via WASM
 
-Since we already have an AI orchestrator, we could introduce a `/theme` command where the user describes a vibe ("Cyberpunk neon city in the rain"), and the AI dynamically generates the hex codes, populates the Theme Interface, and applies it instantly.
+Rather than relying solely on PTY/Shell environments which have security risks, Maestro could bundle a WebAssembly runtime (like Wasmer) in the Go backend. Agents could write and execute Python, Rust, or Go code entirely within a secure WASM sandbox to validate logic before committing it to the user's local disk.
 
-## 4. Voice-First "Heroku" Mode
+## 4. Voice-Driven "Captain's Chair"
 
-Integrate Web Speech API / Whisper. Instead of a keyboard-first approach, create a secondary "Hands-Free" mode. The user speaks to the Moderator AI, which translates the speech into shell commands and agent delegations.
+Integrate local Whisper models to allow developers to issue voice commands to Maestro ("Maestro, tell Claude to refactor the SessionList component and run tests").
 
-## 5. Gamified Code Review
+## 5. Context-Aware Git Timetravel
 
-Expand the "Achievements" system (which currently tracks Auto Run time) to track code quality. If an agent writes code that passes tests on the first try 10 times in a row, the user gets a "Flawless Execution" badge.
+When an agent is asked to fix a bug, Maestro could automatically perform a background `git bisect` using the Go Git service to find the exact commit that introduced the regression, feeding only the diff of that specific commit into the LLM's context window.

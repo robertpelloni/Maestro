@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.15.6] - 2026-04-01
+
+### Added
+
+- **Go/TypeScript Hybrid**: Initialized a Wails-based architecture to replace Electron, transitioning the backend to Go.
+- **Go Backend Services**: Ported Git, PTY/Process, Storage, Filesystem, and SSH services to Go for higher performance and lower memory footprint.
+
+### Changed
+
+- **DevTools**: Removed unsupported devtools script injection in the production HTML template.
+
+### Fixed
+
+- **CSP Policy**: Relaxed Content Security Policy in development to permit local websocket and devtools connections.
+- **React Components**: Fixed duplicate type declarations and incorrect import paths for `MermaidRenderer`.
+- **Storage Layer**: Resolved duplicate function signatures in the OpenCode SQLite session implementation.
+
 ## [0.15.5] - 2026-03-25
 
 ### Added

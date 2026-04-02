@@ -1056,8 +1056,6 @@ export function useAgentListeners(deps: UseAgentListenersDeps): void {
 								...s,
 								state: newState,
 								busySource: newBusySource,
-								// TODO: Remove shellLogs once terminal tabs migration is complete
-								...(!s.terminalTabs?.length && { shellLogs: [...s.shellLogs, exitLog] }),
 							};
 						}
 

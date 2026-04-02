@@ -1,24 +1,18 @@
-# Vision
+# Maestro Project Vision
 
-Maestro aims to become the definitive multi-agent orchestration layer for modern software engineering. Our goal is to unify specialized AI assistants into a cohesive, high-performance ecosystem.
+## Ultimate Goal
 
-## Core Pillars
+Maestro is designed to be the ultimate **AI Agent Orchestration Command Center**. It serves as an integrated, multi-agent desktop environment that radically simplifies the way developers, researchers, and creators interact with Large Language Models.
 
-1.  **Seamless Integration**: Absolute operational parity between local and remote environments via SSH and Borg protocols.
-2.  **Architectural Rigor**: Clean, type-safe abstractions that allow for rapid integration of new AI models and tools.
-3.  **State Unification**: A global, shared memory and context system that allows agents to collaborate with superhuman efficiency.
-4.  **Security by Design**: Native sandboxing and validation layers (`BorgGuard`) ensuring safe interaction with sensitive codebases.
+By breaking away from single-chat web interfaces, Maestro provides a persistent, multi-tabbed, file-system-aware "IDE for AI".
 
-## Roadmap 2026-2027
+## Design Philosophy
 
-### Phase 1: Assimilation (Complete)
+1.  **Local First, Cloud Optional**: All sensitive configuration, SSH keys, and project data reside locally on the developer's machine. AI logic runs via API keys directly from the client.
+2.  **Cross-Platform Efficiency**: With the migration to the **Wails v3 Hybrid Architecture (Go/TypeScript)**, Maestro aims to consume less than 100MB of RAM at idle while outperforming Electron-based competitors.
+3.  **High Signal, Zero Noise**: The user interface is dense, developer-focused, and keyboard-driven.
+4.  **Extensibility**: The system is designed around a plugin architecture (Encore Features) where community members can define their own agent behaviors, UI widgets, and prompt libraries.
 
-Full integration with Borg Core, establishing the API-first service foundation.
+## Target Audience
 
-### Phase 2: Orchestration (Current)
-
-Expanding `Maestro Symphony` and `Director's Notes` to provide deep architectural insights and multi-agent coordination.
-
-### Phase 3: Autonomous Evolution
-
-Implementing self-improving agents that can refactor their own tools and protocols based on performance data and user feedback.
+Senior Software Engineers, Technical Founders, and AI Researchers who demand absolute control over their context windows, token usage, and local execution environments.

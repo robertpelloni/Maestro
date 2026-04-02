@@ -1108,18 +1108,6 @@ export function useInputProcessing(deps: UseInputProcessingDeps): UseInputProces
 									state: 'idle',
 									busySource: undefined,
 									thinkingStartTime: undefined,
-									// TODO: Remove shellLogs once terminal tabs migration is complete
-									...(!s.terminalTabs?.length && {
-										shellLogs: [
-											...s.shellLogs,
-											{
-												id: generateId(),
-												timestamp: Date.now(),
-												source: 'system',
-												text: `Error: Failed to run command - ${(error as Error).message}`,
-											},
-										],
-									}),
 								};
 							})
 						);

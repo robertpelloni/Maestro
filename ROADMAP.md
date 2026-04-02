@@ -2,19 +2,25 @@
 
 ## Long-Term Structural Plans
 
-### 1. Extensible Plugin System
+### 1. Go/TypeScript Hybrid Architecture (Wails v3)
+
+- **Goal**: Completely deprecate the legacy Electron Node.js backend.
+- **Details**: Finalize the port of all IPC handlers, background services, and storage mechanisms to the high-performance Go backend.
+
+### 2. Extensible Plugin System
 
 - **Goal**: Transition from hardcoded "Encore Features" to a community-driven plugin ecosystem.
 - **Details**: Provide APIs for external developers to build UI components, custom metrics, and new Auto Run actions that hook into the Maestro event lifecycle.
 
-### 2. Expanded AI Provider Roster
+### 3. Expanded AI Provider Roster
 
 - **Goal**: Integrate next-generation coding assistants.
 - **Targets**:
-  - **Gemini CLI** (Currently in planning/demand evaluation)
+  - **Gemini CLI** (Integration under active development)
   - **Qwen3 Coder**
+  - **Claude 4.6 & GPT Codex 5.3**
 
-### 3. Advanced Maestro Symphony Features
+### 4. Advanced Maestro Symphony Features
 
 - **Goal**: Scale AI-powered open-source contributions.
 - **Features**:
@@ -22,14 +28,14 @@
   - Reputation system integration with GitHub profiles.
   - Bounty-based playbooks.
 
-### 4. Advanced Process & Context Management
+### 5. Advanced Process & Context Management
 
 - **Goal**: Automate context compaction.
 - **Features**:
   - Intelligent context summarization when tokens reach 80% capacity.
   - Inter-agent memory sharing (global RAG integration).
 
-### 5. Multi-Device Synchronization
+### 6. Multi-Device Synchronization
 
 - **Goal**: Seamless transition between desktop environments.
 - **Features**:
