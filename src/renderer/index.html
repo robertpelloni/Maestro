@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta
 			http-equiv="Content-Security-Policy"
-			content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https: wss: ws:; worker-src 'self' blob:; media-src 'self' blob:;"
+			content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' http://localhost:* ws://localhost:* ws://127.0.0.1:* https: wss: ws:; worker-src 'self' blob:; media-src 'self' blob:;"
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/png" href="/icon.png" />
@@ -152,9 +152,6 @@
 
 		<!-- Splash screen progress animation (external for CSP compliance) -->
 		<script type="module" src="/splash.js"></script>
-
-		<!-- React DevTools: connects to standalone react-devtools app (dev mode only) -->
-		<script type="module" src="/devtools-connect.js"></script>
 
 		<script type="module" src="/main.tsx"></script>
 	</body>

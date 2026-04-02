@@ -28,10 +28,12 @@ export default defineConfig(({ mode }) => ({
 		mode === 'development' && {
 			name: 'dev-csp-relaxation',
 			transformIndexHtml(html: string) {
-				return html.replace(
-					"script-src 'self'",
-					"script-src 'self' 'unsafe-inline' http://localhost:*"
-				);
+				return html
+					.replace("script-src 'self'", "script-src 'self' 'unsafe-inline' http://localhost:*")
+					.replace(
+						"connect-src 'self'",
+						"connect-src 'self' http://localhost:* ws://localhost:* ws://127.0.0.1:*"
+					);
 			},
 		},
 	].filter(Boolean),

@@ -12,8 +12,6 @@ export interface HistoryFilterToggleProps {
 
 const ALL_TYPES: HistoryEntryType[] = ['AUTO', 'USER', 'CUE'];
 
-const ALL_TYPES: HistoryEntryType[] = ['AUTO', 'USER', 'CUE'];
-
 export const HistoryFilterToggle = memo(function HistoryFilterToggle({
 	activeFilters,
 	onToggleFilter,
