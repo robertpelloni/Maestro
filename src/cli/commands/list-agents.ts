@@ -56,7 +56,7 @@ export async function listAgents(options: ListAgentsOptions): Promise<void> {
 				isBorgActive: activeBorgSessionId === s.id || activeBorgSessionId === s.agentSessionId,
 			}));
 			console.log(formatAgents(displayAgents as any, groupName));
-			
+
 			if (activeBorgSessionId) {
 				console.log(`\n(Active Borg Session: ${activeBorgSessionId.slice(0, 8)})`);
 			}

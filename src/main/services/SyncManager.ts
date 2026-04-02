@@ -29,9 +29,9 @@ export class SyncManager {
 			logger.debug('Starting settings synchronization', LOG_CONTEXT);
 			const currentSettings = this.settingsStore.store;
 			const payload: BorgSettingsPayload = { settings: currentSettings };
-			
+
 			const remoteSettings = await this.borgProvider.syncSettings(payload);
-			
+
 			if (remoteSettings && remoteSettings.settings) {
 				// Merge remote settings into local store
 				this.settingsStore.store = {
@@ -54,13 +54,13 @@ export class SyncManager {
 			logger.debug('Starting playbooks synchronization', LOG_CONTEXT);
 			const userDataPath = app.getPath('userData');
 			const playbooksPath = path.join(userDataPath, 'playbooks');
-			
+
 			// Ensure playbooks directory exists
 			await fs.mkdir(playbooksPath, { recursive: true });
-			
+
 			const files = await fs.readdir(playbooksPath);
 			const jsonFiles = files.filter((f) => f.endsWith('.json'));
-			
+
 			const allPlaybooks: any[] = [];
 			for (const file of jsonFiles) {
 				const sessionId = path.basename(file, '.json');
@@ -78,31 +78,34 @@ export class SyncManager {
 					logger.warn(`Failed to read/parse playbook file: ${file}`, LOG_CONTEXT, { error: e });
 				}
 			}
-			
+
 			const remotePlaybooks = await this.borgProvider.syncPlaybooks(allPlaybooks);
-			
+
 			if (remotePlaybooks) {
 				// Group playbooks by session for local storage
 				const playbooksBySession: Record<string, any[]> = {};
-				
+
 				for (const p of remotePlaybooks) {
 					const sessionId = p._sessionId || 'global';
 					if (!playbooksBySession[sessionId]) {
 						playbooksBySession[sessionId] = [];
 					}
-					
+
 					// Clean internal metadata before saving
 					const { _sessionId, ...cleanPlaybook } = p;
 					playbooksBySession[sessionId].push(cleanPlaybook);
 				}
-				
+
 				// Update local files
 				for (const [sessionId, playbooks] of Object.entries(playbooksBySession)) {
 					const filePath = path.join(playbooksPath, `${sessionId}.json`);
 					await fs.writeFile(filePath, JSON.stringify({ playbooks }, null, 2), 'utf-8');
 				}
-				
-				logger.info(`Playbooks successfully synchronized with Borg (${remotePlaybooks.length} total)`, LOG_CONTEXT);
+
+				logger.info(
+					`Playbooks successfully synchronized with Borg (${remotePlaybooks.length} total)`,
+					LOG_CONTEXT
+				);
 			}
 		} catch (error) {
 			logger.error('Failed to sync playbooks with Borg', LOG_CONTEXT, { error });
@@ -118,16 +121,16 @@ export class SyncManager {
 			logger.warn('SyncManager is already running', LOG_CONTEXT);
 			return;
 		}
-		
+
 		// Initial sync
 		this.syncSettings();
 		this.syncPlaybooks();
-		
+
 		this.interval = setInterval(() => {
 			this.syncSettings();
 			this.syncPlaybooks();
 		}, intervalMs);
-		
+
 		logger.info(`SyncManager started with interval: ${intervalMs}ms`, LOG_CONTEXT);
 	}
 

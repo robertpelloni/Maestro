@@ -4,5 +4,5 @@ Please refer to [docs/UNIVERSAL_LLM_INSTRUCTIONS.md](docs/UNIVERSAL_LLM_INSTRUCT
 
 ## Agent Guidelines
 
--   Maintain `src/shared/types.ts` as the source of truth for cross-process types.
--   Follow the selector pattern in Zustand stores to optimize renderer performance.
+- Maintain `src/shared/types.ts` as the source of truth for cross-process types.
+- Follow the selector pattern in Zustand stores to optimize renderer performance.

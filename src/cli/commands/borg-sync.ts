@@ -16,7 +16,7 @@ export async function borgSync(options: BorgSyncOptions): Promise<void> {
 
 		// In a real implementation, this might pull all active handoffs.
 		// For now, we'll verify connectivity and ensure the latest is fetched if a session exists.
-		
+
 		if (options.json) {
 			console.log(JSON.stringify({ success: true, message: 'Borg sync verified' }));
 		} else {

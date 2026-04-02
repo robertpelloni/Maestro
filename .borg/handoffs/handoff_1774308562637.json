@@ -1,41 +1,39 @@
 {
-  "version": "Borg-Maestro-v1",
-  "timestamp": 1774308562637,
-  "sessionId": "test-session-123",
-  "stats": {
-    "totalCount": 1,
-    "sessionCount": 1,
-    "workingCount": 1,
-    "longTermCount": 0,
-    "observationCount": 1,
-    "uniqueObservationCount": 1,
-    "promptCount": 1,
-    "sessionSummaryCount": 0,
-    "session": 1774308562637,
-    "working": 1774308562637,
-    "long_term": 0,
-    "user": 0,
-    "agent": 1,
-    "project": 1,
-    "discovery": 1,
-    "decision": 1,
-    "progress": 1,
-    "warning": 0,
-    "fix": 0
-  },
-  "recentContext": [
-    {
-      "content": "Hello Borg",
-      "metadata": {
-        "source": "test-agent",
-        "tags": [
-          "test"
-        ]
-      }
-    }
-  ],
-  "maestro": {
-    "sessionId": "test-session-123",
-    "status": "in_progress"
-  }
+	"version": "Borg-Maestro-v1",
+	"timestamp": 1774308562637,
+	"sessionId": "test-session-123",
+	"stats": {
+		"totalCount": 1,
+		"sessionCount": 1,
+		"workingCount": 1,
+		"longTermCount": 0,
+		"observationCount": 1,
+		"uniqueObservationCount": 1,
+		"promptCount": 1,
+		"sessionSummaryCount": 0,
+		"session": 1774308562637,
+		"working": 1774308562637,
+		"long_term": 0,
+		"user": 0,
+		"agent": 1,
+		"project": 1,
+		"discovery": 1,
+		"decision": 1,
+		"progress": 1,
+		"warning": 0,
+		"fix": 0
+	},
+	"recentContext": [
+		{
+			"content": "Hello Borg",
+			"metadata": {
+				"source": "test-agent",
+				"tags": ["test"]
+			}
+		}
+	],
+	"maestro": {
+		"sessionId": "test-session-123",
+		"status": "in_progress"
+	}
 }

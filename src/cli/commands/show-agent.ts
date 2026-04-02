@@ -27,7 +27,10 @@ export async function showAgent(agentId: string, options: ShowAgentOptions): Pro
 		// Check for Borg handoff state
 		const cacheManager = new LocalCacheManager(process.cwd());
 		const borgHandoff = await cacheManager.getLatestHandoff();
-		const isBorgNative = borgHandoff && (borgHandoff.sessionId === agent.id || (agent.agentSessionId && borgHandoff.sessionId === agent.agentSessionId));
+		const isBorgNative =
+			borgHandoff &&
+			(borgHandoff.sessionId === agent.id ||
+				(agent.agentSessionId && borgHandoff.sessionId === agent.agentSessionId));
 
 		// Calculate aggregate stats from history
 		let totalInputTokens = 0;
@@ -69,12 +72,14 @@ export async function showAgent(agentId: string, options: ShowAgentOptions): Pro
 			groupId: agent.groupId,
 			groupName: group?.name,
 			autoRunFolderPath: agent.autoRunFolderPath,
-			borg: isBorgNative ? {
-				version: borgHandoff.version,
-				lastUpdated: borgHandoff.timestamp,
-				stats: borgHandoff.stats,
-				maestro: borgHandoff.maestro
-			} : undefined,
+			borg: isBorgNative
+				? {
+						version: borgHandoff.version,
+						lastUpdated: borgHandoff.timestamp,
+						stats: borgHandoff.stats,
+						maestro: borgHandoff.maestro,
+					}
+				: undefined,
 			stats: {
 				historyEntries: history.length,
 				successCount,

@@ -10,22 +10,28 @@ export async function borgStatus(options: BorgStatusOptions): Promise<void> {
 	try {
 		const provider = new BorgLiveProvider();
 		const cacheManager = new LocalCacheManager(process.cwd());
-		
+
 		const [liveStatus, latestHandoff] = await Promise.all([
 			provider.getStatus(),
-			cacheManager.getLatestHandoff()
+			cacheManager.getLatestHandoff(),
 		]);
 
 		const syncSkew = latestHandoff ? Date.now() - latestHandoff.timestamp : null;
 
 		if (options.json) {
-			console.log(JSON.stringify({
-				connected: liveStatus.connected,
-				latencyMs: liveStatus.latencyMs,
-				hasLocalCache: !!latestHandoff,
-				syncSkewMs: syncSkew,
-				latestSessionId: latestHandoff?.sessionId
-			}, null, 2));
+			console.log(
+				JSON.stringify(
+					{
+						connected: liveStatus.connected,
+						latencyMs: liveStatus.latencyMs,
+						hasLocalCache: !!latestHandoff,
+						syncSkewMs: syncSkew,
+						latestSessionId: latestHandoff?.sessionId,
+					},
+					null,
+					2
+				)
+			);
 		} else {
 			console.log('--- Borg Coordination Status ---');
 			console.log(`Core Connected: ${liveStatus.connected ? '✅ YES' : '❌ NO'}`);

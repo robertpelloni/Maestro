@@ -11,6 +11,7 @@ Maestro uses the Borg JSON handoff protocol as its primary source of truth for o
 The protocol uses an extended Borg schema, incorporating a `maestro` namespace for orchestration-specific metadata.
 
 ### 1. Root Structure
+
 ```json
 {
   "version": "Borg-Maestro-v1",
@@ -24,27 +25,33 @@ The protocol uses an extended Borg schema, incorporating a `maestro` namespace f
 ```
 
 ### 2. Stats Object
+
 Tracking usage and activity across the session.
+
 - `totalCount`: Total message count.
 - `observationCount`: Number of tool outputs or environment observations.
 - `agent`: Number of agent execution cycles.
 - `decision`: Number of significant architectural or strategy decisions recorded.
 
 ### 3. Recent Context
+
 An array of the most recent observations and interactions.
+
 ```json
 {
-  "content": "The full text content of the context item",
-  "metadata": {
-    "source": "agent-name",
-    "tags": ["agent-response", "error", "observation"],
-    "preview": "Short summary for UI display"
-  }
+	"content": "The full text content of the context item",
+	"metadata": {
+		"source": "agent-name",
+		"tags": ["agent-response", "error", "observation"],
+		"preview": "Short summary for UI display"
+	}
 }
 ```
 
 ### 4. Maestro Metadata Namespace
+
 Orchestration-specific fields managed by the Maestro TechLead.
+
 - `sessionId`: The original Maestro session identifier.
 - `workflowMode`: `standard` or `express`.
 - `status`: `in_progress`, `completed`, or `failed`.
@@ -54,9 +61,11 @@ Orchestration-specific fields managed by the Maestro TechLead.
 ## API Integration
 
 ### Base URL
+
 Defaults to `http://localhost:3000` (configurable via `BORG_CORE_URL`).
 
 ### Endpoints
+
 - `POST /v1/sessions`: Initialize a new session.
 - `GET /v1/handoffs/:sessionId`: Retrieve the latest state.
 - `PUT /v1/handoffs/:sessionId`: Commit a new handoff (requires timestamp for OCC).

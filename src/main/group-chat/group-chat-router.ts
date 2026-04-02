@@ -1614,7 +1614,8 @@ export async function respawnParticipantWithRecovery(
 		console.log(`[GroupChat:Debug] Windows shell config for recovery: ${winConfig.shell}`);
 	}
 
-	const spawnResult = await processManager.spawn({		sessionId,
+	const spawnResult = await processManager.spawn({
+		sessionId,
 		toolType: participant.agentId,
 		cwd: finalSpawnCwd,
 		command: finalSpawnCommand,

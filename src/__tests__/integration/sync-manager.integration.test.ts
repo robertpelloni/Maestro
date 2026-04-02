@@ -38,7 +38,7 @@ describe('SyncManager Integration', () => {
 	beforeEach(async () => {
 		// Setup temp directories
 		await fs.mkdir(playbooksPath, { recursive: true });
-		
+
 		const { app } = await import('electron');
 		vi.mocked(app.getPath).mockReturnValue(tempUserDataPath);
 
@@ -75,10 +75,13 @@ describe('SyncManager Integration', () => {
 		await syncManager.syncSettings();
 
 		// Verify fetch call
-		expect(fetch).toHaveBeenCalledWith(`${BORG_URL}/v1/sync/settings`, expect.objectContaining({
-			method: 'POST',
-			body: JSON.stringify({ settings: { theme: 'dark', fontSize: 14 } }),
-		}));
+		expect(fetch).toHaveBeenCalledWith(
+			`${BORG_URL}/v1/sync/settings`,
+			expect.objectContaining({
+				method: 'POST',
+				body: JSON.stringify({ settings: { theme: 'dark', fontSize: 14 } }),
+			})
+		);
 
 		// Verify local store updated (merged)
 		expect(mockStore.store).toEqual({
@@ -97,8 +100,14 @@ describe('SyncManager Integration', () => {
 			playbooks: [{ id: 'pb2', name: 'Playbook 2' }],
 		};
 
-		await fs.writeFile(path.join(playbooksPath, 'session1.json'), JSON.stringify(session1Playbooks));
-		await fs.writeFile(path.join(playbooksPath, 'session2.json'), JSON.stringify(session2Playbooks));
+		await fs.writeFile(
+			path.join(playbooksPath, 'session1.json'),
+			JSON.stringify(session1Playbooks)
+		);
+		await fs.writeFile(
+			path.join(playbooksPath, 'session2.json'),
+			JSON.stringify(session2Playbooks)
+		);
 
 		const remotePlaybooks = [
 			{ id: 'pb1', name: 'Playbook 1 Updated', _sessionId: 'session1' },
@@ -114,26 +123,33 @@ describe('SyncManager Integration', () => {
 		await syncManager.syncPlaybooks();
 
 		// Verify fetch call
-		expect(fetch).toHaveBeenCalledWith(`${BORG_URL}/v1/sync/playbooks`, expect.objectContaining({
-			method: 'POST',
-		}));
-		
+		expect(fetch).toHaveBeenCalledWith(
+			`${BORG_URL}/v1/sync/playbooks`,
+			expect.objectContaining({
+				method: 'POST',
+			})
+		);
+
 		const lastFetchCall = vi.mocked(fetch).mock.calls[0];
 		const sentBody = JSON.parse(lastFetchCall[1]?.body as string);
 		expect(sentBody).toContainEqual({ id: 'pb1', name: 'Playbook 1', _sessionId: 'session1' });
 		expect(sentBody).toContainEqual({ id: 'pb2', name: 'Playbook 2', _sessionId: 'session2' });
 
 		// Verify local files updated
-		const session1Content = JSON.parse(await fs.readFile(path.join(playbooksPath, 'session1.json'), 'utf-8'));
+		const session1Content = JSON.parse(
+			await fs.readFile(path.join(playbooksPath, 'session1.json'), 'utf-8')
+		);
 		expect(session1Content.playbooks[0].name).toBe('Playbook 1 Updated');
 
-		const globalContent = JSON.parse(await fs.readFile(path.join(playbooksPath, 'global.json'), 'utf-8'));
+		const globalContent = JSON.parse(
+			await fs.readFile(path.join(playbooksPath, 'global.json'), 'utf-8')
+		);
 		expect(globalContent.playbooks).toContainEqual({ id: 'pb3', name: 'Remote Playbook' });
 	});
 
 	it('periodic sync starts and triggers the sync methods', async () => {
 		vi.useFakeTimers();
-		
+
 		const syncSettingsSpy = vi.spyOn(syncManager, 'syncSettings').mockResolvedValue();
 		const syncPlaybooksSpy = vi.spyOn(syncManager, 'syncPlaybooks').mockResolvedValue();
 

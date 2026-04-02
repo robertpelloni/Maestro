@@ -154,17 +154,17 @@ export async function send(
 			recentContext: [
 				{
 					content: message,
-					metadata: { source: 'user', tags: ['cli-send'] }
+					metadata: { source: 'user', tags: ['cli-send'] },
 				},
 				{
 					content: result.response || '',
-					metadata: { source: agent.name, tags: ['agent-response'] }
-				}
+					metadata: { source: agent.name, tags: ['agent-response'] },
+				},
 			],
 			maestro: {
 				sessionId: agentId,
-				status: result.success ? 'completed' : 'failed'
-			}
+				status: result.success ? 'completed' : 'failed',
+			},
 		};
 		await provider.commitHandoff(handoff);
 	} catch (err) {

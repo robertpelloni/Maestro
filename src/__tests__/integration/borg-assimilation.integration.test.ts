@@ -8,122 +8,122 @@ import path from 'path';
 import os from 'os';
 
 describe('Borg Assimilation Integration', () => {
-  let server: FastifyInstance;
-  let provider: BorgLiveProvider;
-  let tempDir: string;
-  const PORT = 3333;
-  const BORG_CORE_URL = `http://localhost:${PORT}`;
+	let server: FastifyInstance;
+	let provider: BorgLiveProvider;
+	let tempDir: string;
+	const PORT = 3333;
+	const BORG_CORE_URL = `http://localhost:${PORT}`;
 
-  // Mock data
-  let lastHandoff: any = null;
+	// Mock data
+	let lastHandoff: any = null;
 
-  beforeAll(async () => {
-    // Set up temp directory for local cache
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'maestro-borg-test-'));
-    process.env.BORG_CORE_URL = BORG_CORE_URL;
+	beforeAll(async () => {
+		// Set up temp directory for local cache
+		tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'maestro-borg-test-'));
+		process.env.BORG_CORE_URL = BORG_CORE_URL;
 
-    // Start mock Borg Core server
-    server = fastify();
+		// Start mock Borg Core server
+		server = fastify();
 
-    server.post('/v1/sessions', async (request, reply) => {
-      const { task } = request.body as any;
-      return { sessionId: 'test-session-123', task };
-    });
+		server.post('/v1/sessions', async (request, reply) => {
+			const { task } = request.body as any;
+			return { sessionId: 'test-session-123', task };
+		});
 
-    server.get('/v1/handoffs/:sessionId', async (request, reply) => {
-      if (lastHandoff) return lastHandoff;
-      reply.code(404).send({ error: 'Not found' });
-    });
+		server.get('/v1/handoffs/:sessionId', async (request, reply) => {
+			if (lastHandoff) return lastHandoff;
+			reply.code(404).send({ error: 'Not found' });
+		});
 
-    server.put('/v1/handoffs/:sessionId', async (request, reply) => {
-      lastHandoff = request.body;
-      return { success: true };
-    });
+		server.put('/v1/handoffs/:sessionId', async (request, reply) => {
+			lastHandoff = request.body;
+			return { success: true };
+		});
 
-    server.post('/v1/sessions/:sessionId/archive', async (request, reply) => {
-      return { success: true };
-    });
+		server.post('/v1/sessions/:sessionId/archive', async (request, reply) => {
+			return { success: true };
+		});
 
-    server.get('/v1/health', async () => {
-      return { status: 'ok' };
-    });
+		server.get('/v1/health', async () => {
+			return { status: 'ok' };
+		});
 
-    await server.listen({ port: PORT });
+		await server.listen({ port: PORT });
 
-    // Initialize provider
-    provider = new BorgLiveProvider();
-  });
+		// Initialize provider
+		provider = new BorgLiveProvider();
+	});
 
-  afterAll(async () => {
-    await server.close();
-    await fs.rm(tempDir, { recursive: true, force: true });
-  });
+	afterAll(async () => {
+		await server.close();
+		await fs.rm(tempDir, { recursive: true, force: true });
+	});
 
-  it('should verify connectivity to Borg Core', async () => {
-    const status = await provider.getStatus();
-    expect(status.connected).toBe(true);
-  });
+	it('should verify connectivity to Borg Core', async () => {
+		const status = await provider.getStatus();
+		expect(status.connected).toBe(true);
+	});
 
-  it('should create a new session in Borg Core', async () => {
-    const sessionId = await provider.createSession('Test Task');
-    expect(sessionId).toBe('test-session-123');
-  });
+	it('should create a new session in Borg Core', async () => {
+		const sessionId = await provider.createSession('Test Task');
+		expect(sessionId).toBe('test-session-123');
+	});
 
-  it('should commit a handoff and mirror to local cache', async () => {
-    const handoff: BorgHandoff = {
-      version: 'Borg-Maestro-v1',
-      timestamp: Date.now(),
-      sessionId: 'test-session-123',
-      stats: {
-        totalCount: 1,
-        sessionCount: 1,
-        workingCount: 1,
-        longTermCount: 0,
-        observationCount: 1,
-        uniqueObservationCount: 1,
-        promptCount: 1,
-        sessionSummaryCount: 0,
-        session: Date.now(),
-        working: Date.now(),
-        long_term: 0,
-        user: 0,
-        agent: 1,
-        project: 1,
-        discovery: 1,
-        decision: 1,
-        progress: 1,
-        warning: 0,
-        fix: 0,
-      },
-      recentContext: [
-        {
-          content: 'Hello Borg',
-          metadata: { source: 'test-agent', tags: ['test'] }
-        }
-      ],
-      maestro: {
-        sessionId: 'test-session-123',
-        status: 'in_progress'
-      }
-    };
+	it('should commit a handoff and mirror to local cache', async () => {
+		const handoff: BorgHandoff = {
+			version: 'Borg-Maestro-v1',
+			timestamp: Date.now(),
+			sessionId: 'test-session-123',
+			stats: {
+				totalCount: 1,
+				sessionCount: 1,
+				workingCount: 1,
+				longTermCount: 0,
+				observationCount: 1,
+				uniqueObservationCount: 1,
+				promptCount: 1,
+				sessionSummaryCount: 0,
+				session: Date.now(),
+				working: Date.now(),
+				long_term: 0,
+				user: 0,
+				agent: 1,
+				project: 1,
+				discovery: 1,
+				decision: 1,
+				progress: 1,
+				warning: 0,
+				fix: 0,
+			},
+			recentContext: [
+				{
+					content: 'Hello Borg',
+					metadata: { source: 'test-agent', tags: ['test'] },
+				},
+			],
+			maestro: {
+				sessionId: 'test-session-123',
+				status: 'in_progress',
+			},
+		};
 
-    await provider.commitHandoff(handoff);
-    
-    // Verify remote state
-    expect(lastHandoff.sessionId).toBe('test-session-123');
-    expect(lastHandoff.recentContext[0].content).toBe('Hello Borg');
+		await provider.commitHandoff(handoff);
 
-    // Verify local cache (latest.json)
-    // Note: Since the test runs in process.cwd(), we need to check .borg/handoffs/latest.json
-    // But in our setup we might have pointed it elsewhere or just use default.
-    const cacheManager = new LocalCacheManager(process.cwd());
-    const latest = await cacheManager.getLatestHandoff();
-    expect(latest).not.toBeNull();
-    expect(latest?.sessionId).toBe('test-session-123');
-  });
+		// Verify remote state
+		expect(lastHandoff.sessionId).toBe('test-session-123');
+		expect(lastHandoff.recentContext[0].content).toBe('Hello Borg');
 
-  it('should archive a session', async () => {
-    await provider.archiveSession('test-session-123');
-    // Archive just succeeds in mock
-  });
+		// Verify local cache (latest.json)
+		// Note: Since the test runs in process.cwd(), we need to check .borg/handoffs/latest.json
+		// But in our setup we might have pointed it elsewhere or just use default.
+		const cacheManager = new LocalCacheManager(process.cwd());
+		const latest = await cacheManager.getLatestHandoff();
+		expect(latest).not.toBeNull();
+		expect(latest?.sessionId).toBe('test-session-123');
+	});
+
+	it('should archive a session', async () => {
+		await provider.archiveSession('test-session-123');
+		// Archive just succeeds in mock
+	});
 });

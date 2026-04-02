@@ -8,11 +8,14 @@ interface BorgGraphOptions {
 	dot?: boolean;
 }
 
-export async function borgGraph(sessionIdArg: string | undefined, options: BorgGraphOptions): Promise<void> {
+export async function borgGraph(
+	sessionIdArg: string | undefined,
+	options: BorgGraphOptions
+): Promise<void> {
 	try {
 		const provider = new BorgLiveProvider();
 		const cacheManager = new LocalCacheManager(process.cwd());
-		
+
 		let sessionId = sessionIdArg;
 		if (!sessionId) {
 			const latestHandoff = await cacheManager.getLatestHandoff();
@@ -34,7 +37,7 @@ export async function borgGraph(sessionIdArg: string | undefined, options: BorgG
 				sessionId: handoff.sessionId,
 				task: handoff.notes || 'Borg Task',
 				phases: handoff.maestro?.phaseDependencies || [],
-				knowledge: handoff.knowledge || []
+				knowledge: handoff.knowledge || [],
 			};
 			console.log(JSON.stringify(graphData, null, 2));
 		}
@@ -54,7 +57,7 @@ function toDot(handoff: BorgHandoff): string {
 	lines.push('  rankdir=LR;');
 	lines.push('  node [shape=box, fontname="Arial", style=filled, fillcolor=white];');
 	lines.push('  edge [fontname="Arial", fontsize=10];');
-	
+
 	const sessionId = handoff.sessionId.slice(0, 8);
 	lines.push(`  label="Borg Session: ${sessionId}\n${handoff.notes || ''}";`);
 	lines.push('  labelloc=t;');
@@ -63,7 +66,7 @@ function toDot(handoff: BorgHandoff): string {
 	if (handoff.maestro?.phaseDependencies) {
 		for (const dep of handoff.maestro.phaseDependencies) {
 			if (dep.includes('->')) {
-				const parts = dep.split('->').map(p => p.trim());
+				const parts = dep.split('->').map((p) => p.trim());
 				if (parts.length === 2) {
 					lines.push(`  "${parts[0]}" -> "${parts[1]}";`);
 				} else {
@@ -87,24 +90,34 @@ function toDot(handoff: BorgHandoff): string {
 		lines.push('    label="Knowledge Base";');
 		lines.push('    color=lightgrey;');
 		lines.push('    style=dashed;');
-		
+
 		for (let i = 0; i < handoff.knowledge.length; i++) {
 			const item = handoff.knowledge[i];
 			const nodeId = `k_${i}`;
 			const cleanContent = item.content.replace(/"/g, '\"').replace(/\n/g, ' ');
 			const label = `${item.type.toUpperCase()}\n${cleanContent.substring(0, 40)}${cleanContent.length > 40 ? '...' : ''}`;
-			
+
 			let color = 'white';
 			switch (item.type) {
-				case 'discovery': color = '#e6f7ff'; break;
-				case 'decision': color = '#fff7e6'; break;
-				case 'fix': color = '#f6ffed'; break;
-				case 'warning': color = '#fff1f0'; break;
-				case 'pattern': color = '#f9f0ff'; break;
+				case 'discovery':
+					color = '#e6f7ff';
+					break;
+				case 'decision':
+					color = '#fff7e6';
+					break;
+				case 'fix':
+					color = '#f6ffed';
+					break;
+				case 'warning':
+					color = '#fff1f0';
+					break;
+				case 'pattern':
+					color = '#f9f0ff';
+					break;
 			}
-			
+
 			lines.push(`    ${nodeId} [label="${label}", shape=note, fillcolor="${color}"];`);
-			
+
 			if (item.metadata?.phaseId) {
 				lines.push(`    "${item.metadata.phaseId}" -> ${nodeId} [style=dotted, arrowhead=none];`);
 			} else if (handoff.maestro?.currentPhase !== undefined) {
