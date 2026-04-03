@@ -1,13 +1,13 @@
-import { BorgLiveProvider } from '../../main/services/BorgLiveProvider';
+import { HypercodeLiveProvider } from '../../main/services/HypercodeLiveProvider';
 import { formatError, formatInfo } from '../output/formatter';
 
-interface BorgListOptions {
+interface HypercodeListOptions {
 	json?: boolean;
 }
 
-export async function borgList(options: BorgListOptions): Promise<void> {
+export async function hypercodeList(options: HypercodeListOptions): Promise<void> {
 	try {
-		const provider = new BorgLiveProvider();
+		const provider = new HypercodeLiveProvider();
 		const sessions = await provider.listSessions();
 
 		if (options.json) {
@@ -16,11 +16,11 @@ export async function borgList(options: BorgListOptions): Promise<void> {
 		}
 
 		if (sessions.length === 0) {
-			console.log(formatInfo('No Borg sessions found.'));
+			console.log(formatInfo('No Hypercode sessions found.'));
 			return;
 		}
 
-		console.log('--- Borg Sessions ---');
+		console.log('--- Hypercode Sessions ---');
 		console.log(`${'ID'.padEnd(10)} ${'Status'.padEnd(12)} ${'Task'}`);
 		console.log('-'.repeat(60));
 
@@ -36,7 +36,7 @@ export async function borgList(options: BorgListOptions): Promise<void> {
 		if (options.json) {
 			console.error(JSON.stringify({ error: message }));
 		} else {
-			console.error(formatError(`Failed to list Borg sessions: ${message}`));
+			console.error(formatError(`Failed to list Hypercode sessions: ${message}`));
 		}
 		process.exit(1);
 	}

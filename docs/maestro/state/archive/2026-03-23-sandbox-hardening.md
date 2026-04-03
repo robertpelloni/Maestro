@@ -1,6 +1,6 @@
 ---
 session_id: 2026-03-23-sandbox-hardening
-task: implement sandbox hardening and path validation for Borg environments
+task: implement sandbox hardening and path validation for Hypercode environments
 created: '2026-03-25T21:57:32.254Z'
 updated: '2026-03-25T22:16:00.664Z'
 status: completed
@@ -59,7 +59,7 @@ phases:
       assumptions:
         - ProcessManager.spawn is now fully asynchronous across all callers.
       key_interfaces_introduced:
-        - IBorgProvider.commitHandoff integrated into send command
+        - IHypercodeProvider.commitHandoff integrated into send command
       warnings:
         - none
     errors: []
@@ -78,7 +78,7 @@ phases:
     files_deleted: []
     downstream_context:
       assumptions:
-        - BorgGuard correctly identifies and blocks sandbox escape attempts.
+        - HypercodeGuard correctly identifies and blocks sandbox escape attempts.
       integration_points:
         - src/main/process-manager/ProcessManager.ts (Guard integration)
       warnings:
@@ -86,9 +86,9 @@ phases:
       patterns_established:
         - Middleware-based security policy enforcement for process spawning.
       key_interfaces_introduced:
-        - BorgGuard.validate()
+        - HypercodeGuard.validate()
     errors: []
     retry_count: 0
 ---
 
-# implement sandbox hardening and path validation for Borg environments Orchestration Log
+# implement sandbox hardening and path validation for Hypercode environments Orchestration Log

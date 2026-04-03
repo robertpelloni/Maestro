@@ -1,5 +1,5 @@
-// Status command for Borg-assimilated Maestro
-// Displays the current orchestration session status from Borg state
+// Status command for Hypercode-assimilated Maestro
+// Displays the current orchestration session status from Hypercode state
 
 import { LocalCacheManager } from '../../main/services/LocalCacheManager';
 import { formatError } from '../output/formatter';
@@ -19,7 +19,7 @@ export async function status(options: StatusOptions): Promise<void> {
 		if (!handoff) {
 			if (options.json) {
 				console.log(
-					JSON.stringify({ success: false, error: 'No active session found in Borg cache' })
+					JSON.stringify({ success: false, error: 'No active session found in Hypercode cache' })
 				);
 			} else {
 				console.log('No active session found. Start one with /maestro:orchestrate');

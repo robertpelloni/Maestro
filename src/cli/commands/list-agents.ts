@@ -27,10 +27,10 @@ export async function listAgents(options: ListAgentsOptions): Promise<void> {
 			sessions = readSessions();
 		}
 
-		// Check for latest Borg handoff to identify the active native session
+		// Check for latest Hypercode handoff to identify the active native session
 		const cacheManager = new LocalCacheManager(process.cwd());
 		const latestHandoff = await cacheManager.getLatestHandoff();
-		const activeBorgSessionId = latestHandoff?.sessionId;
+		const activeHypercodeSessionId = latestHandoff?.sessionId;
 
 		if (options.json) {
 			// JSON array output
@@ -41,24 +41,24 @@ export async function listAgents(options: ListAgentsOptions): Promise<void> {
 				cwd: s.cwd,
 				groupId: s.groupId,
 				autoRunFolderPath: s.autoRunFolderPath,
-				isBorgActive: activeBorgSessionId === s.id || activeBorgSessionId === s.agentSessionId,
+				isHypercodeActive: activeHypercodeSessionId === s.id || activeHypercodeSessionId === s.agentSessionId,
 			}));
 			console.log(JSON.stringify(output, null, 2));
 		} else {
 			// Human-readable output
-			const displayAgents: (AgentDisplay & { isBorgActive?: boolean })[] = sessions.map((s) => ({
+			const displayAgents: (AgentDisplay & { isHypercodeActive?: boolean })[] = sessions.map((s) => ({
 				id: s.id,
 				name: s.name,
 				toolType: s.toolType,
 				cwd: s.cwd,
 				groupId: s.groupId,
 				autoRunFolderPath: s.autoRunFolderPath,
-				isBorgActive: activeBorgSessionId === s.id || activeBorgSessionId === s.agentSessionId,
+				isHypercodeActive: activeHypercodeSessionId === s.id || activeHypercodeSessionId === s.agentSessionId,
 			}));
 			console.log(formatAgents(displayAgents as any, groupName));
 
-			if (activeBorgSessionId) {
-				console.log(`\n(Active Borg Session: ${activeBorgSessionId.slice(0, 8)})`);
+			if (activeHypercodeSessionId) {
+				console.log(`\n(Active Hypercode Session: ${activeHypercodeSessionId.slice(0, 8)})`);
 			}
 		}
 	} catch (error) {

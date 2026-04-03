@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProcessManager } from '../../main/process-manager/ProcessManager';
-import { BorgEnvironment } from '../../main/services/BorgEnvironment';
+import { HypercodeEnvironment } from '../../main/services/HypercodeEnvironment';
 import path from 'path';
 import os from 'os';
 import fs from 'fs';
 
-describe('BorgGuard Integration with ProcessManager', () => {
+describe('HypercodeGuard Integration with ProcessManager', () => {
 	let processManager: ProcessManager;
-	const projectPath = path.resolve(os.tmpdir(), 'borg-test-project');
+	const projectPath = path.resolve(os.tmpdir(), 'hypercode-test-project');
 
 	beforeEach(() => {
 		if (!fs.existsSync(projectPath)) {
@@ -18,8 +18,8 @@ describe('BorgGuard Integration with ProcessManager', () => {
 	});
 
 	it('should allow normal execution when isSandboxed is false', async () => {
-		vi.spyOn(BorgEnvironment, 'detect').mockResolvedValue({
-			isBorgProject: false,
+		vi.spyOn(HypercodeEnvironment, 'detect').mockResolvedValue({
+			isHypercodeProject: false,
 			isSandboxed: false,
 			handoffDirExists: false,
 		});
@@ -40,8 +40,8 @@ describe('BorgGuard Integration with ProcessManager', () => {
 	});
 
 	it('should allow sandboxed execution within projectPath', async () => {
-		vi.spyOn(BorgEnvironment, 'detect').mockResolvedValue({
-			isBorgProject: true,
+		vi.spyOn(HypercodeEnvironment, 'detect').mockResolvedValue({
+			isHypercodeProject: true,
 			isSandboxed: true,
 			sandboxId: 'test-sandbox',
 			handoffDirExists: true,
@@ -63,8 +63,8 @@ describe('BorgGuard Integration with ProcessManager', () => {
 	});
 
 	it('should block sandboxed execution when CWD is outside projectPath', async () => {
-		vi.spyOn(BorgEnvironment, 'detect').mockResolvedValue({
-			isBorgProject: true,
+		vi.spyOn(HypercodeEnvironment, 'detect').mockResolvedValue({
+			isHypercodeProject: true,
 			isSandboxed: true,
 			sandboxId: 'test-sandbox',
 			handoffDirExists: true,
@@ -84,8 +84,8 @@ describe('BorgGuard Integration with ProcessManager', () => {
 	});
 
 	it('should block sandboxed execution when command contains forbidden shell characters', async () => {
-		vi.spyOn(BorgEnvironment, 'detect').mockResolvedValue({
-			isBorgProject: true,
+		vi.spyOn(HypercodeEnvironment, 'detect').mockResolvedValue({
+			isHypercodeProject: true,
 			isSandboxed: true,
 			sandboxId: 'test-sandbox',
 			handoffDirExists: true,
@@ -105,8 +105,8 @@ describe('BorgGuard Integration with ProcessManager', () => {
 	});
 
 	it('should block sandboxed execution when using forbidden commands (e.g. sudo)', async () => {
-		vi.spyOn(BorgEnvironment, 'detect').mockResolvedValue({
-			isBorgProject: true,
+		vi.spyOn(HypercodeEnvironment, 'detect').mockResolvedValue({
+			isHypercodeProject: true,
 			isSandboxed: true,
 			sandboxId: 'test-sandbox',
 			handoffDirExists: true,
@@ -126,8 +126,8 @@ describe('BorgGuard Integration with ProcessManager', () => {
 	});
 
 	it('should block sandboxed execution when CWD is a sensitive directory', async () => {
-		vi.spyOn(BorgEnvironment, 'detect').mockResolvedValue({
-			isBorgProject: true,
+		vi.spyOn(HypercodeEnvironment, 'detect').mockResolvedValue({
+			isHypercodeProject: true,
 			isSandboxed: true,
 			sandboxId: 'test-sandbox',
 			handoffDirExists: true,

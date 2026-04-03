@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import path from 'path';
 import fs from 'fs/promises';
 import { SyncManager } from '../../main/services/SyncManager';
-import { BorgLiveProvider } from '../../main/services/BorgLiveProvider';
-import { BorgCoreClient } from '../../main/services/BorgCoreClient';
+import { HypercodeLiveProvider } from '../../main/services/HypercodeLiveProvider';
+import { HypercodeCoreClient } from '../../main/services/HypercodeCoreClient';
 
 // Mock electron
 vi.mock('electron', () => ({
@@ -29,11 +29,11 @@ vi.mock('electron-store', () => {
 
 describe('SyncManager Integration', () => {
 	let syncManager: SyncManager;
-	let borgProvider: BorgLiveProvider;
+	let hypercodeProvider: HypercodeLiveProvider;
 	let mockStore: any;
 	const tempUserDataPath = path.join(process.cwd(), 'temp-test-userData');
 	const playbooksPath = path.join(tempUserDataPath, 'playbooks');
-	const BORG_URL = 'http://mock-borg-core:3000';
+	const HYPERCODE_URL = 'http://mock-hypercode-core:3000';
 
 	beforeEach(async () => {
 		// Setup temp directories
@@ -46,9 +46,9 @@ describe('SyncManager Integration', () => {
 		mockStore = new Store();
 		mockStore.store = { theme: 'dark', fontSize: 14 };
 
-		const client = new BorgCoreClient(BORG_URL);
-		borgProvider = new BorgLiveProvider(client);
-		syncManager = new SyncManager(borgProvider, mockStore);
+		const client = new HypercodeCoreClient(HYPERCODE_URL);
+		hypercodeProvider = new HypercodeLiveProvider(client);
+		syncManager = new SyncManager(hypercodeProvider, mockStore);
 
 		// Mock global fetch
 		global.fetch = vi.fn();
@@ -76,7 +76,7 @@ describe('SyncManager Integration', () => {
 
 		// Verify fetch call
 		expect(fetch).toHaveBeenCalledWith(
-			`${BORG_URL}/v1/sync/settings`,
+			`${HYPERCODE_URL}/v1/sync/settings`,
 			expect.objectContaining({
 				method: 'POST',
 				body: JSON.stringify({ settings: { theme: 'dark', fontSize: 14 } }),
@@ -124,7 +124,7 @@ describe('SyncManager Integration', () => {
 
 		// Verify fetch call
 		expect(fetch).toHaveBeenCalledWith(
-			`${BORG_URL}/v1/sync/playbooks`,
+			`${HYPERCODE_URL}/v1/sync/playbooks`,
 			expect.objectContaining({
 				method: 'POST',
 			})

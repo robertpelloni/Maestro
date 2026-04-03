@@ -1,12 +1,12 @@
-# Implementation Plan: Phase 2 - Advanced Borg Coordination
+# Implementation Plan: Phase 2 - Advanced Hypercode Coordination
 
 **Date**: 2026-03-23
 **Task Complexity**: Medium
-**Design Document**: docs/maestro/plans/2026-03-23-advanced-borg-coordination-design.md
+**Design Document**: docs/maestro/plans/2026-03-23-advanced-hypercode-coordination-design.md
 
 ## 1. Plan Overview
 
-This phase adds specialized CLI tooling for Borg management and ensures that all agent interactions via the CLI contribute to the global Borg handoff protocol.
+This phase adds specialized CLI tooling for Hypercode management and ensures that all agent interactions via the CLI contribute to the global Hypercode handoff protocol.
 
 ## 2. Execution Strategy
 
@@ -21,27 +21,27 @@ This phase adds specialized CLI tooling for Borg management and ensures that all
 
 ### Phase 1: CLI Command Definitions
 
-- **Objective**: Define the `borg` command group in the CLI entry point.
+- **Objective**: Define the `hypercode` command group in the CLI entry point.
 - **Files to Modify**: `src/cli/index.ts`.
-- **Deliverables**: Registered `borg status` and `borg sync` commands.
+- **Deliverables**: Registered `hypercode status` and `hypercode sync` commands.
 
 ### Phase 2: Command Handlers & Send Refactor
 
-- **Objective**: Implement the actual logic for Borg status/sync and update `send` to commit handoffs.
+- **Objective**: Implement the actual logic for Hypercode status/sync and update `send` to commit handoffs.
 - **Files to Create**:
-  - `src/cli/commands/borg-status.ts`
-  - `src/cli/commands/borg-sync.ts`
+  - `src/cli/commands/hypercode-status.ts`
+  - `src/cli/commands/hypercode-sync.ts`
 - **Files to Modify**: `src/cli/commands/send.ts`.
 
 ### Phase 3: Environment Detection Utility
 
-- **Objective**: Add `BorgEnvironment` detection to the service layer.
-- **Files to Create**: `src/main/services/BorgEnvironment.ts`.
+- **Objective**: Add `HypercodeEnvironment` detection to the service layer.
+- **Files to Create**: `src/main/services/HypercodeEnvironment.ts`.
 
 ### Phase 4: Final Validation
 
 - **Objective**: Build and verify all new command paths.
-- **Validation**: `maestro borg status` output check.
+- **Validation**: `maestro hypercode status` output check.
 
 ## 4. Cost Summary
 

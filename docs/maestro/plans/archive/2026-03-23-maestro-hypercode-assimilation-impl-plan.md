@@ -1,12 +1,12 @@
-# Implementation Plan: Maestro-Borg Assimilation
+# Implementation Plan: Maestro-Hypercode Assimilation
 
 **Date**: 2026-03-23
 **Task Complexity**: Complex
-**Design Document**: docs/maestro/plans/2026-03-23-maestro-borg-assimilation-design.md
+**Design Document**: docs/maestro/plans/2026-03-23-maestro-hypercode-assimilation-design.md
 
 ## 1. Plan Overview
 
-This plan outlines the systematic replacement of Maestro's native Markdown state engine with a unified Borg-native protocol. We will implement a new TypeScript service layer that communicates with a Live Borg Core control plane while maintaining a local cache for performance.
+This plan outlines the systematic replacement of Maestro's native Markdown state engine with a unified Hypercode-native protocol. We will implement a new TypeScript service layer that communicates with a Live Hypercode Core control plane while maintaining a local cache for performance.
 
 ## 2. Dependency Graph
 
@@ -35,37 +35,37 @@ graph TD
 
 ### Phase 1: Protocol & Schema Foundation
 
-- **Objective**: Define the extended Borg-native JSON schema and the Provider interface.
+- **Objective**: Define the extended Hypercode-native JSON schema and the Provider interface.
 - **Agent**: `architect` — Focus on architectural integrity and type safety.
 - **Files to Create**:
-  - `src/shared/borg-schema.ts`: Define `BorgHandoffSchema` using `zod`.
-  - `src/main/services/IBorgProvider.ts`: Define the `IBorgProvider` interface.
+  - `src/shared/hypercode-schema.ts`: Define `HypercodeHandoffSchema` using `zod`.
+  - `src/main/services/IHypercodeProvider.ts`: Define the `IHypercodeProvider` interface.
 - **Validation**: `npm run build` (ensure types compile).
 
 ### Phase 2: API Client & Connectivity
 
-- **Objective**: Implement the low-level client for the Borg Core Live API.
+- **Objective**: Implement the low-level client for the Hypercode Core Live API.
 - **Agent**: `api_designer` — Focus on robust API patterns and error handling.
 - **Files to Create**:
-  - `src/main/services/BorgCoreClient.ts`: HTTP/gRPC client for the Borg Core.
+  - `src/main/services/HypercodeCoreClient.ts`: HTTP/gRPC client for the Hypercode Core.
 - **Validation**: Unit tests for connection handling and retry logic.
 
-### Phase 3: BorgLiveProvider & Local Cache
+### Phase 3: HypercodeLiveProvider & Local Cache
 
 - **Objective**: Implement the high-level provider and the local mirror logic.
 - **Agent**: `coder` — Focus on service implementation and filesystem I/O.
 - **Files to Create**:
-  - `src/main/services/BorgLiveProvider.ts`: Implements `IBorgProvider`.
-  - `src/main/services/LocalCacheManager.ts`: Manages `.borg/handoffs/` mirror.
-- **Validation**: `npm test src/main/services/BorgLiveProvider.test.ts`.
+  - `src/main/services/HypercodeLiveProvider.ts`: Implements `IHypercodeProvider`.
+  - `src/main/services/LocalCacheManager.ts`: Manages `.hypercode/handoffs/` mirror.
+- **Validation**: `npm test src/main/services/HypercodeLiveProvider.test.ts`.
 
 ### Phase 4: Main Process Integration
 
-- **Objective**: The "Brain Transplant"—refactor core session logic to use Borg.
+- **Objective**: The "Brain Transplant"—refactor core session logic to use Hypercode.
 - **Agent**: `coder` (Lead), `architect` (Reviewer).
 - **Files to Modify**:
-  - `src/main/web-server/managers/LiveSessionManager.ts`: Replace native state logic with `BorgLiveProvider`.
-  - `src/main/group-chat/group-chat-router.ts`: Update agent handoff logic to use Borg handoff JSON.
+  - `src/main/web-server/managers/LiveSessionManager.ts`: Replace native state logic with `HypercodeLiveProvider`.
+  - `src/main/group-chat/group-chat-router.ts`: Update agent handoff logic to use Hypercode handoff JSON.
 - **Validation**: Verify session creation and phase transitions in dev mode.
 
 ### Phase 5: CLI & Reporting Refactor
@@ -74,15 +74,15 @@ graph TD
 - **Agent**: `coder`.
 - **Files to Modify**:
   - `src/cli/commands/*.ts`: Specifically `status`, `list-agents`, `show-agent`.
-  - `scripts/read-active-session.js`: Refactor to parse Borg JSON.
-- **Validation**: `/maestro:status` outputs correct data from Borg Core.
+  - `scripts/read-active-session.js`: Refactor to parse Hypercode JSON.
+- **Validation**: `/maestro:status` outputs correct data from Hypercode Core.
 
 ### Phase 6: Integration Validation
 
 - **Objective**: Exhaustive verification of the full lifecycle against the Live Core.
 - **Agent**: `tester`.
 - **Files to Create**:
-  - `src/__tests__/integration/borg-assimilation.test.ts`: E2E integration test.
+  - `src/__tests__/integration/hypercode-assimilation.test.ts`: E2E integration test.
 - **Validation**: Run full integration suite; verify zero-drift success criteria.
 
 ### Phase 7: Documentation & Handoff
@@ -90,24 +90,24 @@ graph TD
 - **Objective**: Finalize documentation and architectural cleanup.
 - **Agent**: `technical_writer`.
 - **Files to Modify**:
-  - `ARCHITECTURE.md`: Update to reflect the Borg-native engine.
-  - `PROTOCOL.md` (New): Document the extended Borg-Maestro JSON schema.
+  - `ARCHITECTURE.md`: Update to reflect the Hypercode-native engine.
+  - `PROTOCOL.md` (New): Document the extended Hypercode-Maestro JSON schema.
 - **Validation**: Peer review of documentation.
 
 ## 5. File Inventory
 
 | Action | Path                                                  | Purpose                               | Phase |
 | ------ | ----------------------------------------------------- | ------------------------------------- | ----- |
-| Create | `src/shared/borg-schema.ts`                           | Zod schema for extended Borg handoffs | 1     |
-| Create | `src/main/services/IBorgProvider.ts`                  | Interface for Borg integration        | 1     |
-| Create | `src/main/services/BorgCoreClient.ts`                 | Low-level API client for Borg Core    | 2     |
-| Create | `src/main/services/BorgLiveProvider.ts`               | Primary state management service      | 3     |
-| Create | `src/main/services/LocalCacheManager.ts`              | Mirror manager for .borg/handoffs/    | 3     |
+| Create | `src/shared/hypercode-schema.ts`                           | Zod schema for extended Hypercode handoffs | 1     |
+| Create | `src/main/services/IHypercodeProvider.ts`                  | Interface for Hypercode integration        | 1     |
+| Create | `src/main/services/HypercodeCoreClient.ts`                 | Low-level API client for Hypercode Core    | 2     |
+| Create | `src/main/services/HypercodeLiveProvider.ts`               | Primary state management service      | 3     |
+| Create | `src/main/services/LocalCacheManager.ts`              | Mirror manager for .hypercode/handoffs/    | 3     |
 | Modify | `src/main/web-server/managers/LiveSessionManager.ts`  | Core session refactor                 | 4     |
 | Modify | `src/main/group-chat/group-chat-router.ts`            | Agent handoff refactor                | 4     |
 | Modify | `src/cli/commands/*.ts`                               | CLI reporting refactor                | 5     |
 | Modify | `scripts/read-active-session.js`                      | Legacy script refactor                | 5     |
-| Create | `src/__tests__/integration/borg-assimilation.test.ts` | Full lifecycle verification           | 6     |
+| Create | `src/__tests__/integration/hypercode-assimilation.test.ts` | Full lifecycle verification           | 6     |
 | Modify | `ARCHITECTURE.md`                                     | Architecture update                   | 7     |
 | Create | `PROTOCOL.md`                                         | Protocol specification                | 7     |
 
@@ -116,7 +116,7 @@ graph TD
 | Phase | Risk   | Rationale                                                  |
 | ----- | ------ | ---------------------------------------------------------- |
 | 1     | LOW    | Purely definition based.                                   |
-| 2     | MEDIUM | Connectivity issues with Borg Core.                        |
+| 2     | MEDIUM | Connectivity issues with Hypercode Core.                        |
 | 3     | MEDIUM | Filesystem I/O and atomic write complexity.                |
 | 4     | HIGH   | Brain transplant; high regression risk for agent handoffs. |
 | 5     | MEDIUM | Breaking changes for existing CLI tools.                   |

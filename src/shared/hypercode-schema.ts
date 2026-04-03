@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const BorgStatsSchema = z.object({
+export const HypercodeStatsSchema = z.object({
 	totalCount: z.number(),
 	sessionCount: z.number(),
 	workingCount: z.number(),
@@ -22,7 +22,7 @@ export const BorgStatsSchema = z.object({
 	fix: z.number(),
 });
 
-export const BorgContextItemSchema = z.object({
+export const HypercodeContextItemSchema = z.object({
 	content: z.string(),
 	metadata: z
 		.object({
@@ -38,7 +38,7 @@ export const BorgContextItemSchema = z.object({
 		.catchall(z.any()),
 });
 
-export const BorgKnowledgeItemSchema = z.object({
+export const HypercodeKnowledgeItemSchema = z.object({
 	type: z.enum(['discovery', 'decision', 'fix', 'warning', 'pattern']),
 	content: z.string(),
 	source: z.string(),
@@ -56,24 +56,24 @@ export const MaestroMetadataSchema = z.object({
 	status: z.string().optional(),
 });
 
-export const BorgHandoffSchema = z.object({
+export const HypercodeHandoffSchema = z.object({
 	version: z.string(),
 	timestamp: z.number(),
 	sessionId: z.string(),
-	stats: BorgStatsSchema,
-	recentContext: z.array(BorgContextItemSchema),
-	knowledge: z.array(BorgKnowledgeItemSchema).optional(),
+	stats: HypercodeStatsSchema,
+	recentContext: z.array(HypercodeContextItemSchema),
+	knowledge: z.array(HypercodeKnowledgeItemSchema).optional(),
 	notes: z.string().optional(),
 	maestro: MaestroMetadataSchema.optional(),
 });
 
-export const BorgSettingsPayloadSchema = z.object({
+export const HypercodeSettingsPayloadSchema = z.object({
 	settings: z.record(z.string(), z.any()),
 });
 
-export const BorgPlaybooksPayloadSchema = z.array(z.record(z.string(), z.any()));
+export const HypercodePlaybooksPayloadSchema = z.array(z.record(z.string(), z.any()));
 
-export type BorgHandoff = z.infer<typeof BorgHandoffSchema>;
-export type BorgKnowledgeItem = z.infer<typeof BorgKnowledgeItemSchema>;
-export type BorgSettingsPayload = z.infer<typeof BorgSettingsPayloadSchema>;
-export type BorgPlaybooksPayload = z.infer<typeof BorgPlaybooksPayloadSchema>;
+export type HypercodeHandoff = z.infer<typeof HypercodeHandoffSchema>;
+export type HypercodeKnowledgeItem = z.infer<typeof HypercodeKnowledgeItemSchema>;
+export type HypercodeSettingsPayload = z.infer<typeof HypercodeSettingsPayloadSchema>;
+export type HypercodePlaybooksPayload = z.infer<typeof HypercodePlaybooksPayloadSchema>;

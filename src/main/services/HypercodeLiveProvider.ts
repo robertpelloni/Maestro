@@ -1,37 +1,37 @@
-import { IBorgProvider } from './IBorgProvider';
-import { BorgHandoff, BorgSettingsPayload, BorgPlaybooksPayload } from '../../shared/borg-schema';
-import { BorgCoreClient } from './BorgCoreClient';
+import { IHypercodeProvider } from './IHypercodeProvider';
+import { HypercodeHandoff, HypercodeSettingsPayload, HypercodePlaybooksPayload } from '../../shared/hypercode-schema';
+import { HypercodeCoreClient } from './HypercodeCoreClient';
 import { LocalCacheManager } from './LocalCacheManager';
 import { logger } from '../utils/logger';
 
-const LOG_CONTEXT = 'BorgLiveProvider';
+const LOG_CONTEXT = 'HypercodeLiveProvider';
 
-export class BorgLiveProvider implements IBorgProvider {
-	private client: BorgCoreClient;
+export class HypercodeLiveProvider implements IHypercodeProvider {
+	private client: HypercodeCoreClient;
 	private cache: LocalCacheManager;
 
-	constructor(client?: BorgCoreClient, cache?: LocalCacheManager) {
-		this.client = client || new BorgCoreClient();
+	constructor(client?: HypercodeCoreClient, cache?: LocalCacheManager) {
+		this.client = client || new HypercodeCoreClient();
 		this.cache = cache || new LocalCacheManager(process.cwd());
 	}
 
 	async createSession(task: string, initialMetadata?: Record<string, any>): Promise<string> {
-		logger.info(`Creating Borg session for task: ${task}`, LOG_CONTEXT);
+		logger.info(`Creating Hypercode session for task: ${task}`, LOG_CONTEXT);
 		return await this.client.createSession(task, initialMetadata);
 	}
 
 	async listSessions(): Promise<Array<{ sessionId: string; task: string; status: string }>> {
-		logger.info('Listing Borg sessions', LOG_CONTEXT);
+		logger.info('Listing Hypercode sessions', LOG_CONTEXT);
 		return await this.client.listSessions();
 	}
 
-	async commitHandoff(handoff: BorgHandoff): Promise<void> {
+	async commitHandoff(handoff: HypercodeHandoff): Promise<void> {
 		logger.info(`Committing handoff for session: ${handoff.sessionId}`, LOG_CONTEXT);
 		await this.client.putHandoff(handoff.sessionId, handoff);
 		await this.cache.saveHandoff(handoff);
 	}
 
-	async getHandoff(sessionId: string): Promise<BorgHandoff> {
+	async getHandoff(sessionId: string): Promise<HypercodeHandoff> {
 		logger.info(`Fetching handoff for session: ${sessionId}`, LOG_CONTEXT);
 		const handoff = await this.client.getHandoff(sessionId);
 		await this.cache.saveHandoff(handoff);
@@ -78,13 +78,13 @@ export class BorgLiveProvider implements IBorgProvider {
 		}
 	}
 
-	async syncSettings(settings: BorgSettingsPayload): Promise<BorgSettingsPayload> {
-		logger.info('Syncing Borg settings', LOG_CONTEXT);
+	async syncSettings(settings: HypercodeSettingsPayload): Promise<HypercodeSettingsPayload> {
+		logger.info('Syncing Hypercode settings', LOG_CONTEXT);
 		return await this.client.syncSettings(settings);
 	}
 
-	async syncPlaybooks(playbooks: BorgPlaybooksPayload): Promise<BorgPlaybooksPayload> {
-		logger.info('Syncing Borg playbooks', LOG_CONTEXT);
+	async syncPlaybooks(playbooks: HypercodePlaybooksPayload): Promise<HypercodePlaybooksPayload> {
+		logger.info('Syncing Hypercode playbooks', LOG_CONTEXT);
 		return await this.client.syncPlaybooks(playbooks);
 	}
 }

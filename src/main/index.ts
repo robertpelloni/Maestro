@@ -113,11 +113,11 @@ import {
 // Phase 2 refactoring - dependency injection
 import { createSafeSend, isWebContentsAvailable } from './utils/safe-send';
 import { createWebServerFactory } from './web-server/web-server-factory';
-import { BorgLiveProvider } from './services/BorgLiveProvider';
-import { BorgCoreClient } from './services/BorgCoreClient';
+import { HypercodeLiveProvider } from './services/HypercodeLiveProvider';
+import { HypercodeCoreClient } from './services/HypercodeCoreClient';
 import { LocalCacheManager } from './services/LocalCacheManager';
 import { SyncManager } from './services/SyncManager';
-import { setBorgProvider } from './group-chat/group-chat-router';
+import { setHypercodeProvider } from './group-chat/group-chat-router';
 // Phase 4 refactoring - app lifecycle
 import {
 	setupGlobalErrorHandlers,
@@ -255,14 +255,14 @@ const windowStateStore = getWindowStateStore();
 const claudeSessionOriginsStore = getClaudeSessionOriginsStore();
 const agentSessionOriginsStore = getAgentSessionOriginsStore();
 
-// Initialize Borg provider for state integration
-const borgClient = new BorgCoreClient();
-const borgCache = new LocalCacheManager(app.getPath('userData'));
-const borgProvider = new BorgLiveProvider(borgClient, borgCache);
-setBorgProvider(borgProvider);
+// Initialize Hypercode provider for state integration
+const hypercodeClient = new HypercodeCoreClient();
+const hypercodeCache = new LocalCacheManager(app.getPath('userData'));
+const hypercodeProvider = new HypercodeLiveProvider(hypercodeClient, hypercodeCache);
+setHypercodeProvider(hypercodeProvider);
 
 // Start periodic synchronization of settings and playbooks
-const syncManager = new SyncManager(borgProvider, store);
+const syncManager = new SyncManager(hypercodeProvider, store);
 syncManager.start(5 * 60 * 1000); // 5 minutes interval
 
 function getAgentConfigForAgent(agentId: string): Record<string, any> {
@@ -314,7 +314,7 @@ const createWebServer = createWebServerFactory({
 	groupsStore,
 	getMainWindow: () => mainWindow,
 	getProcessManager: () => processManager,
-	borgProvider,
+	hypercodeProvider,
 });
 
 // createWindow is now handled by windowManager (Phase 4 refactoring)

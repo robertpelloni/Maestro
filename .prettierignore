@@ -4,6 +4,6 @@ node_modules/
 coverage/
 *.min.js
 .gitignore
-.borg_startup_marker
+.hypercode_startup_marker
 VERSION
 metamcp.db

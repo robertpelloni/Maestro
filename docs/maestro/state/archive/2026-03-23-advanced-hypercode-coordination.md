@@ -1,12 +1,12 @@
 ---
-session_id: 2026-03-23-advanced-borg-coordination
-task: extend Maestro CLI with advanced Borg coordination features
+session_id: 2026-03-23-advanced-hypercode-coordination
+task: extend Maestro CLI with advanced Hypercode coordination features
 created: '2026-03-23T23:50:17.542Z'
 updated: '2026-03-23T23:55:08.166Z'
 status: completed
 workflow_mode: standard
-design_document: docs/maestro/plans/2026-03-23-advanced-borg-coordination-design.md
-implementation_plan: docs/maestro/plans/2026-03-23-advanced-borg-coordination-impl-plan.md
+design_document: docs/maestro/plans/2026-03-23-advanced-hypercode-coordination-design.md
+implementation_plan: docs/maestro/plans/2026-03-23-advanced-hypercode-coordination-impl-plan.md
 current_phase: 4
 total_phases: 4
 execution_mode: sequential
@@ -33,16 +33,16 @@ phases:
     files_deleted: []
     downstream_context:
       patterns_established:
-        - Borg CLI command grouping.
+        - Hypercode CLI command grouping.
       key_interfaces_introduced:
-        - borgStatus(options)
-        - borgSync(options)
+        - hypercodeStatus(options)
+        - hypercodeSync(options)
       warnings:
         - none
       integration_points:
         - src/cli/index.ts (Command registration)
-        - src/cli/commands/borg-status.ts (New handler)
-        - src/cli/commands/borg-sync.ts (New handler)
+        - src/cli/commands/hypercode-status.ts (New handler)
+        - src/cli/commands/hypercode-sync.ts (New handler)
       assumptions:
         - Command handlers will follow the lazy-loading pattern established in the CLI entry point.
     errors: []
@@ -61,15 +61,15 @@ phases:
     files_deleted: []
     downstream_context:
       assumptions:
-        - Borg CLI extension is now fully wired for status, sync, and handoffs.
+        - Hypercode CLI extension is now fully wired for status, sync, and handoffs.
       patterns_established:
-        - CLI-level Borg handoff contribution.
+        - CLI-level Hypercode handoff contribution.
       integration_points:
-        - src/cli/commands/borg-status.ts
-        - src/cli/commands/borg-sync.ts
+        - src/cli/commands/hypercode-status.ts
+        - src/cli/commands/hypercode-sync.ts
         - src/cli/commands/send.ts (handoff integration)
       key_interfaces_introduced:
-        - maestro borg status/sync commands
+        - maestro hypercode status/sync commands
       warnings:
         - none
     errors: []
@@ -88,16 +88,16 @@ phases:
     files_deleted: []
     downstream_context:
       assumptions:
-        - BorgEnvironment can correctly detect sandboxed states via BORG_SANDBOX_ID or active.json.
+        - HypercodeEnvironment can correctly detect sandboxed states via HYPERCODE_SANDBOX_ID or active.json.
       patterns_established:
         - Filesystem-based environment discovery.
       key_interfaces_introduced:
-        - BorgEnvInfo interface
-        - BorgEnvironment.detect()
+        - HypercodeEnvInfo interface
+        - HypercodeEnvironment.detect()
       warnings:
         - none
       integration_points:
-        - src/main/services/BorgEnvironment.ts (New utility)
+        - src/main/services/HypercodeEnvironment.ts (New utility)
     errors: []
     retry_count: 0
   - id: 4
@@ -122,4 +122,4 @@ phases:
     retry_count: 0
 ---
 
-# extend Maestro CLI with advanced Borg coordination features Orchestration Log
+# extend Maestro CLI with advanced Hypercode coordination features Orchestration Log

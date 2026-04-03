@@ -9,7 +9,7 @@
 
 import { logger } from '../../utils/logger';
 import type { LiveSessionInfo, AutoRunState } from '../types';
-import { IBorgProvider } from '../../../main/services/IBorgProvider';
+import { IHypercodeProvider } from '../../../main/services/IHypercodeProvider';
 
 const LOG_CONTEXT = 'LiveSessionManager';
 
@@ -23,7 +23,7 @@ export interface LiveSessionBroadcastCallbacks {
 }
 
 export class LiveSessionManager {
-	constructor(private borgProvider: IBorgProvider) {}
+	constructor(private hypercodeProvider: IHypercodeProvider) {}
 
 	// Live sessions - only these appear in the web interface
 	private liveSessions: Map<string, LiveSessionInfo> = new Map();
@@ -55,15 +55,15 @@ export class LiveSessionManager {
 			LOG_CONTEXT
 		);
 
-		// Verify Borg connection and ensure session is known to Core
-		this.borgProvider
+		// Verify Hypercode connection and ensure session is known to Core
+		this.hypercodeProvider
 			.getStatus()
 			.then((status) => {
 				if (status.connected) {
-					logger.debug(`Borg Core connected (latency: ${status.latencyMs}ms)`, LOG_CONTEXT);
+					logger.debug(`Hypercode Core connected (latency: ${status.latencyMs}ms)`, LOG_CONTEXT);
 				}
 			})
-			.catch((err) => logger.error(`Borg status check failed: ${err}`, LOG_CONTEXT));
+			.catch((err) => logger.error(`Hypercode status check failed: ${err}`, LOG_CONTEXT));
 
 		// Broadcast to all connected clients
 		this.broadcastCallbacks?.broadcastSessionLive(sessionId, agentSessionId);
@@ -80,11 +80,11 @@ export class LiveSessionManager {
 				LOG_CONTEXT
 			);
 
-			// Archive session in Borg Core
-			this.borgProvider
+			// Archive session in Hypercode Core
+			this.hypercodeProvider
 				.archiveSession(sessionId)
 				.catch((err) =>
-					logger.error(`Borg session archiving failed for ${sessionId}: ${err}`, LOG_CONTEXT)
+					logger.error(`Hypercode session archiving failed for ${sessionId}: ${err}`, LOG_CONTEXT)
 				);
 
 			// Clean up any associated AutoRun state to prevent memory leaks

@@ -21,11 +21,11 @@
 
 ### Added
 
-- **Borg Assimilation**: Full integration with the Borg ecosystem.
+- **Hypercode Assimilation**: Full integration with the Hypercode ecosystem.
 - **Remote Execution**: Native support for SSH remote execution for all agent types.
 - **Maestro Symphony**: New collaborative workflow engine for large-scale projects.
 - **Director's Notes**: Cross-session history and AI-powered architectural synopsis.
-- **BorgGuard**: Comprehensive security validation layer for sandboxed execution.
+- **HypercodeGuard**: Comprehensive security validation layer for sandboxed execution.
 - **Universal LLM Instructions**: Unified instruction set for all AI agents.
 
 ### Changed

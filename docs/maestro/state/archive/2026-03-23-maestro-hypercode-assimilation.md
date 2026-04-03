@@ -1,12 +1,12 @@
 ---
-session_id: 2026-03-23-maestro-borg-assimilation
-task: prepare Maestro for full assimilation into Borg
+session_id: 2026-03-23-maestro-hypercode-assimilation
+task: prepare Maestro for full assimilation into Hypercode
 created: '2026-03-23T20:21:55.543Z'
 updated: '2026-03-23T23:34:11.448Z'
 status: completed
 workflow_mode: standard
-design_document: docs/maestro/plans/2026-03-23-maestro-borg-assimilation-design.md
-implementation_plan: docs/maestro/plans/2026-03-23-maestro-borg-assimilation-impl-plan.md
+design_document: docs/maestro/plans/2026-03-23-maestro-hypercode-assimilation-design.md
+implementation_plan: docs/maestro/plans/2026-03-23-maestro-hypercode-assimilation-impl-plan.md
 current_phase: 6
 total_phases: 7
 execution_mode: sequential
@@ -33,17 +33,17 @@ phases:
     files_deleted: []
     downstream_context:
       integration_points:
-        - src/shared/borg-schema.ts (Validation)
-        - src/main/services/IBorgProvider.ts (Contract)
+        - src/shared/hypercode-schema.ts (Validation)
+        - src/main/services/IHypercodeProvider.ts (Contract)
       warnings:
         - Zod dependency must be managed in subsequent build steps.
       key_interfaces_introduced:
-        - BorgHandoffSchema
-        - IBorgProvider
+        - HypercodeHandoffSchema
+        - IHypercodeProvider
       assumptions:
-        - The Borg Core engine preserves the 'maestro' metadata namespace during handoffs.
+        - The Hypercode Core engine preserves the 'maestro' metadata namespace during handoffs.
       patterns_established:
-        - Zod-based schema extension for Borg handoffs
+        - Zod-based schema extension for Hypercode handoffs
     errors: []
     retry_count: 0
   - id: 2
@@ -67,7 +67,7 @@ phases:
     errors: []
     retry_count: 0
   - id: 3
-    name: BorgLiveProvider & Local Cache
+    name: HypercodeLiveProvider & Local Cache
     status: completed
     agents:
       - coder
@@ -160,7 +160,7 @@ phases:
     files_deleted: []
     downstream_context:
       key_interfaces_introduced:
-        - Unified Borg-Maestro Handoff Schema v1
+        - Unified Hypercode-Maestro Handoff Schema v1
       assumptions:
         - Final documentation accurately reflects the integrated state.
       integration_points:
@@ -174,4 +174,4 @@ phases:
     retry_count: 0
 ---
 
-# prepare Maestro for full assimilation into Borg Orchestration Log
+# prepare Maestro for full assimilation into Hypercode Orchestration Log

@@ -24,13 +24,13 @@ export async function showAgent(agentId: string, options: ShowAgentOptions): Pro
 		// Get history entries for this agent
 		const history = readHistory(undefined, agent.id);
 
-		// Check for Borg handoff state
+		// Check for Hypercode handoff state
 		const cacheManager = new LocalCacheManager(process.cwd());
-		const borgHandoff = await cacheManager.getLatestHandoff();
-		const isBorgNative =
-			borgHandoff &&
-			(borgHandoff.sessionId === agent.id ||
-				(agent.agentSessionId && borgHandoff.sessionId === agent.agentSessionId));
+		const hypercodeHandoff = await cacheManager.getLatestHandoff();
+		const isHypercodeNative =
+			hypercodeHandoff &&
+			(hypercodeHandoff.sessionId === agent.id ||
+				(agent.agentSessionId && hypercodeHandoff.sessionId === agent.agentSessionId));
 
 		// Calculate aggregate stats from history
 		let totalInputTokens = 0;
@@ -72,12 +72,12 @@ export async function showAgent(agentId: string, options: ShowAgentOptions): Pro
 			groupId: agent.groupId,
 			groupName: group?.name,
 			autoRunFolderPath: agent.autoRunFolderPath,
-			borg: isBorgNative
+			hypercode: isHypercodeNative
 				? {
-						version: borgHandoff.version,
-						lastUpdated: borgHandoff.timestamp,
-						stats: borgHandoff.stats,
-						maestro: borgHandoff.maestro,
+						version: hypercodeHandoff.version,
+						lastUpdated: hypercodeHandoff.timestamp,
+						stats: hypercodeHandoff.stats,
+						maestro: hypercodeHandoff.maestro,
 					}
 				: undefined,
 			stats: {
@@ -106,13 +106,13 @@ export async function showAgent(agentId: string, options: ShowAgentOptions): Pro
 			console.log(JSON.stringify(output, null, 2));
 		} else {
 			console.log(formatAgentDetail(output));
-			if (isBorgNative) {
-				console.log('\n--- BORG ASSIMILATED STATE ---');
-				console.log(`Borg Version:  ${borgHandoff.version}`);
-				console.log(`Last Handoff:  ${new Date(borgHandoff.timestamp).toLocaleString()}`);
-				if (borgHandoff.maestro) {
-					console.log(`Maestro Status: ${borgHandoff.maestro.status}`);
-					console.log(`Current Phase:  ${borgHandoff.maestro.currentPhase}`);
+			if (isHypercodeNative) {
+				console.log('\n--- HYPERCODE ASSIMILATED STATE ---');
+				console.log(`Hypercode Version:  ${hypercodeHandoff.version}`);
+				console.log(`Last Handoff:  ${new Date(hypercodeHandoff.timestamp).toLocaleString()}`);
+				if (hypercodeHandoff.maestro) {
+					console.log(`Maestro Status: ${hypercodeHandoff.maestro.status}`);
+					console.log(`Current Phase:  ${hypercodeHandoff.maestro.currentPhase}`);
 				}
 				console.log('------------------------------');
 			}

@@ -1,6 +1,6 @@
 ---
 session_id: 2026-03-25-global-synchronization
-task: implement multi-device synchronization for playbooks and settings via Borg Core
+task: implement multi-device synchronization for playbooks and settings via Hypercode Core
 created: '2026-03-25T23:13:42.449Z'
 updated: '2026-03-25T23:53:54.055Z'
 status: completed
@@ -35,18 +35,18 @@ phases:
       warnings:
         - none
       key_interfaces_introduced:
-        - BorgSettingsPayload
-        - BorgPlaybooksPayload
+        - HypercodeSettingsPayload
+        - HypercodePlaybooksPayload
       integration_points:
-        - src/shared/borg-schema.ts
+        - src/shared/hypercode-schema.ts
       assumptions:
-        - The Borg Core API will accept and return the new settings and playbooks schemas.
+        - The Hypercode Core API will accept and return the new settings and playbooks schemas.
       patterns_established:
         - Zod schemas for new API endpoints.
     errors: []
     retry_count: 0
   - id: 2
-    name: BorgCoreClient Extension
+    name: HypercodeCoreClient Extension
     status: completed
     agents:
       - coder
@@ -120,4 +120,4 @@ phases:
     retry_count: 0
 ---
 
-# implement multi-device synchronization for playbooks and settings via Borg Core Orchestration Log
+# implement multi-device synchronization for playbooks and settings via Hypercode Core Orchestration Log

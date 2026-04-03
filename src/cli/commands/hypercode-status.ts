@@ -1,14 +1,14 @@
-import { BorgLiveProvider } from '../../main/services/BorgLiveProvider';
+import { HypercodeLiveProvider } from '../../main/services/HypercodeLiveProvider';
 import { LocalCacheManager } from '../../main/services/LocalCacheManager';
 import { formatError } from '../output/formatter';
 
-interface BorgStatusOptions {
+interface HypercodeStatusOptions {
 	json?: boolean;
 }
 
-export async function borgStatus(options: BorgStatusOptions): Promise<void> {
+export async function hypercodeStatus(options: HypercodeStatusOptions): Promise<void> {
 	try {
-		const provider = new BorgLiveProvider();
+		const provider = new HypercodeLiveProvider();
 		const cacheManager = new LocalCacheManager(process.cwd());
 
 		const [liveStatus, latestHandoff] = await Promise.all([
@@ -33,7 +33,7 @@ export async function borgStatus(options: BorgStatusOptions): Promise<void> {
 				)
 			);
 		} else {
-			console.log('--- Borg Coordination Status ---');
+			console.log('--- Hypercode Coordination Status ---');
 			console.log(`Core Connected: ${liveStatus.connected ? '✅ YES' : '❌ NO'}`);
 			if (liveStatus.connected) {
 				console.log(`Core Latency:   ${liveStatus.latencyMs}ms`);
@@ -49,7 +49,7 @@ export async function borgStatus(options: BorgStatusOptions): Promise<void> {
 		if (options.json) {
 			console.error(JSON.stringify({ error: message }));
 		} else {
-			console.error(formatError(`Failed to get Borg status: ${message}`));
+			console.error(formatError(`Failed to get Hypercode status: ${message}`));
 		}
 		process.exit(1);
 	}

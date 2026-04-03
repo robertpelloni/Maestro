@@ -11,7 +11,7 @@ import { getHistoryManager } from '../history-manager';
 import { logger } from '../utils/logger';
 import { isWebContentsAvailable } from '../utils/safe-send';
 import type { ProcessManager } from '../process-manager';
-import { IBorgProvider } from '../services/IBorgProvider';
+import { IHypercodeProvider } from '../services/IHypercodeProvider';
 import type { StoredSession, SettingsStoreInterface as SettingsStore } from '../stores/types';
 import type { Group } from '../../shared/types';
 
@@ -41,8 +41,8 @@ export interface WebServerFactoryDependencies {
 	getMainWindow: () => BrowserWindow | null;
 	/** Function to get the process manager reference */
 	getProcessManager: () => ProcessManager | null;
-	/** Borg provider for state integration */
-	borgProvider: IBorgProvider;
+	/** Hypercode provider for state integration */
+	hypercodeProvider: IHypercodeProvider;
 }
 
 /**
@@ -56,7 +56,7 @@ export function createWebServerFactory(deps: WebServerFactoryDependencies) {
 		groupsStore,
 		getMainWindow,
 		getProcessManager,
-		borgProvider,
+		hypercodeProvider,
 	} = deps;
 
 	/**
@@ -97,7 +97,7 @@ export function createWebServerFactory(deps: WebServerFactoryDependencies) {
 			}
 		}
 
-		const server = new WebServer(borgProvider, port, securityToken);
+		const server = new WebServer(hypercodeProvider, port, securityToken);
 
 		// Set up callback for web server to fetch sessions list
 		server.setGetSessionsCallback(() => {

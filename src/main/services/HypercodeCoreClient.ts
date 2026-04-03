@@ -1,12 +1,12 @@
-import { BorgHandoff, BorgSettingsPayload, BorgPlaybooksPayload } from '../../shared/borg-schema';
+import { HypercodeHandoff, HypercodeSettingsPayload, HypercodePlaybooksPayload } from '../../shared/hypercode-schema';
 import { logger } from '../utils/logger';
 
-const LOG_CONTEXT = 'BorgCoreClient';
+const LOG_CONTEXT = 'HypercodeCoreClient';
 
-export class BorgCoreClient {
+export class HypercodeCoreClient {
 	private baseUrl: string;
 
-	constructor(baseUrl: string = process.env.BORG_CORE_URL || 'http://localhost:3000') {
+	constructor(baseUrl: string = process.env.HYPERCODE_CORE_URL || 'http://localhost:3000') {
 		this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
 	}
 
@@ -18,7 +18,7 @@ export class BorgCoreClient {
 		});
 
 		if (!response.ok) {
-			const errorMsg = `Failed to create Borg session: ${response.status} ${response.statusText}`;
+			const errorMsg = `Failed to create Hypercode session: ${response.status} ${response.statusText}`;
 			logger.error(errorMsg, LOG_CONTEXT);
 			throw new Error(errorMsg);
 		}
@@ -31,7 +31,7 @@ export class BorgCoreClient {
 		const response = await fetch(`${this.baseUrl}/v1/sessions`);
 
 		if (!response.ok) {
-			const errorMsg = `Failed to list Borg sessions: ${response.status} ${response.statusText}`;
+			const errorMsg = `Failed to list Hypercode sessions: ${response.status} ${response.statusText}`;
 			logger.error(errorMsg, LOG_CONTEXT);
 			throw new Error(errorMsg);
 		}
@@ -39,7 +39,7 @@ export class BorgCoreClient {
 		return (await response.json()) as Array<{ sessionId: string; task: string; status: string }>;
 	}
 
-	async getHandoff(sessionId: string): Promise<BorgHandoff> {
+	async getHandoff(sessionId: string): Promise<HypercodeHandoff> {
 		const response = await fetch(`${this.baseUrl}/v1/handoffs/${sessionId}`);
 
 		if (!response.ok) {
@@ -48,10 +48,10 @@ export class BorgCoreClient {
 			throw new Error(errorMsg);
 		}
 
-		return (await response.json()) as BorgHandoff;
+		return (await response.json()) as HypercodeHandoff;
 	}
 
-	async putHandoff(sessionId: string, handoff: BorgHandoff): Promise<void> {
+	async putHandoff(sessionId: string, handoff: HypercodeHandoff): Promise<void> {
 		const response = await fetch(`${this.baseUrl}/v1/handoffs/${sessionId}`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
@@ -77,7 +77,7 @@ export class BorgCoreClient {
 		}
 	}
 
-	async syncSettings(settings: BorgSettingsPayload): Promise<BorgSettingsPayload> {
+	async syncSettings(settings: HypercodeSettingsPayload): Promise<HypercodeSettingsPayload> {
 		const response = await fetch(`${this.baseUrl}/v1/sync/settings`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -85,15 +85,15 @@ export class BorgCoreClient {
 		});
 
 		if (!response.ok) {
-			const errorMsg = `Failed to sync Borg settings: ${response.status} ${response.statusText}`;
+			const errorMsg = `Failed to sync Hypercode settings: ${response.status} ${response.statusText}`;
 			logger.error(errorMsg, LOG_CONTEXT);
 			throw new Error(errorMsg);
 		}
 
-		return (await response.json()) as BorgSettingsPayload;
+		return (await response.json()) as HypercodeSettingsPayload;
 	}
 
-	async syncPlaybooks(playbooks: BorgPlaybooksPayload): Promise<BorgPlaybooksPayload> {
+	async syncPlaybooks(playbooks: HypercodePlaybooksPayload): Promise<HypercodePlaybooksPayload> {
 		const response = await fetch(`${this.baseUrl}/v1/sync/playbooks`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -101,12 +101,12 @@ export class BorgCoreClient {
 		});
 
 		if (!response.ok) {
-			const errorMsg = `Failed to sync Borg playbooks: ${response.status} ${response.statusText}`;
+			const errorMsg = `Failed to sync Hypercode playbooks: ${response.status} ${response.statusText}`;
 			logger.error(errorMsg, LOG_CONTEXT);
 			throw new Error(errorMsg);
 		}
 
-		return (await response.json()) as BorgPlaybooksPayload;
+		return (await response.json()) as HypercodePlaybooksPayload;
 	}
 
 	async getHealth(): Promise<{ status: string }> {

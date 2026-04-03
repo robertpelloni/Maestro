@@ -5,14 +5,14 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * read-active-session.js (Borg-Assimilated version)
- * This script bridges the new Borg JSON protocol back to the
+ * read-active-session.js (Hypercode-Assimilated version)
+ * This script bridges the new Hypercode JSON protocol back to the
  * Markdown format expected by the Maestro extension.
  */
 
 function main() {
 	const workspaceRoot = process.cwd();
-	const latestPath = path.join(workspaceRoot, '.borg', 'handoffs', 'latest.json');
+	const latestPath = path.join(workspaceRoot, '.hypercode', 'handoffs', 'latest.json');
 
 	if (!fs.existsSync(latestPath)) {
 		process.stdout.write('No active session\n');
@@ -31,7 +31,7 @@ function main() {
 		md += `current_phase: ${handoff.maestro ? handoff.maestro.currentPhase : 1}\n`;
 		md += `total_phases: ${handoff.maestro ? handoff.maestro.totalPhases : 1}\n`;
 		md += `---\n\n`;
-		md += `# Borg-Assimilated Orchestration Log\n\n`;
+		md += `# Hypercode-Assimilated Orchestration Log\n\n`;
 
 		md += `## Stats\n`;
 		md += `- Total Messages: ${handoff.stats.totalCount}\n`;
@@ -52,7 +52,7 @@ function main() {
 
 		process.stdout.write(md);
 	} catch (err) {
-		process.stdout.write(`Error reading Borg state: ${err.message}\n`);
+		process.stdout.write(`Error reading Hypercode state: ${err.message}\n`);
 	}
 }
 

@@ -7,7 +7,7 @@
 
 ## 1. Problem Statement
 
-Maestro now detects whether it is running inside a Borg-managed sandbox (via `BorgEnvironment`). However, detection is only the first step. To ensure the security of the host system, Maestro must actively enforce constraints when sandboxing is detected:
+Maestro now detects whether it is running inside a Hypercode-managed sandbox (via `HypercodeEnvironment`). However, detection is only the first step. To ensure the security of the host system, Maestro must actively enforce constraints when sandboxing is detected:
 
 1. **Unconstrained Execution**: Agents currently spawn processes with full local privileges.
 2. **Path Leakage**: Agents may attempt to access files outside the workspace root if not properly restricted.
@@ -17,7 +17,7 @@ Maestro now detects whether it is running inside a Borg-managed sandbox (via `Bo
 
 - **REQ-3.1: Execution Interception** — Intercept all `spawn` calls in `ProcessManager` to check for sandbox constraints.
 - **REQ-3.2: Path Enforcement** — When `isSandboxed` is true, validate that the execution `cwd` is within the workspace boundaries.
-- **REQ-3.3: Security Logging** — Log all "Escape Attempts" (attempts to run commands or access paths outside the sandbox) to the Borg Core.
+- **REQ-3.3: Security Logging** — Log all "Escape Attempts" (attempts to run commands or access paths outside the sandbox) to the Hypercode Core.
 
 ## 3. Approach
 
@@ -25,19 +25,19 @@ We will implement a middleware-style "Constraint Engine" within the `ProcessMana
 
 ### Approach: Guarded Spawning
 
-- **BorgGuard (Service)**: A new service that evaluates a `ProcessConfig` against the current `BorgEnvInfo`.
-- **Validation Hook**: Inject `BorgGuard.validate(config)` into the start of the `spawn()` method in `ProcessManager`.
-- **Handoff Enrichment**: Add security violation markers to the `maestro` metadata in Borg handoffs.
+- **HypercodeGuard (Service)**: A new service that evaluates a `ProcessConfig` against the current `HypercodeEnvInfo`.
+- **Validation Hook**: Inject `HypercodeGuard.validate(config)` into the start of the `spawn()` method in `ProcessManager`.
+- **Handoff Enrichment**: Add security violation markers to the `maestro` metadata in Hypercode handoffs.
 
 ## 4. Architecture Extensions
 
-- **BorgGuard** (`src/main/services/BorgGuard.ts`): Responsible for security policy enforcement.
-- **Enhanced ProcessManager**: Modified to consult `BorgGuard` before delegating to spawners.
+- **HypercodeGuard** (`src/main/services/HypercodeGuard.ts`): Responsible for security policy enforcement.
+- **Enhanced ProcessManager**: Modified to consult `HypercodeGuard` before delegating to spawners.
 
 ## 5. Agent Team
 
 - **security_engineer**: Define the security policies and validation logic.
-- **coder**: Refactor `ProcessManager` and implement `BorgGuard`.
+- **coder**: Refactor `ProcessManager` and implement `HypercodeGuard`.
 - **tester**: Create "Escape Room" tests that attempt to bypass the sandbox.
 
 ## 6. Risk Assessment
@@ -48,5 +48,5 @@ We will implement a middleware-style "Constraint Engine" within the `ProcessMana
 ## 7. Success Criteria
 
 1. `ProcessManager` successfully blocks execution if the `cwd` is outside the workspace in a sandboxed environment.
-2. Security violations appear in the `maestro` section of the Borg handoff.
+2. Security violations appear in the `maestro` section of the Hypercode handoff.
 3. No existing "Local" (non-sandboxed) workflows are affected.

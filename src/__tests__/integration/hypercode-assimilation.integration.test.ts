@@ -1,28 +1,28 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import fastify, { FastifyInstance } from 'fastify';
-import { BorgLiveProvider } from '../../main/services/BorgLiveProvider';
-import { BorgHandoff } from '../../shared/borg-schema';
+import { HypercodeLiveProvider } from '../../main/services/HypercodeLiveProvider';
+import { HypercodeHandoff } from '../../shared/hypercode-schema';
 import { LocalCacheManager } from '../../main/services/LocalCacheManager';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 
-describe('Borg Assimilation Integration', () => {
+describe('Hypercode Assimilation Integration', () => {
 	let server: FastifyInstance;
-	let provider: BorgLiveProvider;
+	let provider: HypercodeLiveProvider;
 	let tempDir: string;
 	const PORT = 3333;
-	const BORG_CORE_URL = `http://localhost:${PORT}`;
+	const HYPERCODE_CORE_URL = `http://localhost:${PORT}`;
 
 	// Mock data
 	let lastHandoff: any = null;
 
 	beforeAll(async () => {
 		// Set up temp directory for local cache
-		tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'maestro-borg-test-'));
-		process.env.BORG_CORE_URL = BORG_CORE_URL;
+		tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'maestro-hypercode-test-'));
+		process.env.HYPERCODE_CORE_URL = HYPERCODE_CORE_URL;
 
-		// Start mock Borg Core server
+		// Start mock Hypercode Core server
 		server = fastify();
 
 		server.post('/v1/sessions', async (request, reply) => {
@@ -51,7 +51,7 @@ describe('Borg Assimilation Integration', () => {
 		await server.listen({ port: PORT });
 
 		// Initialize provider
-		provider = new BorgLiveProvider();
+		provider = new HypercodeLiveProvider();
 	});
 
 	afterAll(async () => {
@@ -59,19 +59,19 @@ describe('Borg Assimilation Integration', () => {
 		await fs.rm(tempDir, { recursive: true, force: true });
 	});
 
-	it('should verify connectivity to Borg Core', async () => {
+	it('should verify connectivity to Hypercode Core', async () => {
 		const status = await provider.getStatus();
 		expect(status.connected).toBe(true);
 	});
 
-	it('should create a new session in Borg Core', async () => {
+	it('should create a new session in Hypercode Core', async () => {
 		const sessionId = await provider.createSession('Test Task');
 		expect(sessionId).toBe('test-session-123');
 	});
 
 	it('should commit a handoff and mirror to local cache', async () => {
-		const handoff: BorgHandoff = {
-			version: 'Borg-Maestro-v1',
+		const handoff: HypercodeHandoff = {
+			version: 'Hypercode-Maestro-v1',
 			timestamp: Date.now(),
 			sessionId: 'test-session-123',
 			stats: {
@@ -97,7 +97,7 @@ describe('Borg Assimilation Integration', () => {
 			},
 			recentContext: [
 				{
-					content: 'Hello Borg',
+					content: 'Hello Hypercode',
 					metadata: { source: 'test-agent', tags: ['test'] },
 				},
 			],
@@ -111,10 +111,10 @@ describe('Borg Assimilation Integration', () => {
 
 		// Verify remote state
 		expect(lastHandoff.sessionId).toBe('test-session-123');
-		expect(lastHandoff.recentContext[0].content).toBe('Hello Borg');
+		expect(lastHandoff.recentContext[0].content).toBe('Hello Hypercode');
 
 		// Verify local cache (latest.json)
-		// Note: Since the test runs in process.cwd(), we need to check .borg/handoffs/latest.json
+		// Note: Since the test runs in process.cwd(), we need to check .hypercode/handoffs/latest.json
 		// But in our setup we might have pointed it elsewhere or just use default.
 		const cacheManager = new LocalCacheManager(process.cwd());
 		const latest = await cacheManager.getLatestHandoff();

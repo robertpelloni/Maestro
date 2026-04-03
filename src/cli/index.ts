@@ -80,48 +80,48 @@ show
 // Status command
 program
 	.command('status')
-	.description('Display the current orchestration session status from Borg state')
+	.description('Display the current orchestration session status from Hypercode state')
 	.option('--json', 'Output as JSON (for scripting)')
 	.action(status);
 
-// Borg commands
-const borg = program.command('borg').description('Borg coordination features');
+// Hypercode commands
+const hypercode = program.command('hypercode').description('Hypercode coordination features');
 
-borg
+hypercode
 	.command('status')
-	.description('Show Borg coordination status')
+	.description('Show Hypercode coordination status')
 	.option('--json', 'Output as JSON (for scripting)')
 	.action(async (options: Record<string, unknown>) => {
-		const { borgStatus } = await import('./commands/borg-status');
-		return borgStatus(options);
+		const { hypercodeStatus } = await import('./commands/hypercode-status');
+		return hypercodeStatus(options);
 	});
 
-borg
+hypercode
 	.command('sync')
-	.description('Synchronize Borg state with local environment')
+	.description('Synchronize Hypercode state with local environment')
 	.option('--json', 'Output as JSON (for scripting)')
 	.action(async (options: Record<string, unknown>) => {
-		const { borgSync } = await import('./commands/borg-sync');
-		return borgSync(options);
+		const { hypercodeSync } = await import('./commands/hypercode-sync');
+		return hypercodeSync(options);
 	});
 
-borg
+hypercode
 	.command('list')
-	.description('List Borg coordination sessions')
+	.description('List Hypercode coordination sessions')
 	.option('--json', 'Output as JSON (for scripting)')
 	.action(async (options: Record<string, unknown>) => {
-		const { borgList } = await import('./commands/borg-list');
-		return borgList(options);
+		const { hypercodeList } = await import('./commands/hypercode-list');
+		return hypercodeList(options);
 	});
 
-borg
+hypercode
 	.command('graph [session-id]')
 	.description('Generate a graph of the session phases and knowledge')
 	.option('--json', 'Output as JSON')
 	.option('--dot', 'Output as DOT representation')
 	.action(async (sessionId: string | undefined, options: Record<string, unknown>) => {
-		const { borgGraph } = await import('./commands/borg-graph');
-		return borgGraph(sessionId, options);
+		const { hypercodeGraph } = await import('./commands/hypercode-graph');
+		return hypercodeGraph(sessionId, options);
 	});
 
 // Playbook command (lazy-loaded to avoid eager resolution of generated/prompts)

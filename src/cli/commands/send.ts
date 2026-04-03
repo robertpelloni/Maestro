@@ -7,8 +7,8 @@ import { estimateContextUsage } from '../../main/parsers/usage-aggregator';
 import { getAgentDefinition } from '../../main/agents/definitions';
 import { withMaestroClient } from '../services/maestro-client';
 import type { ToolType } from '../../shared/types';
-import { BorgLiveProvider } from '../../main/services/BorgLiveProvider';
-import { BorgHandoff } from '../../shared/borg-schema';
+import { HypercodeLiveProvider } from '../../main/services/HypercodeLiveProvider';
+import { HypercodeHandoff } from '../../shared/hypercode-schema';
 
 interface SendOptions {
 	session?: string;
@@ -123,11 +123,11 @@ export async function send(
 	});
 	const response = buildResponse(agentId, agent.name, result, agent.toolType);
 
-	// Borg Handoff Integration
+	// Hypercode Handoff Integration
 	try {
-		const provider = new BorgLiveProvider();
-		const handoff: BorgHandoff = {
-			version: 'Borg-Maestro-v1',
+		const provider = new HypercodeLiveProvider();
+		const handoff: HypercodeHandoff = {
+			version: 'Hypercode-Maestro-v1',
 			timestamp: Date.now(),
 			sessionId: result.agentSessionId || agentId,
 			stats: {

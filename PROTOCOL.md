@@ -1,20 +1,20 @@
-# Borg-Maestro Handoff Protocol
+# Hypercode-Maestro Handoff Protocol
 
-This document defines the unified JSON handoff protocol used by Maestro after its assimilation into the Borg ecosystem.
+This document defines the unified JSON handoff protocol used by Maestro after its assimilation into the Hypercode ecosystem.
 
 ## Overview
 
-Maestro uses the Borg JSON handoff protocol as its primary source of truth for orchestration state. This replaces the legacy Markdown-based `active-session.md` system. The state is managed by a **Live Borg Core** control plane, with local mirroring in the `.borg/handoffs/` directory.
+Maestro uses the Hypercode JSON handoff protocol as its primary source of truth for orchestration state. This replaces the legacy Markdown-based `active-session.md` system. The state is managed by a **Live Hypercode Core** control plane, with local mirroring in the `.hypercode/handoffs/` directory.
 
 ## Schema Definition (v1)
 
-The protocol uses an extended Borg schema, incorporating a `maestro` namespace for orchestration-specific metadata.
+The protocol uses an extended Hypercode schema, incorporating a `maestro` namespace for orchestration-specific metadata.
 
 ### 1. Root Structure
 
 ```json
 {
-  "version": "Borg-Maestro-v1",
+  "version": "Hypercode-Maestro-v1",
   "timestamp": 1711234567890,
   "sessionId": "uuid-string",
   "stats": { ... },
@@ -62,7 +62,7 @@ Orchestration-specific fields managed by the Maestro TechLead.
 
 ### Base URL
 
-Defaults to `http://localhost:3000` (configurable via `BORG_CORE_URL`).
+Defaults to `http://localhost:3000` (configurable via `HYPERCODE_CORE_URL`).
 
 ### Endpoints
 
@@ -74,4 +74,4 @@ Defaults to `http://localhost:3000` (configurable via `BORG_CORE_URL`).
 
 ## Local Mirroring
 
-For performance, the `LocalCacheManager` maintains a copy of the latest handoff in `.borg/handoffs/latest.json`. Maestro CLI commands (like `/maestro:status`) read directly from this mirror to ensure instantaneous response times.
+For performance, the `LocalCacheManager` maintains a copy of the latest handoff in `.hypercode/handoffs/latest.json`. Maestro CLI commands (like `/maestro:status`) read directly from this mirror to ensure instantaneous response times.

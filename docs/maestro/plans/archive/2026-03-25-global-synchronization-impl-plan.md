@@ -6,14 +6,14 @@
 
 ## 1. Plan Overview
 
-This phase introduces multi-device synchronization by extending the `BorgLiveProvider` to handle `maestro-settings.json` and `maestro-playbooks.json` via the Borg Core API.
+This phase introduces multi-device synchronization by extending the `HypercodeLiveProvider` to handle `maestro-settings.json` and `maestro-playbooks.json` via the Hypercode Core API.
 
 ## 2. Execution Strategy
 
 | Phase | Task                       | Agent        | Mode       |
 | ----- | -------------------------- | ------------ | ---------- |
 | 1     | API Contract for Sync      | api_designer | Sequential |
-| 2     | BorgCoreClient Extension   | coder        | Sequential |
+| 2     | HypercodeCoreClient Extension   | coder        | Sequential |
 | 3     | SyncManager Implementation | coder        | Sequential |
 | 4     | Integration Validation     | tester       | Sequential |
 
@@ -22,13 +22,13 @@ This phase introduces multi-device synchronization by extending the `BorgLivePro
 ### Phase 1: API Contract for Sync
 
 - **Objective**: Define the API endpoints for syncing settings and playbooks.
-- **Files to Modify**: `src/shared/borg-schema.ts`
+- **Files to Modify**: `src/shared/hypercode-schema.ts`
 - **Deliverables**: New schema definitions for Settings and Playbooks payloads.
 
-### Phase 2: BorgCoreClient Extension
+### Phase 2: HypercodeCoreClient Extension
 
 - **Objective**: Add HTTP calls to the new endpoints.
-- **Files to Modify**: `src/main/services/BorgCoreClient.ts`, `src/main/services/IBorgProvider.ts`, `src/main/services/BorgLiveProvider.ts`
+- **Files to Modify**: `src/main/services/HypercodeCoreClient.ts`, `src/main/services/IHypercodeProvider.ts`, `src/main/services/HypercodeLiveProvider.ts`
 - **Deliverables**: Provider capable of sending/receiving sync data.
 
 ### Phase 3: SyncManager Implementation

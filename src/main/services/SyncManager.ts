@@ -2,35 +2,35 @@ import { app } from 'electron';
 import path from 'path';
 import fs from 'fs/promises';
 import Store from 'electron-store';
-import { IBorgProvider } from './IBorgProvider';
+import { IHypercodeProvider } from './IHypercodeProvider';
 import { MaestroSettings } from '../stores/types';
-import { BorgSettingsPayload } from '../../shared/borg-schema';
+import { HypercodeSettingsPayload } from '../../shared/hypercode-schema';
 import { logger } from '../utils/logger';
 
 const LOG_CONTEXT = 'SyncManager';
 
 /**
- * SyncManager coordinates periodic synchronization of settings and playbooks with Borg.
+ * SyncManager coordinates periodic synchronization of settings and playbooks with Hypercode.
  */
 export class SyncManager {
 	private interval: NodeJS.Timeout | null = null;
 
 	constructor(
-		private borgProvider: IBorgProvider,
+		private hypercodeProvider: IHypercodeProvider,
 		private settingsStore: Store<MaestroSettings>
 	) {}
 
 	/**
-	 * Synchronize settings with Borg Core.
-	 * Local settings are sent to Borg, and remote changes are merged back.
+	 * Synchronize settings with Hypercode Core.
+	 * Local settings are sent to Hypercode, and remote changes are merged back.
 	 */
 	async syncSettings(): Promise<void> {
 		try {
 			logger.debug('Starting settings synchronization', LOG_CONTEXT);
 			const currentSettings = this.settingsStore.store;
-			const payload: BorgSettingsPayload = { settings: currentSettings };
+			const payload: HypercodeSettingsPayload = { settings: currentSettings };
 
-			const remoteSettings = await this.borgProvider.syncSettings(payload);
+			const remoteSettings = await this.hypercodeProvider.syncSettings(payload);
 
 			if (remoteSettings && remoteSettings.settings) {
 				// Merge remote settings into local store
@@ -38,15 +38,15 @@ export class SyncManager {
 					...this.settingsStore.store,
 					...remoteSettings.settings,
 				};
-				logger.info('Settings successfully synchronized with Borg', LOG_CONTEXT);
+				logger.info('Settings successfully synchronized with Hypercode', LOG_CONTEXT);
 			}
 		} catch (error) {
-			logger.error('Failed to sync settings with Borg', LOG_CONTEXT, { error });
+			logger.error('Failed to sync settings with Hypercode', LOG_CONTEXT, { error });
 		}
 	}
 
 	/**
-	 * Synchronize playbooks with Borg Core.
+	 * Synchronize playbooks with Hypercode Core.
 	 * Aggregates all local session playbooks and syncs them with the global control plane.
 	 */
 	async syncPlaybooks(): Promise<void> {
@@ -79,7 +79,7 @@ export class SyncManager {
 				}
 			}
 
-			const remotePlaybooks = await this.borgProvider.syncPlaybooks(allPlaybooks);
+			const remotePlaybooks = await this.hypercodeProvider.syncPlaybooks(allPlaybooks);
 
 			if (remotePlaybooks) {
 				// Group playbooks by session for local storage
@@ -103,12 +103,12 @@ export class SyncManager {
 				}
 
 				logger.info(
-					`Playbooks successfully synchronized with Borg (${remotePlaybooks.length} total)`,
+					`Playbooks successfully synchronized with Hypercode (${remotePlaybooks.length} total)`,
 					LOG_CONTEXT
 				);
 			}
 		} catch (error) {
-			logger.error('Failed to sync playbooks with Borg', LOG_CONTEXT, { error });
+			logger.error('Failed to sync playbooks with Hypercode', LOG_CONTEXT, { error });
 		}
 	}
 

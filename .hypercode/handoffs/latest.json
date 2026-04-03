@@ -1,5 +1,5 @@
 {
-	"version": "Borg-Maestro-v1",
+	"version": "Hypercode-Maestro-v1",
 	"timestamp": 1774308562637,
 	"sessionId": "test-session-123",
 	"stats": {
@@ -25,7 +25,7 @@
 	},
 	"recentContext": [
 		{
-			"content": "Hello Borg",
+			"content": "Hello Hypercode",
 			"metadata": {
 				"source": "test-agent",
 				"tags": ["test"]

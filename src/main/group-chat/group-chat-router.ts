@@ -45,8 +45,8 @@ import { groupChatParticipantRequestPrompt } from '../../prompts';
 import { wrapSpawnWithSsh } from '../utils/ssh-spawn-wrapper';
 import type { SshRemoteSettingsStore } from '../utils/ssh-remote-resolver';
 import { setGetCustomShellPathCallback, getWindowsSpawnConfig } from './group-chat-config';
-import { BorgHandoff } from '../../shared/borg-schema';
-import { IBorgProvider } from '../services/IBorgProvider';
+import { HypercodeHandoff } from '../../shared/hypercode-schema';
+import { IHypercodeProvider } from '../services/IHypercodeProvider';
 
 // Import emitters from IPC handlers (will be populated after handlers are registered)
 import { groupChatEmitters } from '../ipc/handlers/groupChat';
@@ -98,8 +98,8 @@ let getAgentConfigCallback: GetAgentConfigCallback | null = null;
 // Module-level SSH store for remote execution support
 let sshStore: SshRemoteSettingsStore | null = null;
 
-// Module-level Borg provider for state integration
-let borgProvider: IBorgProvider | null = null;
+// Module-level Hypercode provider for state integration
+let hypercodeProvider: IHypercodeProvider | null = null;
 
 /**
  * Tracks pending participant responses for each group chat.
@@ -189,11 +189,11 @@ export function setSshStore(store: SshRemoteSettingsStore): void {
 }
 
 /**
- * Sets the Borg provider for state integration.
+ * Sets the Hypercode provider for state integration.
  * Called from index.ts during initialization.
  */
-export function setBorgProvider(provider: IBorgProvider): void {
-	borgProvider = provider;
+export function setHypercodeProvider(provider: IHypercodeProvider): void {
+	hypercodeProvider = provider;
 }
 
 /**
@@ -1155,10 +1155,10 @@ export async function routeAgentResponse(
 			`[GroupChatRouter] Added history entry for ${participantName}: ${summary.substring(0, 50)}...`
 		);
 
-		// Borg Handoff Integration
-		if (borgProvider) {
-			const handoff: BorgHandoff = {
-				version: 'Borg-Maestro-v1',
+		// Hypercode Handoff Integration
+		if (hypercodeProvider) {
+			const handoff: HypercodeHandoff = {
+				version: 'Hypercode-Maestro-v1',
 				timestamp: Date.now(),
 				sessionId: groupChatId,
 				stats: {
@@ -1198,8 +1198,8 @@ export async function routeAgentResponse(
 				},
 			};
 
-			borgProvider.commitHandoff(handoff).catch((err) => {
-				logger.error(`Failed to commit Borg handoff for ${participantName}`, LOG_CONTEXT, {
+			hypercodeProvider.commitHandoff(handoff).catch((err) => {
+				logger.error(`Failed to commit Hypercode handoff for ${participantName}`, LOG_CONTEXT, {
 					err,
 					groupChatId,
 				});

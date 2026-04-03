@@ -7,7 +7,7 @@
 
 ## 1. Problem Statement
 
-While Maestro is now assimilated into Borg for state management, session data remains isolated. To achieve the project's goal of "Global RAG integration," we need to:
+While Maestro is now assimilated into Hypercode for state management, session data remains isolated. To achieve the project's goal of "Global RAG integration," we need to:
 
 1. **Discoverability**: Identify other active or historical sessions within the collective.
 2. **Knowledge Extraction**: Capture high-value insights (decisions, discoveries, fixes) in a machine-readable format.
@@ -15,9 +15,9 @@ While Maestro is now assimilated into Borg for state management, session data re
 
 ## 2. Requirements
 
-- **REQ-4.1: Collective Discovery** — Add `listSessions` to the `BorgLiveProvider` to query the global control plane.
-- **REQ-4.2: Knowledge Namespace** — Extend the `BorgHandoff` schema with a `knowledge` section for extracted insights.
-- **REQ-4.3: Graphing Engine** — Add a `maestro borg graph` CLI command that outputs DOT or JSON graph data.
+- **REQ-4.1: Collective Discovery** — Add `listSessions` to the `HypercodeLiveProvider` to query the global control plane.
+- **REQ-4.2: Knowledge Namespace** — Extend the `HypercodeHandoff` schema with a `knowledge` section for extracted insights.
+- **REQ-4.3: Graphing Engine** — Add a `maestro hypercode graph` CLI command that outputs DOT or JSON graph data.
 
 ## 3. Approach
 
@@ -25,21 +25,21 @@ We will leverage the existing API-first architecture to surface collective data.
 
 ### Approach: Distributed Intelligence
 
-- **Provider Extension**: Add discovery methods to `IBorgProvider`.
+- **Provider Extension**: Add discovery methods to `IHypercodeProvider`.
 - **Insight Extraction**: Update `AfterAgent` hook logic (conceptually) to encourage agents to populate the `knowledge` section.
 - **Graph Visualization**: Implement a breadth-first traversal of session handoffs to build a dependency and knowledge graph.
 
 ## 4. Architecture Extensions
 
-- **Discovery Service**: New methods in `BorgLiveProvider.ts`.
-- **Knowledge Schema**: New Zod definitions in `borg-schema.ts`.
-- **BorgGraph (CLI)**: New command handler in `src/cli/commands/borg-graph.ts`.
+- **Discovery Service**: New methods in `HypercodeLiveProvider.ts`.
+- **Knowledge Schema**: New Zod definitions in `hypercode-schema.ts`.
+- **HypercodeGraph (CLI)**: New command handler in `src/cli/commands/hypercode-graph.ts`.
 
 ## 5. Agent Team
 
 - **architect**: Design the knowledge extraction schema.
 - **coder**: Implement discovery methods and CLI graphing.
-- **api_designer**: Ensure the Discovery API is consistent with Borg Core patterns.
+- **api_designer**: Ensure the Discovery API is consistent with Hypercode Core patterns.
 
 ## 6. Risk Assessment
 
@@ -48,6 +48,6 @@ We will leverage the existing API-first architecture to surface collective data.
 
 ## 7. Success Criteria
 
-1. `maestro borg list` shows all active sessions in the Borg Core.
-2. `maestro borg graph` generates a valid visualization of session dependencies.
+1. `maestro hypercode list` shows all active sessions in the Hypercode Core.
+2. `maestro hypercode graph` generates a valid visualization of session dependencies.
 3. Handoffs contain a `knowledge` array with at least one "Discovery" or "Decision" item.

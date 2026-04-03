@@ -1,26 +1,26 @@
-import { BorgLiveProvider } from '../../main/services/BorgLiveProvider';
+import { HypercodeLiveProvider } from '../../main/services/HypercodeLiveProvider';
 import { formatError } from '../output/formatter';
 
-interface BorgSyncOptions {
+interface HypercodeSyncOptions {
 	json?: boolean;
 }
 
-export async function borgSync(options: BorgSyncOptions): Promise<void> {
+export async function hypercodeSync(options: HypercodeSyncOptions): Promise<void> {
 	try {
-		const provider = new BorgLiveProvider();
+		const provider = new HypercodeLiveProvider();
 		const liveStatus = await provider.getStatus();
 
 		if (!liveStatus.connected) {
-			throw new Error('Borg Core is unreachable. Sync impossible.');
+			throw new Error('Hypercode Core is unreachable. Sync impossible.');
 		}
 
 		// In a real implementation, this might pull all active handoffs.
 		// For now, we'll verify connectivity and ensure the latest is fetched if a session exists.
 
 		if (options.json) {
-			console.log(JSON.stringify({ success: true, message: 'Borg sync verified' }));
+			console.log(JSON.stringify({ success: true, message: 'Hypercode sync verified' }));
 		} else {
-			console.log('🔄 Synchronizing with Borg Core...');
+			console.log('🔄 Synchronizing with Hypercode Core...');
 			console.log('✅ Connectivity verified.');
 			console.log('✅ Local mirror is up to date.');
 		}
@@ -29,7 +29,7 @@ export async function borgSync(options: BorgSyncOptions): Promise<void> {
 		if (options.json) {
 			console.error(JSON.stringify({ error: message }));
 		} else {
-			console.error(formatError(`Borg sync failed: ${message}`));
+			console.error(formatError(`Hypercode sync failed: ${message}`));
 		}
 		process.exit(1);
 	}

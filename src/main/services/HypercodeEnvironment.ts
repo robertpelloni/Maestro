@@ -2,34 +2,34 @@ import fs from 'fs/promises';
 import path from 'path';
 import { logger } from '../utils/logger';
 
-const LOG_CONTEXT = 'BorgEnvironment';
+const LOG_CONTEXT = 'HypercodeEnvironment';
 
-export interface BorgEnvInfo {
-	isBorgProject: boolean;
+export interface HypercodeEnvInfo {
+	isHypercodeProject: boolean;
 	isSandboxed: boolean;
 	sandboxId?: string;
 	handoffDirExists: boolean;
 }
 
-export class BorgEnvironment {
+export class HypercodeEnvironment {
 	/**
-	 * Detects the current Borg environment state.
+	 * Detects the current Hypercode environment state.
 	 */
-	static async detect(workspaceRoot: string = process.cwd()): Promise<BorgEnvInfo> {
-		const borgDir = path.join(workspaceRoot, '.borg');
-		const sandboxDir = path.join(borgDir, 'sandbox');
-		const handoffDir = path.join(borgDir, 'handoffs');
+	static async detect(workspaceRoot: string = process.cwd()): Promise<HypercodeEnvInfo> {
+		const hypercodeDir = path.join(workspaceRoot, '.hypercode');
+		const sandboxDir = path.join(hypercodeDir, 'sandbox');
+		const handoffDir = path.join(hypercodeDir, 'handoffs');
 
-		let isBorgProject = false;
+		let isHypercodeProject = false;
 		let isSandboxed = false;
 		let sandboxId: string | undefined;
 		let handoffDirExists = false;
 
 		try {
-			const stats = await fs.stat(borgDir);
-			isBorgProject = stats.isDirectory();
+			const stats = await fs.stat(hypercodeDir);
+			isHypercodeProject = stats.isDirectory();
 		} catch {
-			// Not a borg project
+			// Not a hypercode project
 		}
 
 		try {
@@ -40,9 +40,9 @@ export class BorgEnvironment {
 		}
 
 		// Detect sandbox via specific metadata file or env var
-		if (process.env.BORG_SANDBOX_ID) {
+		if (process.env.HYPERCODE_SANDBOX_ID) {
 			isSandboxed = true;
-			sandboxId = process.env.BORG_SANDBOX_ID;
+			sandboxId = process.env.HYPERCODE_SANDBOX_ID;
 		} else {
 			try {
 				const activeSandboxPath = path.join(sandboxDir, 'active.json');
@@ -56,13 +56,13 @@ export class BorgEnvironment {
 		}
 
 		const info = {
-			isBorgProject,
+			isHypercodeProject,
 			isSandboxed,
 			sandboxId,
 			handoffDirExists,
 		};
 
-		logger.debug('Borg environment detected', LOG_CONTEXT, info);
+		logger.debug('Hypercode environment detected', LOG_CONTEXT, info);
 		return info;
 	}
 }

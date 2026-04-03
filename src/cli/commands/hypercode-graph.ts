@@ -1,19 +1,19 @@
-import { BorgLiveProvider } from '../../main/services/BorgLiveProvider';
+import { HypercodeLiveProvider } from '../../main/services/HypercodeLiveProvider';
 import { LocalCacheManager } from '../../main/services/LocalCacheManager';
 import { formatError } from '../output/formatter';
-import { BorgHandoff } from '../../shared/borg-schema';
+import { HypercodeHandoff } from '../../shared/hypercode-schema';
 
-interface BorgGraphOptions {
+interface HypercodeGraphOptions {
 	json?: boolean;
 	dot?: boolean;
 }
 
-export async function borgGraph(
+export async function hypercodeGraph(
 	sessionIdArg: string | undefined,
-	options: BorgGraphOptions
+	options: HypercodeGraphOptions
 ): Promise<void> {
 	try {
-		const provider = new BorgLiveProvider();
+		const provider = new HypercodeLiveProvider();
 		const cacheManager = new LocalCacheManager(process.cwd());
 
 		let sessionId = sessionIdArg;
@@ -35,7 +35,7 @@ export async function borgGraph(
 			// Default to JSON if not specified, or if json option is true
 			const graphData = {
 				sessionId: handoff.sessionId,
-				task: handoff.notes || 'Borg Task',
+				task: handoff.notes || 'Hypercode Task',
 				phases: handoff.maestro?.phaseDependencies || [],
 				knowledge: handoff.knowledge || [],
 			};
@@ -46,20 +46,20 @@ export async function borgGraph(
 		if (options.json) {
 			console.error(JSON.stringify({ error: message }));
 		} else {
-			console.error(formatError(`Failed to generate Borg graph: ${message}`));
+			console.error(formatError(`Failed to generate Hypercode graph: ${message}`));
 		}
 		process.exit(1);
 	}
 }
 
-function toDot(handoff: BorgHandoff): string {
-	const lines: string[] = ['digraph BorgGraph {'];
+function toDot(handoff: HypercodeHandoff): string {
+	const lines: string[] = ['digraph HypercodeGraph {'];
 	lines.push('  rankdir=LR;');
 	lines.push('  node [shape=box, fontname="Arial", style=filled, fillcolor=white];');
 	lines.push('  edge [fontname="Arial", fontsize=10];');
 
 	const sessionId = handoff.sessionId.slice(0, 8);
-	lines.push(`  label="Borg Session: ${sessionId}\n${handoff.notes || ''}";`);
+	lines.push(`  label="Hypercode Session: ${sessionId}\n${handoff.notes || ''}";`);
 	lines.push('  labelloc=t;');
 
 	// Phases and Dependencies

@@ -1,6 +1,6 @@
 import path from 'path';
 import type { ProcessConfig } from '../process-manager/types';
-import type { BorgEnvInfo } from './BorgEnvironment';
+import type { HypercodeEnvInfo } from './HypercodeEnvironment';
 
 /**
  * Result of a guard validation check.
@@ -11,11 +11,11 @@ export interface GuardResult {
 }
 
 /**
- * BorgGuard implements security policies for sandboxed process execution.
- * It ensures that agents running in a Borg sandbox cannot escape the
+ * HypercodeGuard implements security policies for sandboxed process execution.
+ * It ensures that agents running in a Hypercode sandbox cannot escape the
  * designated workspace or perform dangerous shell operations.
  */
-export class BorgGuard {
+export class HypercodeGuard {
 	// Forbidden shell characters that allow command chaining or redirection
 	private static readonly FORBIDDEN_SHELL_CHARS = /[;&|><`$\\\\]/;
 
@@ -32,17 +32,17 @@ export class BorgGuard {
 	];
 
 	// Sensitive directories that should not be used as CWD
-	private static readonly SENSITIVE_DIRS = ['.borg', '.git', '.github', '.vscode', '.env'];
+	private static readonly SENSITIVE_DIRS = ['.hypercode', '.git', '.github', '.vscode', '.env'];
 
 	/**
 	 * Validates a process configuration against the security policy.
-	 * This is enforced when running in a Borg sandbox.
+	 * This is enforced when running in a Hypercode sandbox.
 	 *
 	 * @param config The process configuration to validate
-	 * @param envInfo Current Borg environment information
+	 * @param envInfo Current Hypercode environment information
 	 * @returns GuardResult indicating if the process is allowed to spawn
 	 */
-	static validate(config: ProcessConfig, envInfo: BorgEnvInfo): GuardResult {
+	static validate(config: ProcessConfig, envInfo: HypercodeEnvInfo): GuardResult {
 		// If not explicitly sandboxed, the guard allows the process (legacy/normal behavior)
 		if (!envInfo.isSandboxed) {
 			return { allowed: true };
@@ -134,13 +134,13 @@ export class BorgGuard {
 		}
 
 		// 5. Environment Variable Protection
-		// Prevent processes from tampering with BORG specific variables
+		// Prevent processes from tampering with HYPERCODE specific variables
 		const envVars = { ...shellEnvVars, ...customEnvVars };
 		for (const key of Object.keys(envVars)) {
-			if (key.startsWith('BORG_')) {
+			if (key.startsWith('HYPERCODE_')) {
 				return {
 					allowed: false,
-					reason: `Overriding BORG_* environment variables is forbidden: ${key}`,
+					reason: `Overriding HYPERCODE_* environment variables is forbidden: ${key}`,
 				};
 			}
 		}

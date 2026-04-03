@@ -1,6 +1,6 @@
 ---
 session_id: 2026-03-23-collective-knowledge
-task: enable collective session discovery and knowledge graphing in Maestro-Borg
+task: enable collective session discovery and knowledge graphing in Maestro-Hypercode
 created: '2026-03-25T22:57:26.351Z'
 updated: '2026-03-25T23:06:53.600Z'
 status: completed
@@ -55,14 +55,14 @@ phases:
       patterns_established:
         - Discovery layer integration.
       integration_points:
-        - src/main/services/BorgCoreClient.ts (Discovery API)
-        - src/main/services/BorgLiveProvider.ts (Discovery Implementation)
+        - src/main/services/HypercodeCoreClient.ts (Discovery API)
+        - src/main/services/HypercodeLiveProvider.ts (Discovery Implementation)
       warnings:
         - none
       key_interfaces_introduced:
-        - BorgLiveProvider.listSessions()
+        - HypercodeLiveProvider.listSessions()
       assumptions:
-        - BorgCoreClient correctly handles GET /v1/sessions.
+        - HypercodeCoreClient correctly handles GET /v1/sessions.
     errors: []
     retry_count: 0
   - id: 3
@@ -107,4 +107,4 @@ phases:
     retry_count: 0
 ---
 
-# enable collective session discovery and knowledge graphing in Maestro-Borg Orchestration Log
+# enable collective session discovery and knowledge graphing in Maestro-Hypercode Orchestration Log
