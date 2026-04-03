@@ -612,12 +612,10 @@ export function useInputProcessing(deps: UseInputProcessingDeps): UseInputProces
 						newHistory.push(effectiveInputValue.trim());
 					}
 
-					// For terminal mode (legacy), add to shellLogs
+					// For terminal mode, update session state
 					if (currentMode !== 'ai') {
 						return {
 							...s,
-							// TODO: Remove shellLogs once terminal tabs migration is complete
-							...(!s.terminalTabs?.length && { shellLogs: [...s.shellLogs, newEntry] }),
 							state: 'busy',
 							busySource: currentMode,
 							shellCwd: newShellCwd,
@@ -1072,7 +1070,6 @@ export function useInputProcessing(deps: UseInputProcessingDeps): UseInputProces
 								state: 'idle',
 								busySource: undefined,
 								thinkingStartTime: undefined,
-								shellLogs: [],
 							};
 						})
 					);

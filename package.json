@@ -245,6 +245,7 @@
 		"electron-store": "^8.1.0",
 		"electron-updater": "^6.6.2",
 		"fastify": "^4.25.2",
+		"github-slugger": "^2.0.0",
 		"js-tiktoken": "^1.0.21",
 		"js-yaml": "^4.1.1",
 		"marked": "^17.0.1",
@@ -262,6 +263,7 @@
 		"rehype-slug": "^6.0.0",
 		"remark-frontmatter": "^5.0.0",
 		"remark-gfm": "^4.0.1",
+		"unist-util-visit": "^5.1.0",
 		"ws": "^8.16.0",
 		"zod": "^4.3.6",
 		"zustand": "^5.0.11"
