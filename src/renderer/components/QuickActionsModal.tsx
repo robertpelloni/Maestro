@@ -622,7 +622,16 @@ export const QuickActionsModal = memo(function QuickActionsModal(props: QuickAct
 						label: 'Clear Terminal History',
 						action: () => {
 							setSessions((prev) =>
-								prev.map((s) => (s.id === activeSessionId ? { ...s, shellLogs: [] } : s))
+								prev.map((s) => {
+									if (s.id !== activeSessionId) return s;
+									return {
+										...s,
+										shellLogs: [],
+										...(s.terminalTabs?.length && {
+											terminalTabs: s.terminalTabs.map((tab) => ({ ...tab, logs: [] })),
+										}),
+									};
+								})
 							);
 							setQuickActionOpen(false);
 						},

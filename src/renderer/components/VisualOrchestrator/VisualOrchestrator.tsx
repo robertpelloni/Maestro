@@ -12,7 +12,7 @@ import ReactFlow, {
 	Panel,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../../web/components/ThemeProvider';
 import { Play, Square, Settings2 } from 'lucide-react';
 
 const initialNodes: Node[] = [

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../../web/components/ThemeProvider';
 import { useLayerStack } from '../../contexts/LayerStackContext';
 import { X } from 'lucide-react';
 import VisualOrchestrator from './VisualOrchestrator';
