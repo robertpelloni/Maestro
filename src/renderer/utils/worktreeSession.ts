@@ -69,18 +69,9 @@ export function buildWorktreeSession(params: BuildWorktreeSessionParams): Sessio
 		// Legacy model: no parentSessionId (uses worktreeParentPath instead)
 		parentSessionId: isLegacy ? undefined : params.parentSession.id,
 		worktreeBranch: isLegacy ? undefined : params.branch || undefined,
-		worktreeParentPath: params.worktreeParentPath,
 		// Inherit SSH configuration from parent session
 		sessionSshRemoteConfig: params.parentSession.sessionSshRemoteConfig,
 		aiLogs: [],
-		shellLogs: [
-			{
-				id: generateId(),
-				timestamp: Date.now(),
-				source: 'system',
-				text: isLegacy ? 'Shell Session Ready.' : 'Worktree Session Ready.',
-			},
-		],
 		workLog: [],
 		contextUsage: 0,
 		// Legacy: inherits inputMode directly from parent

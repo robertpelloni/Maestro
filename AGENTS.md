@@ -1,8 +1,5 @@
 # Agent Instructions
 
-Please refer to [docs/UNIVERSAL_LLM_INSTRUCTIONS.md](docs/UNIVERSAL_LLM_INSTRUCTIONS.md) for core operational mandates, technical architecture, and project standards.
+All LLMs interacting with this codebase **MUST** refer to `docs/UNIVERSAL_LLM_INSTRUCTIONS.md` for core operational mandates, technical architecture, and project standards.
 
-## Agent Guidelines
-
-- Maintain `src/shared/types.ts` as the source of truth for cross-process types.
-- Follow the selector pattern in Zustand stores to optimize renderer performance.
+This project is actively porting to a Go/Wails architecture. Any new backend services must be written in Go inside `/go/internal/`. Do not add new `ipcMain` handlers.

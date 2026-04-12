@@ -1,18 +1,12 @@
-# Maestro Project Vision
+# VISION: Maestro
 
 ## Ultimate Goal
 
-Maestro is designed to be the ultimate **AI Agent Orchestration Command Center**. It serves as an integrated, multi-agent desktop environment that radically simplifies the way developers, researchers, and creators interact with Large Language Models.
+Maestro is designed to be the ultimate, insanely great, pass-through interface and orchestration layer for **all** AI providers and local coding agents. The grand vision is to transcend the constraints of an Electron app and provide a robust, lightning-fast Go-based backend (via Wails v3) with multiple native UI frontends.
 
-By breaking away from single-chat web interfaces, Maestro provides a persistent, multi-tabbed, file-system-aware "IDE for AI".
+### Key Pillars
 
-## Design Philosophy
-
-1.  **Local First, Cloud Optional**: All sensitive configuration, SSH keys, and project data reside locally on the developer's machine. AI logic runs via API keys directly from the client.
-2.  **Cross-Platform Efficiency**: With the migration to the **Wails v3 Hybrid Architecture (Go/TypeScript)**, Maestro aims to consume less than 100MB of RAM at idle while outperforming Electron-based competitors.
-3.  **High Signal, Zero Noise**: The user interface is dense, developer-focused, and keyboard-driven.
-4.  **Extensibility**: The system is designed around a plugin architecture (Encore Features) where community members can define their own agent behaviors, UI widgets, and prompt libraries.
-
-## Target Audience
-
-Senior Software Engineers, Technical Founders, and AI Researchers who demand absolute control over their context windows, token usage, and local execution environments.
+1. **Universal Agent Support**: Out-of-the-box integration for Claude Code, Gemini CLI, Copilot, Aider, OpenCode, and ~30 other CLIs. If it can be run in a terminal, it can be orchestrated in Maestro.
+2. **True Parallel Development**: Through Git Worktrees and Auto Run Playbooks, Maestro enables parallel, multi-agent development spanning multiple isolated branches without merge conflicts.
+3. **High Performance**: Transitioning from a Node.js/Electron IPC backend to a native Go implementation ensures minimal memory overhead and snappy PTY responsiveness, even with dozens of agents running simultaneously.
+4. **Platform Agnosticism**: While the current frontend is web/React-based, the architectural separation created by the Go port will pave the way for completely native frontends (macOS Swift, Windows C#/.NET).

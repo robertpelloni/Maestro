@@ -1014,7 +1014,8 @@ export function useTabHandlers(): TabHandlersReturn {
 
 		const isAIMode = currentSession.inputMode === 'ai';
 		const currentActiveTab = isAIMode ? getActiveTab(currentSession) : null;
-		const logs = isAIMode ? currentActiveTab?.logs || [] : currentSession.shellLogs;
+		const logs = currentActiveTab?.logs || [];
+		if (!isAIMode) return null;
 
 		const logIndex = logs.findIndex((log) => log.id === logId);
 		if (logIndex === -1) return null;
@@ -1091,7 +1092,6 @@ export function useTabHandlers(): TabHandlersReturn {
 					);
 					return {
 						...s,
-						shellLogs: newLogs,
 						shellCommandHistory: newShellCommandHistory,
 					};
 				})

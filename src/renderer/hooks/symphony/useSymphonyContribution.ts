@@ -142,14 +142,6 @@ export function useSymphonyContribution(
 				gitTags,
 				gitRefsCacheTime,
 				aiLogs: [],
-				shellLogs: [
-					{
-						id: generateId(),
-						timestamp: Date.now(),
-						source: 'system',
-						text: 'Shell Session Ready.',
-					},
-				],
 				workLog: [],
 				contextUsage: 0,
 				inputMode: 'ai',

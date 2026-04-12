@@ -222,6 +222,11 @@ type SshRemoteStatus struct {
 	LastTestError   *string `json:"lastTestError"`
 }
 
+type SshRemoteInfo struct {
+	Hostname     string `json:"hostname"`
+	AgentVersion string `json:"agentVersion,omitempty"`
+}
+
 // SshRemoteTestResult represents the result of testing an SSH remote connection
 type SshRemoteTestResult struct {
 	Success    bool              `json:"success"`
@@ -230,11 +235,6 @@ type SshRemoteTestResult struct {
 }
 
 // RemoteDirEntry represents an entry in a remote directory.
-type RemoteDirEntry struct {
-	Name        string `json:"name"`
-	IsDirectory bool   `json:"isDirectory"`
-	IsSymlink   bool   `json:"isSymlink"`
-}
 
 // AgentSshRemoteConfig represents agent-level SSH remote configuration
 type AgentSshRemoteConfig struct {
