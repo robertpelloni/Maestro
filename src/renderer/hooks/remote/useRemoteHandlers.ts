@@ -154,18 +154,7 @@ export function useRemoteHandlers(deps: UseRemoteHandlersDeps): UseRemoteHandler
 							...s,
 							state: 'busy' as SessionState,
 							busySource: 'terminal',
-							// TODO: Remove shellLogs once terminal tabs migration is complete
-							...(!s.terminalTabs?.length && {
-								shellLogs: [
-									...s.shellLogs,
-									{
-										id: generateId(),
-										timestamp: Date.now(),
-										source: 'user',
-										text: command,
-									},
-								],
-							}),
+							// TODO: shellLogs removed as part of terminal tabs migration
 						};
 					})
 				);
@@ -177,12 +166,12 @@ export function useRemoteHandlers(deps: UseRemoteHandlersDeps): UseRemoteHandler
 					? session.remoteCwd || session.sessionSshRemoteConfig?.workingDirOverride || session.cwd
 					: session.shellCwd || session.cwd;
 				try {
-					await window.maestro.process.runCommand({
-						sessionId: sessionId,
-						command: command,
-						cwd: commandCwd,
-						sessionSshRemoteConfig: session.sessionSshRemoteConfig,
-					});
+					const tabId = session.terminalTabs?.[0]?.id;
+					if (tabId) {
+						await window.maestro.process.write(`${sessionId}-terminal-${tabId}`, command + '\n');
+					} else {
+						console.warn('[Remote] No terminal tab found to write to');
+					}
 					console.log('[Remote] Terminal command completed successfully');
 				} catch (error: unknown) {
 					captureException(error, {
@@ -202,18 +191,7 @@ export function useRemoteHandlers(deps: UseRemoteHandlersDeps): UseRemoteHandler
 								state: 'idle' as SessionState,
 								busySource: undefined,
 								thinkingStartTime: undefined,
-								// TODO: Remove shellLogs once terminal tabs migration is complete
-								...(!s.terminalTabs?.length && {
-									shellLogs: [
-										...s.shellLogs,
-										{
-											id: generateId(),
-											timestamp: Date.now(),
-											source: 'system',
-											text: `Error: Failed to run command - ${errorMessage}`,
-										},
-									],
-								}),
+								// TODO: shellLogs removed as part of terminal tabs migration
 							};
 						})
 					);

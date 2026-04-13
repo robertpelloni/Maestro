@@ -1087,28 +1087,21 @@ export function useInputProcessing(deps: UseInputProcessingDeps): UseInputProces
 						activeSession.sessionSshRemoteConfig?.workingDirOverride ||
 						activeSession.cwd
 					: activeSession.shellCwd || activeSession.cwd;
-				window.maestro.process
-					.runCommand({
-						sessionId: activeSession.id, // Plain session ID (not suffixed)
-						command: capturedInputValue,
-						cwd: commandCwd,
-						// Pass SSH config if the session has SSH enabled
-						sessionSshRemoteConfig: activeSession.sessionSshRemoteConfig,
-					})
-					.catch((error) => {
-						console.error('Failed to run command:', error);
-						setSessions((prev) =>
-							prev.map((s) => {
-								if (s.id !== activeSessionId) return s;
-								return {
-									...s,
-									state: 'idle',
-									busySource: undefined,
-									thinkingStartTime: undefined,
-								};
-							})
-						);
-					});
+				// Instead of runCommand, write directly to the persistent terminal tab
+				const tabId = activeSession.terminalTabs?.[0]?.id;
+				if (tabId) {
+					window.maestro.process
+						.write(`${activeSession.id}-terminal-${tabId}`, capturedInputValue + '\n')
+						.catch((error) => {
+							console.error('Failed to write to terminal tab:', error);
+							setSessions((prev) =>
+								prev.map((s) => {
+									if (s.id !== activeSessionId) return s;
+									return { ...s, state: 'idle', busySource: undefined };
+								})
+							);
+						});
+				}
 			} else if (targetPid > 0) {
 				// AI mode: Write to stdin
 				window.maestro.process.write(targetSessionId, capturedInputValue).catch((error) => {

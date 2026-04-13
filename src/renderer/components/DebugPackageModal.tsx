@@ -141,13 +141,7 @@ export function DebugPackageModal({ theme, isOpen, onClose }: DebugPackageModalP
 	const handleRevealInFinder = useCallback(() => {
 		if (resultPath) {
 			// Use shell to open the containing folder
-			window.maestro.process
-				.runCommand({
-					sessionId: 'debug-package',
-					command: `open -R "${resultPath}"`,
-					cwd: '/',
-					shell: '/bin/bash',
-				})
+			Promise.resolve() /* runCommand deprecated */
 				.catch(console.error);
 		}
 	}, [resultPath]);

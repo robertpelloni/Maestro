@@ -1,8 +1,4 @@
-# Gemini CLI Instructions
+# Gemini Instructions
 
-Please refer to [docs/UNIVERSAL_LLM_INSTRUCTIONS.md](docs/UNIVERSAL_LLM_INSTRUCTIONS.md) for core operational mandates, technical architecture, and project standards.
-
-## Gemini Specifics
-
-- Maestro provides specialized MCP tools for session management and complexity analysis.
-- Use `npx tsc -p tsconfig.main.json --noEmit` to verify main process type safety.
+Please reference `docs/UNIVERSAL_LLM_INSTRUCTIONS.md`.
+Prioritize clean TypeScript React hooks and Go backend efficiency. Avoid using Electron specific APIs for new features as we are migrating to Wails.

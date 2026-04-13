@@ -1,8 +1,4 @@
-# Claude Code Instructions
+# Claude Instructions
 
-Please refer to [docs/UNIVERSAL_LLM_INSTRUCTIONS.md](docs/UNIVERSAL_LLM_INSTRUCTIONS.md) for core operational mandates, technical architecture, and project standards.
-
-## Maestro Specifics
-
-- Use `npm run build:cli` to verify CLI changes.
-- Ensure all IPC handlers are registered in `src/main/ipc/handlers/index.ts`.
+Please reference `docs/UNIVERSAL_LLM_INSTRUCTIONS.md`.
+Prioritize clean TypeScript React hooks and Go backend efficiency. Avoid using Electron specific APIs for new features as we are migrating to Wails.

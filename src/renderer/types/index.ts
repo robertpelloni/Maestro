@@ -533,7 +533,6 @@ export interface Session {
 	projectRoot: string; // The initial working directory (never changes, used for Claude session storage)
 	aiLogs: LogEntry[];
 	// DEPRECATED: Legacy shell output logs — terminal tabs use xterm.js with direct PTY streaming
-	shellLogs: LogEntry[];
 	workLog: WorkLogItem[];
 	contextUsage: number;
 	// Usage statistics from AI responses
@@ -566,7 +565,6 @@ export interface Session {
 	worktreesExpanded?: boolean;
 	// Legacy: Worktree parent path for auto-discovery (will be migrated to worktreeConfig)
 	// TODO: Remove after migration to new parent/child model
-	worktreeParentPath?: string;
 	// File Explorer per-session state
 	fileTree: any[];
 	fileExplorerExpanded: string[];
@@ -732,6 +730,10 @@ export interface Session {
 
 	// Symphony contribution metadata (only set for Symphony sessions)
 	symphonyMetadata?: SymphonySessionMetadata;
+	/** @deprecated Part of terminal tabs migration */
+	shellLogs?: any[];
+	/** @deprecated Part of parent-child worktree migration */
+	worktreeParentPath?: string;
 }
 
 export interface AgentConfigOption {

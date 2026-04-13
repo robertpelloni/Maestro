@@ -3,8 +3,7 @@ package storage
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
+		"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"

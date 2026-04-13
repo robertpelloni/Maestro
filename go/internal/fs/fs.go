@@ -344,8 +344,8 @@ func (s *FsService) DirectorySize(dirPath string) (*DirectorySizeResult, error) 
 		TotalSize:   totalSize,
 		FileCount:   fileCount,
 		FolderCount: folderCount,
-	},
-	}
+	}, nil
+
 }
 
 // CountItems counts files and folders in a directory recursively
@@ -374,8 +374,8 @@ func (s *FsService) CountItems(dirPath string) (*ItemCountResult, error) {
 	return &ItemCountResult{
 		FileCount:   fileCount,
 		FolderCount: folderCount,
-	},
-	}
+	}, nil
+
 }
 
 // FetchImageAsBase64 fetches an image from a URL and returns a base64 data URL
