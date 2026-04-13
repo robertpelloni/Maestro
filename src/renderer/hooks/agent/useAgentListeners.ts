@@ -676,8 +676,7 @@ export function useAgentListeners(deps: UseAgentListenersDeps): void {
 							...s,
 							state: anyAiTabBusy ? s.state : ('idle' as SessionState),
 							busySource: anyAiTabBusy ? s.busySource : undefined,
-							// TODO: Remove shellLogs once terminal tabs migration is complete
-							...(!s.terminalTabs?.length && { shellLogs: [...s.shellLogs, exitLog] }),
+							// TODO: shellLogs removed as part of terminal tabs migration
 						};
 					})
 				);
@@ -686,7 +685,8 @@ export function useAgentListeners(deps: UseAgentListenersDeps): void {
 				if (!isFromAi) {
 					const currentSession = getSessions().find((s) => s.id === actualSessionId);
 					if (currentSession?.isGitRepo) {
-						const userLogs = currentSession.shellLogs.filter((log) => log.source === 'user');
+						const userLogs =
+							currentSession.aiTabs?.[0]?.logs?.filter((log: any) => log.source === 'user') || [];
 						const lastCommand = userLogs[userLogs.length - 1]?.text?.trim().toLowerCase() || '';
 
 						const gitRefCommands = [
@@ -1029,48 +1029,6 @@ export function useAgentListeners(deps: UseAgentListenersDeps): void {
 			}
 		});
 
-		// ================================================================
-		// onCommandExit — Handle command exit from runCommand
-		// ================================================================
-		const unsubscribeCommandExit = window.maestro.process.onCommandExit(
-			(sessionId: string, code: number) => {
-				const actualSessionId = sessionId;
-
-				setSessions((prev) =>
-					prev.map((s) => {
-						if (s.id !== actualSessionId) return s;
-
-						const anyAiTabBusy = s.aiTabs?.some((tab) => tab.state === 'busy') || false;
-
-						const newState = anyAiTabBusy ? ('busy' as SessionState) : ('idle' as SessionState);
-						const newBusySource = anyAiTabBusy ? ('ai' as const) : undefined;
-
-						if (code !== 0) {
-							const exitLog: LogEntry = {
-								id: generateId(),
-								timestamp: Date.now(),
-								source: 'system',
-								text: `Command exited with code ${code}`,
-							};
-							return {
-								...s,
-								state: newState,
-								busySource: newBusySource,
-							};
-						}
-
-						return {
-							...s,
-							state: newState,
-							busySource: newBusySource,
-						};
-					})
-				);
-			}
-		);
-
-		// ================================================================
-		// onUsage — Handle usage statistics (BATCHED)
 		// ================================================================
 		const unsubscribeUsage = window.maestro.process.onUsage((sessionId: string, usageStats) => {
 			const parsed = parseSessionId(sessionId);
@@ -1559,7 +1517,7 @@ export function useAgentListeners(deps: UseAgentListenersDeps): void {
 			unsubscribeSessionId();
 			unsubscribeSlashCommands();
 			unsubscribeStderr();
-			unsubscribeCommandExit();
+
 			unsubscribeUsage();
 			unsubscribeAgentError();
 			unsubscribeThinkingChunk?.();

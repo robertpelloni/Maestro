@@ -253,7 +253,7 @@ export function useBatchedSessionUpdates(
 					// Apply shell logs (legacy fallback — only when no terminal tabs present)
 					// TODO: Remove shellLogs once terminal tabs migration is complete
 					if ((shellStdout || shellStderr) && !updatedSession.terminalTabs?.length) {
-						const shellLogs = [...updatedSession.shellLogs];
+						const shellLogs = [...(updatedSession.shellLogs || [])];
 
 						if (shellStdout) {
 							const lastLog = shellLogs[shellLogs.length - 1];

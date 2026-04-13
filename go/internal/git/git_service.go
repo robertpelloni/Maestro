@@ -132,7 +132,7 @@ func (s *GitService) GetDiff(cwd string, files []string) (*GitDiff, error) {
 		return nil, fmt.Errorf("failed to get git diff: %w", err)
 	}
 
-	return &GitDiff{Diff: stdout},
+	return &GitDiff{Diff: stdout}, nil
 }
 
 // GetNumstat returns line-level statistics for changes
@@ -143,7 +143,7 @@ func (s *GitService) GetNumstat(cwd string) (*GitNumstat, error) {
 	}
 
 	files := s.ParseGitNumstat(stdout)
-	return &GitNumstat{Files: files},
+	return &GitNumstat{Files: files}, nil
 }
 
 // GetBranches returns all unique branch names (local and remote)
@@ -153,7 +153,7 @@ func (s *GitService) GetBranches(cwd string) ([]string, error) {
 		return nil, fmt.Errorf("failed to get branches: %w", err)
 	}
 
-	return s.ParseGitBranches(stdout),
+	return s.ParseGitBranches(stdout), nil
 }
 
 // GetTags returns all tags
@@ -163,7 +163,7 @@ func (s *GitService) GetTags(cwd string) ([]string, error) {
 		return nil, fmt.Errorf("failed to get tags: %w", err)
 	}
 
-	return s.ParseGitTags(stdout),
+	return s.ParseGitTags(stdout), nil
 }
 
 // GetLog returns git log entries
@@ -189,7 +189,7 @@ func (s *GitService) GetLog(cwd string, limit int, search string) ([]GitLogEntry
 		return nil, fmt.Errorf("failed to get git log: %w", err)
 	}
 
-	return s.ParseGitLog(stdout),
+	return s.ParseGitLog(stdout), nil
 }
 
 // GetRemotes returns the origin remote URL
@@ -198,7 +198,7 @@ func (s *GitService) GetRemotes(cwd string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to get remote URL: %w", err)
 	}
-	return strings.TrimSpace(stdout),
+	return strings.TrimSpace(stdout), nil
 }
 
 // GetRepoRoot returns the root directory of the git repository
@@ -207,7 +207,7 @@ func (s *GitService) GetRepoRoot(cwd string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("not a git repository: %w", err)
 	}
-	return strings.TrimSpace(stdout),
+	return strings.TrimSpace(stdout), nil
 }
 
 // WorktreeInfo returns information about a worktree at a given path
@@ -255,7 +255,7 @@ func (s *GitService) WorktreeInfo(worktreePath string) (*WorktreeInfo, error) {
 		IsWorktree:    isWorktree,
 		CurrentBranch: strings.TrimSpace(branch),
 		RepoRoot:      repoRoot,
-	},
+	}, nil
 }
 
 // WorktreeSetup creates or reuses a worktree

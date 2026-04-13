@@ -83,7 +83,7 @@ Run multiple agents in parallel with a Linear/Superhuman-level responsive interf
 
 Additional interactions: Drag nodes to reposition, scroll to zoom, use mini-map for overview.
 
-> **Note**: Maestro supports Claude Code, OpenAI Codex, OpenCode, and Factory Droid. Support for additional agents (Gemini CLI, Qwen3 Coder) may be added in future releases based on community demand.
+> **Note**: Maestro supports Claude Code, OpenAI Codex, OpenCode, Factory Droid, Adrenaline, Aider, Amazon Q, Amp Code, Auggie, Azure OpenAI, Code CLI, Codebuff, Codemachine, Copilot, Crush, Goose, Grok, Kilo, Kimi, Manus, Mistral, Ollama, Open Interpreter, Pi, Rovo, Trae, and Warp. Support for additional agents (Gemini CLI, Qwen3 Coder) may be added in future releases based on community demand.
 
 ## Quick Start
 

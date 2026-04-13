@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.15.7] - 2026-04-12
+
+### Added
+
+- **Expanded CLI Roster**: Added support for ~30 new AI coding agents and CLIs including Adrenaline, Aider, Amazon Q, Amp Code, Auggie, Azure OpenAI, Code CLI, Codebuff, Codemachine, Copilot, Crush, Factory, Goose, Grok, Kilo, Kimi, Manus, Mistral, Ollama, Interpreter, Pi, Rovo, Trae, and Warp.
+- **Go/TypeScript Hybrid Migration Phase 1**: Began the transition to a Wails v3 architecture. Ported agent definitions, detection logic, and SSH/File/Git backend services to native Go implementations (`/go/internal/`).
+
+### Changed
+
+- **Terminal Tabs Migration**: Removed legacy `shellLogs` dependencies in favor of persistent PTY-backed terminal tabs.
+- **Worktree Management**: Deprecated legacy `worktreeParentPath` scanners in favor of a robust parent/child tree representation.
+
+### Fixed
+
+- **Legacy IPC Hooks**: Eliminated the deprecated `runCommand` handlers across the frontend to reduce terminal noise.
+
+## [0.15.7] - 2026-04-12
+
+### Added
+
+- **Expanded CLI Roster**: Added support for ~30 new AI coding agents and CLIs including Adrenaline, Aider, Amazon Q, Amp Code, Auggie, Azure OpenAI, Code CLI, Codebuff, Codemachine, Copilot, Crush, Factory, Goose, Grok, Kilo, Kimi, Manus, Mistral, Ollama, Interpreter, Pi, Rovo, Trae, and Warp.
+- **Go/TypeScript Hybrid Migration Phase 1**: Began the transition to a Wails v3 architecture. Ported agent definitions, detection logic, and SSH/File/Git backend services to native Go implementations (`/go/internal/`).
+
+### Changed
+
+- **Terminal Tabs Migration**: Removed legacy `shellLogs` dependencies in favor of persistent PTY-backed terminal tabs.
+- **Worktree Management**: Deprecated legacy `worktreeParentPath` scanners in favor of a robust parent/child tree representation.
+
+### Fixed
+
+- **Legacy IPC Hooks**: Eliminated the deprecated `runCommand` handlers across the frontend to reduce terminal noise.
+
 ## [0.15.6] - 2026-04-01
 
 ### Added

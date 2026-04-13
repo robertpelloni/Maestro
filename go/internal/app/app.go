@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/RunMaestro/Maestro/internal/fs"
 	"github.com/RunMaestro/Maestro/internal/git"
@@ -85,12 +84,12 @@ func (a *App) GetStoragePath() string {
 // Git Methods (Bound to window.go.git.GitService in the frontend)
 // ============================================================================
 
-func (a *App) GetGitStatus(projectPath string) (string, error) {
+func (a *App) GetGitStatus(projectPath string) (*git.GitStatus, error) {
 	return a.gitService.GetStatus(projectPath)
 }
 
-func (a *App) GetGitDiff(projectPath string) (string, error) {
-	return a.gitService.GetDiff(projectPath)
+func (a *App) GetGitDiff(projectPath string) (*git.GitDiff, error) {
+	return a.gitService.GetDiff(projectPath, nil)
 }
 
 // ============================================================================
@@ -115,10 +114,10 @@ func (a *App) SpawnProcess(config *process.ProcessConfig) (*process.SpawnResult,
 	return a.processManager.Spawn(config)
 }
 
-func (a *App) KillProcess(sessionID string) error {
+func (a *App) KillProcess(sessionID string) bool {
 	return a.processManager.Kill(sessionID)
 }
 
-func (a *App) WriteToProcess(sessionID string, data string) error {
-	return a.processManager.Write(sessionID, []byte(data))
+func (a *App) WriteToProcess(sessionID string, data string) bool {
+	return a.processManager.Write(sessionID, data)
 }

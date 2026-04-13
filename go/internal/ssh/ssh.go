@@ -88,7 +88,7 @@ func (s *SshService) GetClient(config *types.SshRemoteConfig) (*Client, error) {
 	return &Client{
 		Client: client,
 		config: config,
-	},
+	}, nil
 	
 }
 
@@ -99,9 +99,8 @@ func (s *SshService) TestConnection(config *types.SshRemoteConfig, agentCommand 
 		return &types.SshRemoteTestResult{
 			Success: false,
 			Error:   err.Error(),
-		},
-		
-	},
+			}, nil
+		}
 	defer client.Close()
 
 	// Test command: echo marker, get hostname, optionally check agent
@@ -115,18 +114,16 @@ func (s *SshService) TestConnection(config *types.SshRemoteConfig, agentCommand 
 		return &types.SshRemoteTestResult{
 			Success: false,
 			Error:   fmt.Sprintf("Failed to execute test command: %v (stderr: %s)", err, stderr),
-		},
-		
-	},
+		}, nil
+	}
 
 	lines := strings.Split(strings.TrimSpace(stdout), "\n")
 	if len(lines) == 0 || lines[0] != "SSH_OK" {
 		return &types.SshRemoteTestResult{
 			Success: false,
 			Error:   "Unexpected response from remote host",
-		},
-		
-	},
+		}, nil
+	}
 
 	hostname := "unknown"
 	if len(lines) > 1 {
@@ -145,10 +142,9 @@ func (s *SshService) TestConnection(config *types.SshRemoteConfig, agentCommand 
 		RemoteInfo: &types.SshRemoteInfo{
 			Hostname:     hostname,
 			AgentVersion: agentVersion,
-		},
-	},
-	
-}
+			},
+		}, nil
+	}
 
 // CloseConnection closes the SSH connection.
 func (c *Client) CloseConnection() error {
@@ -183,7 +179,7 @@ func (c *Client) GetRemoteInfo(agentCommand string) (*types.SshRemoteInfo, error
 	return &types.SshRemoteInfo{
 		Hostname:     hostname,
 		AgentVersion: agentVersion,
-	},
+	}, nil
 	
 }
 

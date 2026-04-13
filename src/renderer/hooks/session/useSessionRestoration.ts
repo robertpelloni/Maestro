@@ -375,7 +375,6 @@ export function useSessionRestoration(): SessionRestorationReturn {
 				liveUrl: undefined,
 				aiLogs: [],
 				aiTabs: resetAiTabs,
-				shellLogs: correctedSession.shellLogs,
 				executionQueue: correctedSession.executionQueue || [],
 				activeTimeMs: correctedSession.activeTimeMs || 0,
 				agentError: undefined,

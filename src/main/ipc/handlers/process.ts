@@ -794,7 +794,7 @@ export function registerProcessHandlers(deps: ProcessHandlerDependencies): void 
 	// Supports SSH remote execution when sessionSshRemoteConfig is provided
 	// TODO: Remove this handler once all callers migrate to process:spawnTerminalTab for persistent PTY sessions
 	ipcMain.handle(
-		'process:runCommand',
+		'process:runCommand_DEPRECATED',
 		withIpcErrorLogging(
 			handlerOpts('runCommand'),
 			async (config: {

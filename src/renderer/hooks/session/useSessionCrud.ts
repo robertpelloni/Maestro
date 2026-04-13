@@ -217,14 +217,6 @@ export function useSessionCrud(deps: UseSessionCrudDeps): UseSessionCrudReturn {
 					gitTags,
 					gitRefsCacheTime,
 					aiLogs: [],
-					shellLogs: [
-						{
-							id: generateId(),
-							timestamp: Date.now(),
-							source: 'system',
-							text: 'Shell Session Ready.',
-						},
-					],
 					workLog: [],
 					contextUsage: 0,
 					inputMode: agentId === 'terminal' ? 'terminal' : 'ai',
