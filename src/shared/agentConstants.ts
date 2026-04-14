@@ -19,6 +19,30 @@ export const DEFAULT_CONTEXT_WINDOWS: Partial<Record<AgentId, number>> = {
 	opencode: 128000, // OpenCode (depends on model, 128k is conservative default)
 	'factory-droid': 200000, // Factory Droid (varies by model, defaults to Claude Opus)
 	terminal: 0, // Terminal has no context window
+	'adrenaline-cli': 128000,
+	'amazon-q-cli': 128000,
+	'amazon-q-developer-cli': 128000,
+	'amp-code-cli': 128000,
+	'auggie-cli': 128000,
+	'azure-openai-cli': 128000,
+	'code-cli': 128000,
+	'codebuff-cli': 128000,
+	'codemachine-cli': 128000,
+	'copilot-cli': 128000,
+	'crush-cli': 128000,
+	'factory-cli': 128000,
+	'goose-cli': 128000,
+	'grok-cli': 128000,
+	'kilo-code-cli': 128000,
+	'kimi-cli': 128000,
+	'manus-cli': 128000,
+	'mistral-vibe-cli': 128000,
+	'ollama-cli': 128000,
+	'open-interpreter-cli': 128000,
+	'pi-cli': 128000,
+	'rovo-cli': 128000,
+	'trae-cli': 128000,
+	'warp-cli': 128000,
 };
 
 /**

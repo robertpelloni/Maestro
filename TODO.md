@@ -4,6 +4,7 @@
 
 ### Unfinished Migrations & Technical Debt
 
+- [ ] **Agent CLI Roster Expansion**: Build out parsers, capabilities, and storage handlers for the newly introduced CLI agents (Adrenaline CLI, Amazon Q CLI, etc.). Make sure UI options reflect the newly added tools.
 - [ ] **Terminal Tabs Migration**: Remove legacy `shellLogs` dependencies in `useInputProcessing.ts`, `useAgentListeners.ts`, and `useInterruptHandler.ts`. Complete the shift to persistent PTY-backed terminal tabs.
 - [ ] **Session Model Refactoring**: Finalize the 'parent/child' model for sessions and worktrees in `useWorktreeHandlers.ts` and clean up `src/renderer/types/index.ts`.
 - [ ] **Legacy IPC Handlers**: Deprecate legacy process spawning handlers in `src/main/ipc/handlers/process.ts` in favor of `process:spawnTerminalTab`.

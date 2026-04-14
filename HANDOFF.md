@@ -2,24 +2,24 @@
 
 ## Session Summary
 
-**Date**: April 1, 2026
-**Version**: 0.15.6
+**Date**: April 10, 2026
+**Version**: 0.15.7
 
-During this session, Maestro was transitioned into a **Go/TypeScript Hybrid** application using Wails v3. The legacy Electron backend is actively being deprecated.
+During this session, Maestro was expanded to support a massive roster of CLI agents and further transitioned into a **Go/TypeScript Hybrid** application using Wails v3. The legacy Electron backend is actively being deprecated.
 
 ### Completed Work:
 
-1.  **Backend Translation**: All core services (Git, PTY Process Management, Session Storage, Filesystem, Persistence, and SSH) have been ported to Go.
-2.  **Frontend Fixes**: Resolved critical Vite build errors (`cueSessionMap` duplication, `ALL_TYPES` duplication, `MermaidRenderer` import paths).
-3.  **CSP Adjustments**: Relaxed Content Security Policy to allow React DevTools and local HMR connections in development.
-4.  **Documentation Sweep**: Created `UNIVERSAL_LLM_INSTRUCTIONS.md`, generated `IDEAS.md`, `DASHBOARD.md`, and unified the agent instructions.
+1.  **Agent CLI Roster Expansion**: Added support for 24 new CLI agents (Adrenaline CLI, Amazon Q CLI, etc.) in `src/shared/agentIds.ts`, `src/shared/agentMetadata.ts`, and `src/shared/agentConstants.ts`.
+2.  **Go Translation**: Ported the list of Agent IDs to Go types in `go/internal/types/agent_ids.go`.
+3.  **Documentation Updates**: Bumped version to 0.15.7 across `package.json`, `VERSION`, `VERSION.md`, `CHANGELOG.md`. Added the new agents to `ROADMAP.md` and `TODO.md`.
 
 ### Outstanding Tasks for Next Agent:
 
 The next AI model (e.g., Claude Opus 4.6 or GPT Codex 5.3) should pick up the following tasks from `TODO.md`:
 
-1.  **Terminal Tabs Migration**: Remove legacy `shellLogs` dependencies in `useInputProcessing.ts`, `useAgentListeners.ts`, and `useInterruptHandler.ts`. This is a critical technical debt item blocking the full transition to persistent PTY-backed terminal tabs.
-2.  **Session Model Refactoring**: Finalize the 'parent/child' model for sessions and worktrees in `useWorktreeHandlers.ts`.
+1.  **Agent CLI Roster Expansion**: Build out parsers, capabilities, and storage handlers for the newly introduced CLI agents. Make sure UI options reflect the newly added tools.
+2.  **Terminal Tabs Migration**: Remove legacy `shellLogs` dependencies in `useInputProcessing.ts`, `useAgentListeners.ts`, and `useInterruptHandler.ts`. This is a critical technical debt item blocking the full transition to persistent PTY-backed terminal tabs.
+3.  **Session Model Refactoring**: Finalize the 'parent/child' model for sessions and worktrees in `useWorktreeHandlers.ts`.
 
 ### Project State Notes:
 
