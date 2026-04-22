@@ -1,4 +1,8 @@
-import { HypercodeHandoff, HypercodeSettingsPayload, HypercodePlaybooksPayload } from '../../shared/hypercode-schema';
+import {
+	HypercodeHandoff,
+	HypercodeSettingsPayload,
+	HypercodePlaybooksPayload,
+} from '../../shared/hypercode-schema';
 
 export interface IHypercodeProvider {
 	createSession(task: string, initialMetadata?: Record<string, any>): Promise<string>;

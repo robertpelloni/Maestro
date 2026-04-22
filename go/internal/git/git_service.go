@@ -71,7 +71,7 @@ type WorktreeSetupResult struct {
 }
 
 // GitService provides methods for interacting with git repositories
-type GitService struct {}
+type GitService struct{}
 
 // NewGitService creates a new GitService
 func NewGitService() *GitService {
@@ -265,10 +265,10 @@ func (s *GitService) WorktreeSetup(mainRepoCwd, worktreePath, branchName string)
 
 	if strings.HasPrefix(worktreePath, mainRepoCwd+string(os.PathSeparator)) {
 		return &WorktreeSetupResult{
-			Success: false,
-			Error:   "Worktree path cannot be inside the main repository.",
-		},
-		nil
+				Success: false,
+				Error:   "Worktree path cannot be inside the main repository.",
+			},
+			nil
 	}
 
 	pathExists := true
@@ -285,10 +285,10 @@ func (s *GitService) WorktreeSetup(mainRepoCwd, worktreePath, branchName string)
 				pathExists = false
 			} else {
 				return &WorktreeSetupResult{
-					Success: false,
-					Error:   "Path exists but is not a git worktree or repository (and is not empty)",
-				},
-			nil
+						Success: false,
+						Error:   "Path exists but is not a git worktree or repository (and is not empty)",
+					},
+					nil
 			}
 		}
 	}
@@ -308,13 +308,13 @@ func (s *GitService) WorktreeSetup(mainRepoCwd, worktreePath, branchName string)
 		currBranchTrim := strings.TrimSpace(currentBranch)
 
 		return &WorktreeSetupResult{
-			Success:         true,
-			Created:         false,
-			CurrentBranch:   currBranchTrim,
-			RequestedBranch: branchName,
-			BranchMismatch:  currBranchTrim != branchName && branchName != "",
-		},
-		nil
+				Success:         true,
+				Created:         false,
+				CurrentBranch:   currBranchTrim,
+				RequestedBranch: branchName,
+				BranchMismatch:  currBranchTrim != branchName && branchName != "",
+			},
+			nil
 	}
 
 	_, _, err := s.execGit([]string{"rev-parse", "--verify", branchName}, mainRepoCwd)
@@ -333,13 +333,13 @@ func (s *GitService) WorktreeSetup(mainRepoCwd, worktreePath, branchName string)
 	}
 
 	return &WorktreeSetupResult{
-		Success:         true,
-		Created:         true,
-		CurrentBranch:   branchName,
-		RequestedBranch: branchName,
-		BranchMismatch:  false,
-	},
-	nil
+			Success:         true,
+			Created:         true,
+			CurrentBranch:   branchName,
+			RequestedBranch: branchName,
+			BranchMismatch:  false,
+		},
+		nil
 }
 
 // ParseGitStatusPorcelain parses git status --porcelain output

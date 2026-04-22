@@ -51,13 +51,13 @@ Maestro's internal state engine will be completely refactored to replace its nat
 
 ### Decision Matrix
 
-| Criterion              | Weight | Live Provider                      | Sidecar Sync                      |
-| :--------------------- | :----- | :--------------------------------- | :-------------------------------- |
-| **Data Integrity**     | 40%    | **5/5**: Single source of truth.   | **3/5**: Sync conflict risks.     |
-| **Hypercode Native Flow**   | 30%    | **5/5**: Deep protocol alignment.  | **3/5**: Needs translation layer. |
-| **Complexity**         | 20%    | **2/5**: High implementation cost. | **4/5**: Additive change.         |
-| **Offline Capability** | 10%    | **1/5**: Hard network dependency.  | **5/5**: Local-first works.       |
-| **Weighted Total**     |        | **4.2**                            | **3.4**                           |
+| Criterion                 | Weight | Live Provider                      | Sidecar Sync                      |
+| :------------------------ | :----- | :--------------------------------- | :-------------------------------- |
+| **Data Integrity**        | 40%    | **5/5**: Single source of truth.   | **3/5**: Sync conflict risks.     |
+| **Hypercode Native Flow** | 30%    | **5/5**: Deep protocol alignment.  | **3/5**: Needs translation layer. |
+| **Complexity**            | 20%    | **2/5**: High implementation cost. | **4/5**: Additive change.         |
+| **Offline Capability**    | 10%    | **1/5**: Hard network dependency.  | **5/5**: Local-first works.       |
+| **Weighted Total**        |        | **4.2**                            | **3.4**                           |
 
 ## 4. Architecture
 

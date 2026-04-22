@@ -3,7 +3,7 @@ package storage
 import (
 	"database/sql"
 	"encoding/json"
-		"io/ioutil"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -55,7 +55,7 @@ func (s *SessionStorage) ListSessions(projectPath string) ([]types.AgentSessionI
 
 	// 2. Try JSON fallback (simplified for brevity)
 	// In a full implementation, we would merge and deduplicate
-	
+
 	return allSessions, nil
 }
 
@@ -102,7 +102,7 @@ func (s *SessionStorage) listSessionsSqlite(projectPath string) ([]types.AgentSe
 		sess.Timestamp = time.Unix(created/1000, 0).Format(time.RFC3339)
 		sess.ModifiedAt = time.Unix(updated/1000, 0).Format(time.RFC3339)
 		sess.FirstMessage = title
-		
+
 		// In a real implementation, we'd also join with message/part tables for stats
 		sessions = append(sessions, sess)
 	}
@@ -160,9 +160,9 @@ func (s *SessionStorage) loadMessagesSqlite(sessionID string) (*types.SessionMes
 		msg.ID = id
 		msg.SessionID = sessionID
 		msg.Time = &types.OpenCodeTime{Created: created}
-		
+
 		result.Messages = append(result.Messages, msg)
-		
+
 		if msg.Tokens != nil {
 			result.TotalInputTokens += msg.Tokens.Input
 			result.TotalOutputTokens += msg.Tokens.Output
@@ -212,7 +212,7 @@ func (s *SessionStorage) loadMessagesJson(sessionID string) (*types.SessionMessa
 		if !strings.HasSuffix(file.Name(), ".json") {
 			continue
 		}
-		
+
 		data, err := ioutil.ReadFile(filepath.Join(msgDir, file.Name()))
 		if err != nil {
 			continue
@@ -222,7 +222,7 @@ func (s *SessionStorage) loadMessagesJson(sessionID string) (*types.SessionMessa
 		if err := json.Unmarshal(data, &msg); err != nil {
 			continue
 		}
-		
+
 		result.Messages = append(result.Messages, msg)
 		// ... (Aggregate tokens and load parts similar to SQLite logic)
 	}

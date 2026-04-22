@@ -272,8 +272,6 @@ describe('agent-capabilities', () => {
 				'supportsBatchMode',
 				'supportsStreaming',
 				'supportsStreamJsonInput',
-				'supportsImageFiles',
-				'requiresStdinEnd',
 				'supportsResultMessages',
 				'supportsModelSelection',
 				'requiresPromptToStart',

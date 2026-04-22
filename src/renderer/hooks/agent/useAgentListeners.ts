@@ -676,7 +676,6 @@ export function useAgentListeners(deps: UseAgentListenersDeps): void {
 							...s,
 							state: anyAiTabBusy ? s.state : ('idle' as SessionState),
 							busySource: anyAiTabBusy ? s.busySource : undefined,
-							// TODO: shellLogs removed as part of terminal tabs migration
 						};
 					})
 				);

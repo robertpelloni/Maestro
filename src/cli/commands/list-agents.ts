@@ -41,20 +41,24 @@ export async function listAgents(options: ListAgentsOptions): Promise<void> {
 				cwd: s.cwd,
 				groupId: s.groupId,
 				autoRunFolderPath: s.autoRunFolderPath,
-				isHypercodeActive: activeHypercodeSessionId === s.id || activeHypercodeSessionId === s.agentSessionId,
+				isHypercodeActive:
+					activeHypercodeSessionId === s.id || activeHypercodeSessionId === s.agentSessionId,
 			}));
 			console.log(JSON.stringify(output, null, 2));
 		} else {
 			// Human-readable output
-			const displayAgents: (AgentDisplay & { isHypercodeActive?: boolean })[] = sessions.map((s) => ({
-				id: s.id,
-				name: s.name,
-				toolType: s.toolType,
-				cwd: s.cwd,
-				groupId: s.groupId,
-				autoRunFolderPath: s.autoRunFolderPath,
-				isHypercodeActive: activeHypercodeSessionId === s.id || activeHypercodeSessionId === s.agentSessionId,
-			}));
+			const displayAgents: (AgentDisplay & { isHypercodeActive?: boolean })[] = sessions.map(
+				(s) => ({
+					id: s.id,
+					name: s.name,
+					toolType: s.toolType,
+					cwd: s.cwd,
+					groupId: s.groupId,
+					autoRunFolderPath: s.autoRunFolderPath,
+					isHypercodeActive:
+						activeHypercodeSessionId === s.id || activeHypercodeSessionId === s.agentSessionId,
+				})
+			);
 			console.log(formatAgents(displayAgents as any, groupName));
 
 			if (activeHypercodeSessionId) {

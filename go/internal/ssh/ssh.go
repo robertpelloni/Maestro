@@ -89,7 +89,7 @@ func (s *SshService) GetClient(config *types.SshRemoteConfig) (*Client, error) {
 		Client: client,
 		config: config,
 	}, nil
-	
+
 }
 
 // TestConnection verifies the SSH connection and returns remote info.
@@ -99,8 +99,8 @@ func (s *SshService) TestConnection(config *types.SshRemoteConfig, agentCommand 
 		return &types.SshRemoteTestResult{
 			Success: false,
 			Error:   err.Error(),
-			}, nil
-		}
+		}, nil
+	}
 	defer client.Close()
 
 	// Test command: echo marker, get hostname, optionally check agent
@@ -142,9 +142,9 @@ func (s *SshService) TestConnection(config *types.SshRemoteConfig, agentCommand 
 		RemoteInfo: &types.SshRemoteInfo{
 			Hostname:     hostname,
 			AgentVersion: agentVersion,
-			},
-		}, nil
-	}
+		},
+	}, nil
+}
 
 // CloseConnection closes the SSH connection.
 func (c *Client) CloseConnection() error {
@@ -180,7 +180,7 @@ func (c *Client) GetRemoteInfo(agentCommand string) (*types.SshRemoteInfo, error
 		Hostname:     hostname,
 		AgentVersion: agentVersion,
 	}, nil
-	
+
 }
 
 // Exec executes a command on the remote host and returns stdout and stderr.

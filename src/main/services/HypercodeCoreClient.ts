@@ -1,4 +1,8 @@
-import { HypercodeHandoff, HypercodeSettingsPayload, HypercodePlaybooksPayload } from '../../shared/hypercode-schema';
+import {
+	HypercodeHandoff,
+	HypercodeSettingsPayload,
+	HypercodePlaybooksPayload,
+} from '../../shared/hypercode-schema';
 import { logger } from '../utils/logger';
 
 const LOG_CONTEXT = 'HypercodeCoreClient';

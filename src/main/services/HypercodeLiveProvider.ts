@@ -1,5 +1,9 @@
 import { IHypercodeProvider } from './IHypercodeProvider';
-import { HypercodeHandoff, HypercodeSettingsPayload, HypercodePlaybooksPayload } from '../../shared/hypercode-schema';
+import {
+	HypercodeHandoff,
+	HypercodeSettingsPayload,
+	HypercodePlaybooksPayload,
+} from '../../shared/hypercode-schema';
 import { HypercodeCoreClient } from './HypercodeCoreClient';
 import { LocalCacheManager } from './LocalCacheManager';
 import { logger } from '../utils/logger';

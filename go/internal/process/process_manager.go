@@ -1,7 +1,7 @@
 package process
 
 import (
-		"fmt"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -50,24 +50,24 @@ type ProcessConfig struct {
 
 // ManagedProcess represents an internal representation of a managed process.
 type ManagedProcess struct {
-	SessionID   string
-	ToolType    string
-	Pty         *os.File
-	Cmd         *exec.Cmd
-	Stdin       io.WriteCloser
-	Cwd         string
-	Pid         int
-	IsTerminal  bool
-	StartTime   time.Time
-	Command     string
-	Args        []string
-	ProjectPath string
-	TabID       string
-	SshRemoteID string
+	SessionID     string
+	ToolType      string
+	Pty           *os.File
+	Cmd           *exec.Cmd
+	Stdin         io.WriteCloser
+	Cwd           string
+	Pid           int
+	IsTerminal    bool
+	StartTime     time.Time
+	Command       string
+	Args          []string
+	ProjectPath   string
+	TabID         string
+	SshRemoteID   string
 	SshRemoteHost string
-	Config      *ProcessConfig
-	RetryCount  int
-	
+	Config        *ProcessConfig
+	RetryCount    int
+
 	// Channels for I/O
 	StdoutChan chan []byte
 	StderrChan chan []byte
@@ -88,7 +88,7 @@ type CommandResult struct {
 type ProcessManager struct {
 	processes map[string]*ManagedProcess
 	mu        sync.RWMutex
-	
+
 	// Callbacks for events
 	OnData   func(sessionID string, data []byte)
 	OnStderr func(sessionID string, data []byte)
@@ -108,7 +108,7 @@ func (pm *ProcessManager) Spawn(config *ProcessConfig) (*SpawnResult, error) {
 	defer pm.mu.Unlock()
 
 	isTerminal := pm.shouldUsePty(config)
-	
+
 	var mp *ManagedProcess
 	var err error
 
@@ -123,7 +123,7 @@ func (pm *ProcessManager) Spawn(config *ProcessConfig) (*SpawnResult, error) {
 	}
 
 	pm.processes[config.SessionID] = mp
-	
+
 	// Start monitoring process output and exit
 	go pm.monitorProcess(mp)
 
@@ -151,7 +151,7 @@ func (pm *ProcessManager) spawnPty(config *ProcessConfig) (*ManagedProcess, erro
 			} else {
 				cmdArgs = []string{"-l", "-i"}
 			}
-			
+
 			// Append custom shell arguments if needed
 			if config.ShellArgs != "" {
 				// Simple split for now. In TS it uses a regex for quotes.
@@ -167,7 +167,7 @@ func (pm *ProcessManager) spawnPty(config *ProcessConfig) (*ManagedProcess, erro
 
 	cmd := exec.Command(cmdPath, cmdArgs...)
 	cmd.Dir = config.Cwd
-	
+
 	// Set environment variables
 	pm.setupEnv(cmd, config, isTerminal)
 
@@ -184,7 +184,7 @@ func (pm *ProcessManager) spawnPty(config *ProcessConfig) (*ManagedProcess, erro
 		if rows == 0 {
 			rows = 24
 		}
-		
+
 		ptyFile, err = pty.StartWithSize(cmd, &pty.Winsize{
 			Cols: uint16(cols),
 			Rows: uint16(rows),
@@ -202,23 +202,23 @@ func (pm *ProcessManager) spawnPty(config *ProcessConfig) (*ManagedProcess, erro
 	}
 
 	mp := &ManagedProcess{
-		SessionID:   config.SessionID,
-		ToolType:    config.ToolType,
-		Pty:         ptyFile,
-		Cmd:         cmd,
-		Cwd:         config.Cwd,
-		Pid:         cmd.Process.Pid,
-		IsTerminal:  true,
-		StartTime:   time.Now(),
-		Command:     config.Command,
-		Args:        config.Args,
-		ProjectPath: config.ProjectPath,
-		TabID:       config.TabID,
-		SshRemoteID: config.SshRemoteID,
+		SessionID:     config.SessionID,
+		ToolType:      config.ToolType,
+		Pty:           ptyFile,
+		Cmd:           cmd,
+		Cwd:           config.Cwd,
+		Pid:           cmd.Process.Pid,
+		IsTerminal:    true,
+		StartTime:     time.Now(),
+		Command:       config.Command,
+		Args:          config.Args,
+		ProjectPath:   config.ProjectPath,
+		TabID:         config.TabID,
+		SshRemoteID:   config.SshRemoteID,
 		SshRemoteHost: config.SshRemoteHost,
-		Config:      config,
-		StdoutChan:  make(chan []byte, 100),
-		StderrChan:  make(chan []byte, 100),
+		Config:        config,
+		StdoutChan:    make(chan []byte, 100),
+		StderrChan:    make(chan []byte, 100),
 	}
 
 	return mp, nil
@@ -247,23 +247,23 @@ func (pm *ProcessManager) spawnChild(config *ProcessConfig) (*ManagedProcess, er
 	}
 
 	mp := &ManagedProcess{
-		SessionID:   config.SessionID,
-		ToolType:    config.ToolType,
-		Cmd:         cmd,
-		Stdin:       stdin,
-		Cwd:         config.Cwd,
-		Pid:         cmd.Process.Pid,
-		IsTerminal:  false,
-		StartTime:   time.Now(),
-		Command:     config.Command,
-		Args:        config.Args,
-		ProjectPath: config.ProjectPath,
-		TabID:       config.TabID,
-		SshRemoteID: config.SshRemoteID,
+		SessionID:     config.SessionID,
+		ToolType:      config.ToolType,
+		Cmd:           cmd,
+		Stdin:         stdin,
+		Cwd:           config.Cwd,
+		Pid:           cmd.Process.Pid,
+		IsTerminal:    false,
+		StartTime:     time.Now(),
+		Command:       config.Command,
+		Args:          config.Args,
+		ProjectPath:   config.ProjectPath,
+		TabID:         config.TabID,
+		SshRemoteID:   config.SshRemoteID,
 		SshRemoteHost: config.SshRemoteHost,
-		Config:      config,
-		StdoutChan:  make(chan []byte, 100),
-		StderrChan:  make(chan []byte, 100),
+		Config:        config,
+		StdoutChan:    make(chan []byte, 100),
+		StderrChan:    make(chan []byte, 100),
 	}
 
 	go pm.readPipe(config.SessionID, stdout, mp.StdoutChan)
@@ -274,7 +274,7 @@ func (pm *ProcessManager) spawnChild(config *ProcessConfig) (*ManagedProcess, er
 
 func (pm *ProcessManager) setupEnv(cmd *exec.Cmd, config *ProcessConfig, isTerminal bool) {
 	cmd.Env = os.Environ()
-	
+
 	// Add shell/custom env vars
 	if isTerminal {
 		for k, v := range config.ShellEnvVars {
@@ -371,13 +371,13 @@ func (pm *ProcessManager) readPty(mp *ManagedProcess) {
 		if n > 0 {
 			data := make([]byte, n)
 			copy(data, buf[:n])
-			
+
 			// For terminal sessions, we pass data through untouched (ANSI preserved)
 			// For AI agents using PTY (TTY support), we strip control sequences for the log
 			if !mp.IsTerminal {
 				data = []byte(pm.stripControlSequences(string(data)))
 			}
-			
+
 			mp.StdoutChan <- data
 		}
 		if err != nil {
@@ -392,11 +392,11 @@ func (pm *ProcessManager) stripControlSequences(text string) string {
 	// Basic regex to remove common ANSI escape sequences
 	// This is not as comprehensive as the TS version but covers the most common ones.
 	// In a real scenario, we might want to use a more robust library or port the TS regexes.
-	
+
 	// Remove OSC sequences: ESC ] ... (BEL or ST)
 	// (Simplified regex)
 	// This is a placeholder for more complex regexes.
-	return text 
+	return text
 }
 
 // Write writes data to a process's stdin.
@@ -489,7 +489,7 @@ func (pm *ProcessManager) Kill(sessionID string) bool {
 			_ = mp.Cmd.Process.Kill()
 		}
 	}
-	
+
 	if mp.Pty != nil {
 		_ = mp.Pty.Close()
 	}
@@ -515,7 +515,7 @@ func (pm *ProcessManager) KillAll() {
 func (pm *ProcessManager) GetAll() []*ManagedProcess {
 	pm.mu.RLock()
 	defer pm.mu.RUnlock()
-	
+
 	res := make([]*ManagedProcess, 0, len(pm.processes))
 	for _, mp := range pm.processes {
 		res = append(res, mp)

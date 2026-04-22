@@ -19,7 +19,6 @@
   - **Gemini CLI** (Integration under active development)
   - **Qwen3 Coder**
   - **Claude 4.6 & GPT Codex 5.3**
-  - **Newly Added Integration**: Full capability mapping, storage adapters, and UI features for the recently added extensive list of agents (Adrenaline CLI, Amazon Q CLI, Amp Code CLI, Auggie CLI, Azure OpenAI CLI, Codebuff CLI, Copilot CLI, Crush CLI, Factory CLI, Goose CLI, Grok CLI, Kilo Code CLI, Kimi CLI, Manus CLI, Mistral Vibe CLI, Ollama CLI, Open Interpreter CLI, Pi CLI, Rovo CLI, Trae CLI, Warp CLI).
 
 ### 4. Advanced Maestro Symphony Features
 

@@ -251,52 +251,6 @@ export function useBatchedSessionUpdates(
 					}
 
 					// Apply shell logs (legacy fallback — only when no terminal tabs present)
-					// TODO: Remove shellLogs once terminal tabs migration is complete
-					if ((shellStdout || shellStderr) && !updatedSession.terminalTabs?.length) {
-						const shellLogs = [...(updatedSession.shellLogs || [])];
-
-						if (shellStdout) {
-							const lastLog = shellLogs[shellLogs.length - 1];
-							const shouldGroup =
-								lastLog && lastLog.source === 'stdout' && updatedSession.state === 'busy';
-
-							if (shouldGroup) {
-								shellLogs[shellLogs.length - 1] = {
-									...lastLog,
-									text: lastLog.text + shellStdout,
-								};
-							} else {
-								shellLogs.push({
-									id: generateId(),
-									timestamp: shellStdoutTimestamp || Date.now(),
-									source: 'stdout',
-									text: shellStdout,
-								});
-							}
-						}
-
-						if (shellStderr) {
-							const lastLog = shellLogs[shellLogs.length - 1];
-							const shouldGroup =
-								lastLog && lastLog.source === 'stderr' && updatedSession.state === 'busy';
-
-							if (shouldGroup) {
-								shellLogs[shellLogs.length - 1] = {
-									...lastLog,
-									text: lastLog.text + shellStderr,
-								};
-							} else {
-								shellLogs.push({
-									id: generateId(),
-									timestamp: shellStderrTimestamp || Date.now(),
-									source: 'stderr',
-									text: shellStderr,
-								});
-							}
-						}
-
-						updatedSession = { ...updatedSession, shellLogs };
-					}
 				}
 
 				// Apply status update

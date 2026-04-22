@@ -140,11 +140,11 @@ var AgentDefinitions = []AgentDefinition{
 		NoPromptSeparator:   true,
 		ConfigOptions: []AgentConfigOption{
 			{
-				Key:         "model",
-				Type:        "select",
-				Label:       "Model",
-				Options:     []string{"", "gpt-4o", "claude-3-5-sonnet-20241022"},
-				Default:     "",
+				Key:     "model",
+				Type:    "select",
+				Label:   "Model",
+				Options: []string{"", "gpt-4o", "claude-3-5-sonnet-20241022"},
+				Default: "",
 			},
 		},
 	},

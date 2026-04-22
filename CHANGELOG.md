@@ -1,6 +1,20 @@
 # Changelog
 
-<<<<<<< HEAD
+## [v0.15.8] - 2026-04-22
+
+### Added
+
+- Implemented Go backend agent parsers (Adrenaline, Aider, Amazon Q, Factory, Gemini, Grok, Qwen, Claude, OpenCode).
+- Implemented Go backend agent storage adapters.
+
+### Changed
+
+- Refactored frontend to complete Terminal Tabs migration.
+- Removed legacy `shellLogs` from session types and React hooks.
+- Finalized parent/child model for Git worktrees, eradicating `worktreeParentPath`.
+- Deprecated legacy Electron IPC `runCommand` in favor of `process:spawnTerminalTab` PTY streaming.
+- Incremented version from v0.15.7 to v0.15.8.
+
 ## [0.15.7] - 2026-04-12
 
 ### Added
@@ -32,14 +46,6 @@
 ### Fixed
 
 - **Legacy IPC Hooks**: Eliminated the deprecated `runCommand` handlers across the frontend to reduce terminal noise.
-=======
-## [0.15.7] - 2026-04-10
-
-### Added
-
-- **Agent CLI Support**: Added support for Adrenaline CLI, Amazon Q CLI, Amazon Q Developer CLI, Amp Code CLI, Auggie CLI, Azure OpenAI CLI, Code CLI, Codebuff CLI, Codemachine CLI, Copilot CLI, Crush CLI, Factory CLI, Goose CLI, Grok CLI, Kilo Code CLI, Kimi CLI, Manus CLI, Mistral Vibe CLI, Ollama CLI, Open Interpreter CLI, Pi CLI, Rovo CLI, Trae CLI, and Warp CLI in Maestro.
-- **Go Support**: Ported the list of Agent IDs to Go types in `go/internal/types/agent_ids.go`.
->>>>>>> origin/jules-add-new-agents-535743983477155742
 
 ## [0.15.6] - 2026-04-01
 

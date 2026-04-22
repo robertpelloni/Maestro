@@ -10,12 +10,12 @@ This phase introduces multi-device synchronization by extending the `HypercodeLi
 
 ## 2. Execution Strategy
 
-| Phase | Task                       | Agent        | Mode       |
-| ----- | -------------------------- | ------------ | ---------- |
-| 1     | API Contract for Sync      | api_designer | Sequential |
-| 2     | HypercodeCoreClient Extension   | coder        | Sequential |
-| 3     | SyncManager Implementation | coder        | Sequential |
-| 4     | Integration Validation     | tester       | Sequential |
+| Phase | Task                          | Agent        | Mode       |
+| ----- | ----------------------------- | ------------ | ---------- |
+| 1     | API Contract for Sync         | api_designer | Sequential |
+| 2     | HypercodeCoreClient Extension | coder        | Sequential |
+| 3     | SyncManager Implementation    | coder        | Sequential |
+| 4     | Integration Validation        | tester       | Sequential |
 
 ## 3. Phase Details
 

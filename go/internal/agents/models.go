@@ -10,23 +10,23 @@ type AgentConfigOption struct {
 }
 
 type AgentDefinition struct {
-	ID                  string               `json:"id"`
-	Name                string               `json:"name"`
-	BinaryName          string               `json:"binaryName"`
-	Command             string               `json:"command"`
-	Args                []string             `json:"args"`
-	RequiresPty         bool                 `json:"requiresPty"`
-	Hidden              bool                 `json:"hidden"`
-	BatchModePrefix     []string             `json:"batchModePrefix"`
-	BatchModeArgs       []string             `json:"batchModeArgs"`
-	JsonOutputArgs      []string             `json:"jsonOutputArgs"`
-	ReadOnlyArgs        []string             `json:"readOnlyArgs"`
-	ReadOnlyCliEnforced bool                 `json:"readOnlyCliEnforced"`
-	YoloModeArgs        []string             `json:"yoloModeArgs"`
-	DefaultEnvVars      map[string]string    `json:"defaultEnvVars"`
-	ReadOnlyEnvOverrides map[string]string    `json:"readOnlyEnvOverrides"`
-	NoPromptSeparator   bool                 `json:"noPromptSeparator"`
-	ConfigOptions       []AgentConfigOption  `json:"configOptions"`
+	ID                   string              `json:"id"`
+	Name                 string              `json:"name"`
+	BinaryName           string              `json:"binaryName"`
+	Command              string              `json:"command"`
+	Args                 []string            `json:"args"`
+	RequiresPty          bool                `json:"requiresPty"`
+	Hidden               bool                `json:"hidden"`
+	BatchModePrefix      []string            `json:"batchModePrefix"`
+	BatchModeArgs        []string            `json:"batchModeArgs"`
+	JsonOutputArgs       []string            `json:"jsonOutputArgs"`
+	ReadOnlyArgs         []string            `json:"readOnlyArgs"`
+	ReadOnlyCliEnforced  bool                `json:"readOnlyCliEnforced"`
+	YoloModeArgs         []string            `json:"yoloModeArgs"`
+	DefaultEnvVars       map[string]string   `json:"defaultEnvVars"`
+	ReadOnlyEnvOverrides map[string]string   `json:"readOnlyEnvOverrides"`
+	NoPromptSeparator    bool                `json:"noPromptSeparator"`
+	ConfigOptions        []AgentConfigOption `json:"configOptions"`
 }
 
 type Agent struct {

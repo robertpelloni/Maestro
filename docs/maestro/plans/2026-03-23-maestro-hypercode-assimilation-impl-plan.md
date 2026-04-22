@@ -96,27 +96,27 @@ graph TD
 
 ## 5. File Inventory
 
-| Action | Path                                                  | Purpose                               | Phase |
-| ------ | ----------------------------------------------------- | ------------------------------------- | ----- |
+| Action | Path                                                       | Purpose                                    | Phase |
+| ------ | ---------------------------------------------------------- | ------------------------------------------ | ----- |
 | Create | `src/shared/hypercode-schema.ts`                           | Zod schema for extended Hypercode handoffs | 1     |
 | Create | `src/main/services/IHypercodeProvider.ts`                  | Interface for Hypercode integration        | 1     |
 | Create | `src/main/services/HypercodeCoreClient.ts`                 | Low-level API client for Hypercode Core    | 2     |
-| Create | `src/main/services/HypercodeLiveProvider.ts`               | Primary state management service      | 3     |
-| Create | `src/main/services/LocalCacheManager.ts`              | Mirror manager for .hypercode/handoffs/    | 3     |
-| Modify | `src/main/web-server/managers/LiveSessionManager.ts`  | Core session refactor                 | 4     |
-| Modify | `src/main/group-chat/group-chat-router.ts`            | Agent handoff refactor                | 4     |
-| Modify | `src/cli/commands/*.ts`                               | CLI reporting refactor                | 5     |
-| Modify | `scripts/read-active-session.js`                      | Legacy script refactor                | 5     |
-| Create | `src/__tests__/integration/hypercode-assimilation.test.ts` | Full lifecycle verification           | 6     |
-| Modify | `ARCHITECTURE.md`                                     | Architecture update                   | 7     |
-| Create | `PROTOCOL.md`                                         | Protocol specification                | 7     |
+| Create | `src/main/services/HypercodeLiveProvider.ts`               | Primary state management service           | 3     |
+| Create | `src/main/services/LocalCacheManager.ts`                   | Mirror manager for .hypercode/handoffs/    | 3     |
+| Modify | `src/main/web-server/managers/LiveSessionManager.ts`       | Core session refactor                      | 4     |
+| Modify | `src/main/group-chat/group-chat-router.ts`                 | Agent handoff refactor                     | 4     |
+| Modify | `src/cli/commands/*.ts`                                    | CLI reporting refactor                     | 5     |
+| Modify | `scripts/read-active-session.js`                           | Legacy script refactor                     | 5     |
+| Create | `src/__tests__/integration/hypercode-assimilation.test.ts` | Full lifecycle verification                | 6     |
+| Modify | `ARCHITECTURE.md`                                          | Architecture update                        | 7     |
+| Create | `PROTOCOL.md`                                              | Protocol specification                     | 7     |
 
 ## 6. Risk Classification
 
 | Phase | Risk   | Rationale                                                  |
 | ----- | ------ | ---------------------------------------------------------- |
 | 1     | LOW    | Purely definition based.                                   |
-| 2     | MEDIUM | Connectivity issues with Hypercode Core.                        |
+| 2     | MEDIUM | Connectivity issues with Hypercode Core.                   |
 | 3     | MEDIUM | Filesystem I/O and atomic write complexity.                |
 | 4     | HIGH   | Brain transplant; high regression risk for agent handoffs. |
 | 5     | MEDIUM | Breaking changes for existing CLI tools.                   |

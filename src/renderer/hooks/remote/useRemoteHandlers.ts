@@ -154,7 +154,6 @@ export function useRemoteHandlers(deps: UseRemoteHandlersDeps): UseRemoteHandler
 							...s,
 							state: 'busy' as SessionState,
 							busySource: 'terminal',
-							// TODO: shellLogs removed as part of terminal tabs migration
 						};
 					})
 				);
@@ -191,7 +190,6 @@ export function useRemoteHandlers(deps: UseRemoteHandlersDeps): UseRemoteHandler
 								state: 'idle' as SessionState,
 								busySource: undefined,
 								thinkingStartTime: undefined,
-								// TODO: shellLogs removed as part of terminal tabs migration
 							};
 						})
 					);

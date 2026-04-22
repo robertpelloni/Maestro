@@ -34,13 +34,13 @@ type SessionInfo struct {
 
 // UsageStats represents usage statistics from AI agent CLI
 type UsageStats struct {
-	InputTokens               int     `json:"inputTokens"`
-	OutputTokens              int     `json:"outputTokens"`
-	CacheReadInputTokens      int     `json:"cacheReadInputTokens"`
-	CacheCreationInputTokens  int     `json:"cacheCreationInputTokens"`
-	TotalCostUSD              float64 `json:"totalCostUsd"`
-	ContextWindow             int     `json:"contextWindow"`
-	ReasoningTokens           int     `json:"reasoningTokens,omitempty"`
+	InputTokens              int     `json:"inputTokens"`
+	OutputTokens             int     `json:"outputTokens"`
+	CacheReadInputTokens     int     `json:"cacheReadInputTokens"`
+	CacheCreationInputTokens int     `json:"cacheCreationInputTokens"`
+	TotalCostUSD             float64 `json:"totalCostUsd"`
+	ContextWindow            int     `json:"contextWindow"`
+	ReasoningTokens          int     `json:"reasoningTokens,omitempty"`
 }
 
 // HistoryEntryType represents history entry types for the History panel
@@ -81,15 +81,15 @@ type PlaybookDocumentEntry struct {
 
 // Playbook represents a saved Playbook configuration
 type Playbook struct {
-	ID                string                  `json:"id"`
-	Name              string                  `json:"name"`
-	CreatedAt         int64                   `json:"createdAt"`
-	UpdatedAt         int64                   `json:"updatedAt"`
-	Documents         []PlaybookDocumentEntry `json:"documents"`
-	LoopEnabled       bool                    `json:"loopEnabled"`
-	MaxLoops          *int                    `json:"maxLoops,omitempty"`
-	Prompt            string                  `json:"prompt"`
-	WorktreeSettings  *WorktreeSettings       `json:"worktreeSettings,omitempty"`
+	ID               string                  `json:"id"`
+	Name             string                  `json:"name"`
+	CreatedAt        int64                   `json:"createdAt"`
+	UpdatedAt        int64                   `json:"updatedAt"`
+	Documents        []PlaybookDocumentEntry `json:"documents"`
+	LoopEnabled      bool                    `json:"loopEnabled"`
+	MaxLoops         *int                    `json:"maxLoops,omitempty"`
+	Prompt           string                  `json:"prompt"`
+	WorktreeSettings *WorktreeSettings       `json:"worktreeSettings,omitempty"`
 }
 
 // WorktreeSettings represents git worktree settings for a playbook
@@ -155,8 +155,8 @@ type AgentErrorType string
 
 const (
 	AgentErrorCodeAuthExpired      AgentErrorType = "auth_expired"
-	AgentErrorCodeTokenExhaustion AgentErrorType = "token_exhaustion"
-	AgentErrorCodeRateLimited     AgentErrorType = "rate_limited"
+	AgentErrorCodeTokenExhaustion  AgentErrorType = "token_exhaustion"
+	AgentErrorCodeRateLimited      AgentErrorType = "rate_limited"
 	AgentErrorCodeNetworkError     AgentErrorType = "network_error"
 	AgentErrorCodeAgentCrashed     AgentErrorType = "agent_crashed"
 	AgentErrorCodePermissionDenied AgentErrorType = "permission_denied"
@@ -217,8 +217,8 @@ type SshRemoteConfig struct {
 
 // SshRemoteStatus represents the status of an SSH remote connection
 type SshRemoteStatus struct {
-	LastTestSuccess *bool  `json:"lastTestSuccess"`
-	LastTestAt      *int64 `json:"lastTestAt"`
+	LastTestSuccess *bool   `json:"lastTestSuccess"`
+	LastTestAt      *int64  `json:"lastTestAt"`
 	LastTestError   *string `json:"lastTestError"`
 }
 
@@ -229,9 +229,9 @@ type SshRemoteInfo struct {
 
 // SshRemoteTestResult represents the result of testing an SSH remote connection
 type SshRemoteTestResult struct {
-	Success    bool              `json:"success"`
-	Error      string            `json:"error,omitempty"`
-	RemoteInfo *SshRemoteInfo    `json:"remoteInfo,omitempty"`
+	Success    bool           `json:"success"`
+	Error      string         `json:"error,omitempty"`
+	RemoteInfo *SshRemoteInfo `json:"remoteInfo,omitempty"`
 }
 
 // RemoteDirEntry represents an entry in a remote directory.
@@ -263,17 +263,17 @@ type ProviderStats struct {
 
 // GlobalAgentStats aggregated from all providers
 type GlobalAgentStats struct {
-	TotalSessions             int                      `json:"totalSessions"`
-	TotalMessages             int                      `json:"totalMessages"`
-	TotalInputTokens          int                      `json:"totalInputTokens"`
-	TotalOutputTokens         int                      `json:"totalOutputTokens"`
-	TotalCacheReadTokens      int                      `json:"totalCacheReadTokens"`
-	TotalCacheCreationTokens  int                      `json:"totalCacheCreationTokens"`
-	TotalCostUSD              float64                  `json:"totalCostUsd"`
-	HasCostData               bool                     `json:"hasCostData"`
-	TotalSizeBytes            int64                    `json:"totalSizeBytes"`
-	IsComplete                bool                     `json:"isComplete"`
-	ByProvider                map[string]ProviderStats `json:"byProvider"`
+	TotalSessions            int                      `json:"totalSessions"`
+	TotalMessages            int                      `json:"totalMessages"`
+	TotalInputTokens         int                      `json:"totalInputTokens"`
+	TotalOutputTokens        int                      `json:"totalOutputTokens"`
+	TotalCacheReadTokens     int                      `json:"totalCacheReadTokens"`
+	TotalCacheCreationTokens int                      `json:"totalCacheCreationTokens"`
+	TotalCostUSD             float64                  `json:"totalCostUsd"`
+	HasCostData              bool                     `json:"hasCostData"`
+	TotalSizeBytes           int64                    `json:"totalSizeBytes"`
+	IsComplete               bool                     `json:"isComplete"`
+	ByProvider               map[string]ProviderStats `json:"byProvider"`
 }
 
 // ============================================================================
@@ -289,17 +289,17 @@ type SymphonyRegistry struct {
 
 // RegisteredRepository represents a repository in the Symphony program
 type RegisteredRepository struct {
-	Slug        string             `json:"slug"`
-	Name        string             `json:"name"`
-	Description string             `json:"description"`
-	URL         string             `json:"url"`
-	Category    string             `json:"category"`
-	Tags        []string           `json:"tags,omitempty"`
+	Slug        string               `json:"slug"`
+	Name        string               `json:"name"`
+	Description string               `json:"description"`
+	URL         string               `json:"url"`
+	Category    string               `json:"category"`
+	Tags        []string             `json:"tags,omitempty"`
 	Maintainer  RepositoryMaintainer `json:"maintainer"`
-	IsActive    bool               `json:"isActive"`
-	Featured    bool               `json:"featured,omitempty"`
-	AddedAt     time.Time          `json:"addedAt"`
-	Stars       int                `json:"stars,omitempty"`
+	IsActive    bool                 `json:"isActive"`
+	Featured    bool                 `json:"featured,omitempty"`
+	AddedAt     time.Time            `json:"addedAt"`
+	Stars       int                  `json:"stars,omitempty"`
 }
 
 // RepositoryMaintainer represents a repository owner/maintainer
@@ -347,26 +347,26 @@ type ClaimedByPR struct {
 
 // ActiveContribution represents an active contribution in progress
 type ActiveContribution struct {
-	ID               string               `json:"id"`
-	RepoSlug         string               `json:"repoSlug"`
-	RepoName         string               `json:"repoName"`
-	IssueNumber      int                  `json:"issueNumber"`
-	IssueTitle       string               `json:"issueTitle"`
-	LocalPath        string               `json:"localPath"`
-	BranchName       string               `json:"branchName"`
-	DraftPRNumber    int                  `json:"draftPrNumber,omitempty"`
-	DraftPRURL       string               `json:"draftPrUrl,omitempty"`
-	StartedAt        time.Time            `json:"startedAt"`
-	Status           string               `json:"status"`
-	Progress         ContributionProgress `json:"progress"`
-	TokenUsage       ContributionTokenUsage `json:"tokenUsage"`
-	TimeSpent        int64                `json:"timeSpent"`
-	SessionID        string               `json:"sessionId"`
-	AgentType        string               `json:"agentType"`
-	Error            string               `json:"error,omitempty"`
-	IsFork           bool                 `json:"isFork,omitempty"`
-	ForkSlug         string               `json:"forkSlug,omitempty"`
-	UpstreamSlug     string               `json:"upstreamSlug,omitempty"`
+	ID            string                 `json:"id"`
+	RepoSlug      string                 `json:"repoSlug"`
+	RepoName      string                 `json:"repoName"`
+	IssueNumber   int                    `json:"issueNumber"`
+	IssueTitle    string                 `json:"issueTitle"`
+	LocalPath     string                 `json:"localPath"`
+	BranchName    string                 `json:"branchName"`
+	DraftPRNumber int                    `json:"draftPrNumber,omitempty"`
+	DraftPRURL    string                 `json:"draftPrUrl,omitempty"`
+	StartedAt     time.Time              `json:"startedAt"`
+	Status        string                 `json:"status"`
+	Progress      ContributionProgress   `json:"progress"`
+	TokenUsage    ContributionTokenUsage `json:"tokenUsage"`
+	TimeSpent     int64                  `json:"timeSpent"`
+	SessionID     string                 `json:"sessionId"`
+	AgentType     string                 `json:"agentType"`
+	Error         string                 `json:"error,omitempty"`
+	IsFork        bool                   `json:"isFork,omitempty"`
+	ForkSlug      string                 `json:"forkSlug,omitempty"`
+	UpstreamSlug  string                 `json:"upstreamSlug,omitempty"`
 }
 
 // ContributionProgress tracks contribution progress
@@ -439,42 +439,42 @@ type ContributorStats struct {
 
 // AgentSessionInfo represents summary information about an agent session.
 type AgentSessionInfo struct {
-	SessionID           string    `json:"sessionId"`
-	ProjectPath         string    `json:"projectPath"`
-	Timestamp           string    `json:"timestamp"` // ISO 8601
-	ModifiedAt          string    `json:"modifiedAt"` // ISO 8601
-	FirstMessage        string    `json:"firstMessage"`
-	MessageCount        int       `json:"messageCount"`
-	SizeBytes           int64     `json:"sizeBytes"`
-	CostUSD             float64   `json:"costUsd"`
-	InputTokens         int       `json:"inputTokens"`
-	OutputTokens        int       `json:"outputTokens"`
-	CacheReadTokens     int       `json:"cacheReadTokens"`
-	CacheCreationTokens int       `json:"cacheCreationTokens"`
-	DurationSeconds     int       `json:"durationSeconds"`
+	SessionID           string  `json:"sessionId"`
+	ProjectPath         string  `json:"projectPath"`
+	Timestamp           string  `json:"timestamp"`  // ISO 8601
+	ModifiedAt          string  `json:"modifiedAt"` // ISO 8601
+	FirstMessage        string  `json:"firstMessage"`
+	MessageCount        int     `json:"messageCount"`
+	SizeBytes           int64   `json:"sizeBytes"`
+	CostUSD             float64 `json:"costUsd"`
+	InputTokens         int     `json:"inputTokens"`
+	OutputTokens        int     `json:"outputTokens"`
+	CacheReadTokens     int     `json:"cacheReadTokens"`
+	CacheCreationTokens int     `json:"cacheCreationTokens"`
+	DurationSeconds     int     `json:"durationSeconds"`
 }
 
 // SessionMessagesResult represents the result of loading session messages.
 type SessionMessagesResult struct {
-	Messages           []OpenCodeMessage          `json:"messages"`
-	Parts              map[string][]OpenCodePart  `json:"parts"`
-	TotalInputTokens   int                        `json:"totalInputTokens"`
-	TotalOutputTokens  int                        `json:"totalOutputTokens"`
-	TotalCacheReadTokens int                      `json:"totalCacheReadTokens"`
-	TotalCacheWriteTokens int                     `json:"totalCacheWriteTokens"`
-	TotalCost          float64                    `json:"totalCost"`
+	Messages              []OpenCodeMessage         `json:"messages"`
+	Parts                 map[string][]OpenCodePart `json:"parts"`
+	TotalInputTokens      int                       `json:"totalInputTokens"`
+	TotalOutputTokens     int                       `json:"totalOutputTokens"`
+	TotalCacheReadTokens  int                       `json:"totalCacheReadTokens"`
+	TotalCacheWriteTokens int                       `json:"totalCacheWriteTokens"`
+	TotalCost             float64                   `json:"totalCost"`
 }
 
 // OpenCodeMessage represents a message in an OpenCode session.
 type OpenCodeMessage struct {
-	ID        string            `json:"id"`
-	SessionID string            `json:"sessionId"`
-	Role      string            `json:"role"`
-	Time      *OpenCodeTime     `json:"time,omitempty"`
-	Model     *OpenCodeModel    `json:"model,omitempty"`
-	Agent     string            `json:"agent,omitempty"`
-	Tokens    *OpenCodeTokens   `json:"tokens,omitempty"`
-	Cost      float64           `json:"cost,omitempty"`
+	ID        string          `json:"id"`
+	SessionID string          `json:"sessionId"`
+	Role      string          `json:"role"`
+	Time      *OpenCodeTime   `json:"time,omitempty"`
+	Model     *OpenCodeModel  `json:"model,omitempty"`
+	Agent     string          `json:"agent,omitempty"`
+	Tokens    *OpenCodeTokens `json:"tokens,omitempty"`
+	Cost      float64         `json:"cost,omitempty"`
 }
 
 type OpenCodeTime struct {
@@ -487,9 +487,9 @@ type OpenCodeModel struct {
 }
 
 type OpenCodeTokens struct {
-	Input     int `json:"input,omitempty"`
-	Output    int `json:"output,omitempty"`
-	Reasoning int `json:"reasoning,omitempty"`
+	Input     int                  `json:"input,omitempty"`
+	Output    int                  `json:"output,omitempty"`
+	Reasoning int                  `json:"reasoning,omitempty"`
 	Cache     *OpenCodeCacheTokens `json:"cache,omitempty"`
 }
 

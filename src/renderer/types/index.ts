@@ -730,9 +730,7 @@ export interface Session {
 
 	// Symphony contribution metadata (only set for Symphony sessions)
 	symphonyMetadata?: SymphonySessionMetadata;
-	/** @deprecated Part of terminal tabs migration */
 	shellLogs?: any[];
-	/** @deprecated Part of parent-child worktree migration */
 	worktreeParentPath?: string;
 }
 
