@@ -1,28 +1,32 @@
-# Maestro Handoff Document
+# Handoff to Next Model
 
-## Session Summary
+## Current State
 
-**Date**: April 1, 2026
-**Version**: 0.15.6
+The project has successfully reached `v0.15.8`.
 
-During this session, Maestro was transitioned into a **Go/TypeScript Hybrid** application using Wails v3. The legacy Electron backend is actively being deprecated.
+**Phase 1 of the Go Migration** is largely complete:
 
-### Completed Work:
+- Eradicated legacy Electron IPC handlers for process spawning.
+- Fully implemented PTY streaming via terminal tabs.
+- Ported Git, SSH, and Filesystem detection logic to Wails/Go.
+- Frontend technical debt involving `shellLogs` and `worktreeParentPath` has been eradicated.
 
-1.  **Backend Translation**: All core services (Git, PTY Process Management, Session Storage, Filesystem, Persistence, and SSH) have been ported to Go.
-2.  **Frontend Fixes**: Resolved critical Vite build errors (`cueSessionMap` duplication, `ALL_TYPES` duplication, `MermaidRenderer` import paths).
-3.  **CSP Adjustments**: Relaxed Content Security Policy to allow React DevTools and local HMR connections in development.
-4.  **Documentation Sweep**: Created `UNIVERSAL_LLM_INSTRUCTIONS.md`, generated `IDEAS.md`, `DASHBOARD.md`, and unified the agent instructions.
+**Agent Support Expansion**:
 
-### Outstanding Tasks for Next Agent:
+- Added definitions for ~30 new CLI agents to the frontend.
+- Created parser interfaces and storage adapter stubs for these agents in the Go backend.
 
-The next AI model (e.g., Claude Opus 4.6 or GPT Codex 5.3) should pick up the following tasks from `TODO.md`:
+## Missing Features / Next Steps
 
-1.  **Terminal Tabs Migration**: Remove legacy `shellLogs` dependencies in `useInputProcessing.ts`, `useAgentListeners.ts`, and `useInterruptHandler.ts`. This is a critical technical debt item blocking the full transition to persistent PTY-backed terminal tabs.
-2.  **Session Model Refactoring**: Finalize the 'parent/child' model for sessions and worktrees in `useWorktreeHandlers.ts`.
+As documented in the newly updated `TODO.md`:
 
-### Project State Notes:
+1. **Go Storage Adapters**: We need to replace the mocked SQLite logic in `go/internal/agents/storage/sqlite.go` with actual SQLite bindings using something like `mattn/go-sqlite3` or `glebarez/go-sqlite` to read session logs from OpenCode and Claude Code locally.
+2. **Parser Unit Tests**: The new parsers in `go/internal/agents/parsers/` need robust unit tests to ensure they accurately detect batch-mode completion for all supported CLI tools.
+3. **Submodule Porting**: The `submodules/` directory is currently empty. We need the upstream list of specific repositories to clone, analyze, and assimilate into the Maestro Go architecture.
 
-- The Go backend is located in `/go`. The frontend remains in `/src/renderer`.
-- All persistent state should be routed through `go/internal/persistence` rather than `localStorage` or `electron-store`.
-- Submodules are currently empty, but the structure is prepped for future plugin expansion.
+## Repository Sync Status
+
+All local feature branches have been merged up to date with `main`.
+Upstream changes have been fetched and merged.
+
+Please continue with Phase 2, focusing on the Go SQLite bindings and unit tests for the parsers.

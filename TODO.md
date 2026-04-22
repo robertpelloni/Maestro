@@ -7,7 +7,7 @@
 - [x] **Terminal Tabs Migration**: Remove legacy `shellLogs` dependencies in `useInputProcessing.ts`, `useAgentListeners.ts`, and `useInterruptHandler.ts`. Complete the shift to persistent PTY-backed terminal tabs.
 - [x] **Session Model Refactoring**: Finalize the 'parent/child' model for sessions and worktrees in `useWorktreeHandlers.ts` and clean up `src/renderer/types/index.ts`.
 - [x] **Legacy IPC Handlers**: Deprecate legacy process spawning handlers in `src/main/ipc/handlers/process.ts` in favor of `process:spawnTerminalTab`.
-- [ ] **Group Chat Polish**: Dynamically resolve the moderator agent type in `useGroupChatHandlers.ts` instead of hardcoding it.
+- [x] **Group Chat Polish**: Dynamically resolve the moderator agent type in `useGroupChatHandlers.ts` instead of hardcoding it.
 
 ### Mobile & Web Interface
 
