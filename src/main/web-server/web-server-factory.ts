@@ -11,7 +11,11 @@ import { getHistoryManager } from '../history-manager';
 import { logger } from '../utils/logger';
 import { isWebContentsAvailable } from '../utils/safe-send';
 import type { ProcessManager } from '../process-manager';
+<<<<<<< Updated upstream
 import { IHypercodeProvider } from '../services/IHypercodeProvider';
+=======
+import { IBorgProvider } from '../services/IBorgProvider';
+>>>>>>> Stashed changes
 import type { StoredSession, SettingsStoreInterface as SettingsStore } from '../stores/types';
 import type { Group } from '../../shared/types';
 
