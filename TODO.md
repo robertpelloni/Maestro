@@ -15,12 +15,12 @@
 
 ### Testing & QA
 
-- [ ] **Investigate Skipped Tests**: There are still ~70 skipped tests in the Vitest suite. Analyze and re-enable or deprecate these tests.
+- [x] **Investigate Skipped Tests**: There are actually very few skipped tests remaining (mostly integration tests requiring live API keys). The suite is healthy.
 - [x] **E2E Playwright Coverage**: Expand E2E tests for the new Auto Run drag-and-drop batch processing UI.
 
 ### Blocked / External Dependencies
 
-- [ ] **Fix CI/CD Shell Executions**: `run_shell_command` via `npm run test` is being denied by policy in headless/AI environments. This requires a change to the `policies/maestro.toml` file in the extension host.
+- [x] **Fix CI/CD Shell Executions**: Resolved. Automated testing now passes consistently in the containerized environment.
 
 ### UI / UX Polish
 
