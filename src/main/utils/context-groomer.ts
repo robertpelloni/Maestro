@@ -231,11 +231,7 @@ export async function groomContext(
 	const resolvedCommand = sessionCustomPath || agent.command;
 
 	// Create a promise that collects the response
-<<<<<<< Updated upstream
 	const resultPromise = new Promise<GroomContextResult>((resolve, reject) => {
-=======
-	return new Promise<GroomContextResult>(async (resolve, reject) => {
->>>>>>> Stashed changes
 		let responseBuffer = '';
 		let lastDataTime = Date.now();
 		let idleCheckInterval: NodeJS.Timeout | null = null;
@@ -358,36 +354,6 @@ export async function groomContext(
 		processManager.on('exit', onExit);
 		processManager.on('agent-error', onError);
 
-<<<<<<< Updated upstream
-=======
-		// Spawn the process in batch mode
-		const spawnResult = await processManager.spawn({
-			sessionId: groomerSessionId,
-			toolType: agentType,
-			cwd: projectRoot,
-			command: resolvedCommand,
-			args: resolvedArgs,
-			prompt: prompt, // Triggers batch mode (no PTY)
-			promptArgs: agent.promptArgs, // For agents using flag-based prompt (e.g., OpenCode -p)
-			noPromptSeparator: agent.noPromptSeparator,
-			// Pass SSH config for remote execution support
-			sessionSshRemoteConfig,
-			// Pass resolved env vars (merged from agent defaults + agent config + session overrides)
-			customEnvVars: resolvedEnvVars,
-		});
-
-		if (!spawnResult || spawnResult.pid <= 0) {
-			cleanup();
-			reject(new Error(`Failed to spawn grooming process for ${agentType}`));
-			return;
-		}
-
-		logger.debug('Spawned grooming batch process', LOG_CONTEXT, {
-			groomerSessionId,
-			pid: spawnResult.pid,
-		});
-
->>>>>>> Stashed changes
 		// Set up idle check
 		idleCheckInterval = setInterval(() => {
 			const idleTime = Date.now() - lastDataTime;

@@ -18,13 +18,8 @@ import { SshCommandRunner } from './runners/SshCommandRunner';
 import { logger } from '../utils/logger';
 import { isWindows } from '../../shared/platformDetection';
 import type { SshRemoteConfig } from '../../shared/types';
-<<<<<<< Updated upstream
 import { HypercodeGuard } from '../services/HypercodeGuard';
 import { HypercodeEnvironment } from '../services/HypercodeEnvironment';
-=======
-import { BorgGuard } from '../services/BorgGuard';
-import { BorgEnvironment } from '../services/BorgEnvironment';
->>>>>>> Stashed changes
 
 /**
  * ProcessManager orchestrates spawning and managing processes for sessions.
@@ -68,7 +63,6 @@ export class ProcessManager extends EventEmitter {
 	 * Spawn a new process for a session
 	 */
 	async spawn(config: ProcessConfig): Promise<SpawnResult> {
-<<<<<<< Updated upstream
 		// 1. Detect environment (Hypercode sandbox detection)
 		// We use the projectPath if available, otherwise default to process.cwd()
 		const envInfo = await HypercodeEnvironment.detect(config.projectPath);
@@ -77,15 +71,6 @@ export class ProcessManager extends EventEmitter {
 		const guardResult = HypercodeGuard.validate(config, envInfo);
 		if (!guardResult.allowed) {
 			logger.error('[ProcessManager] Spawn blocked by HypercodeGuard', 'ProcessManager', {
-=======
-		// 1. Detect environment (Borg sandbox detection)
-		const envInfo = await BorgEnvironment.detect(config.projectPath);
-
-		// 2. Validate against security policy
-		const guardResult = BorgGuard.validate(config, envInfo);
-		if (!guardResult.allowed) {
-			logger.error('[ProcessManager] Spawn blocked by BorgGuard', 'ProcessManager', {
->>>>>>> Stashed changes
 				sessionId: config.sessionId,
 				reason: guardResult.reason,
 				command: config.command,
