@@ -4,29 +4,27 @@
 
 The project has successfully reached `v0.15.8`.
 
-**Phase 1 of the Go Migration** is largely complete:
+**Phase 1 and Phase 2 of the Go Migration** are complete:
 
 - Eradicated legacy Electron IPC handlers for process spawning.
 - Fully implemented PTY streaming via terminal tabs.
 - Ported Git, SSH, and Filesystem detection logic to Wails/Go.
 - Frontend technical debt involving `shellLogs` and `worktreeParentPath` has been eradicated.
-
-**Agent Support Expansion**:
-
 - Added definitions for ~30 new CLI agents to the frontend.
-- Created parser interfaces and storage adapter stubs for these agents in the Go backend.
+- Created parser interfaces and unit tests for these agents in the Go backend.
+- Implemented actual SQLite bindings using pure Go (`modernc.org/sqlite`) for OpenCode/Claude Code log retrieval.
 
-## Missing Features / Next Steps
+## Missing Features / Next Steps (Phase 3)
 
 As documented in the newly updated `TODO.md`:
 
-1. **Go Storage Adapters**: We need to replace the mocked SQLite logic in `go/internal/agents/storage/sqlite.go` with actual SQLite bindings using something like `mattn/go-sqlite3` or `glebarez/go-sqlite` to read session logs from OpenCode and Claude Code locally.
-2. **Parser Unit Tests**: The new parsers in `go/internal/agents/parsers/` need robust unit tests to ensure they accurately detect batch-mode completion for all supported CLI tools.
-3. **Submodule Porting**: The `submodules/` directory is currently empty. We need the upstream list of specific repositories to clone, analyze, and assimilate into the Maestro Go architecture.
+1. **Wails Frontend Wiring**: We need to replace all `window.maestro.process` and `window.maestro.agents` Electron IPC calls in the React hooks with their respective `window.go.internal.app.App` Wails bindings.
+2. **Remove Electron Core**: Once all React hooks are migrated to Wails bindings, completely strip out `src/main` and the `electron` dependencies from `package.json`.
+3. **Submodule Assimilation**: The `submodules/` directory is currently empty. We need to begin cloning specific upstream submodules and compiling them directly into the Wails backend for zero-dependency execution.
 
 ## Repository Sync Status
 
 All local feature branches have been merged up to date with `main`.
 Upstream changes have been fetched and merged.
 
-Please continue with Phase 2, focusing on the Go SQLite bindings and unit tests for the parsers.
+Please continue with Phase 3, focusing on the Wails frontend wiring.

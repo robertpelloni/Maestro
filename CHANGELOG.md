@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.15.9] - 2026-04-23
+
+### Changed
+
+- Prepared Phase 3 of the Go Migration architecture.
+- Documented Submodules Architecture and integration path.
+- Updated HANDOFF and TODO for Wails Frontend Wiring.
+- Synchronized local repositories with upstream.
+
 ## [v0.15.8] - 2026-04-22
 
 ### Added

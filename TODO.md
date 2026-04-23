@@ -18,6 +18,12 @@
 - [x] **Investigate Skipped Tests**: There are actually very few skipped tests remaining (mostly integration tests requiring live API keys). The suite is healthy.
 - [x] **E2E Playwright Coverage**: Expand E2E tests for the new Auto Run drag-and-drop batch processing UI.
 
+### Wails Frontend Wiring (Phase 3)
+
+- [ ] **Migrate React IPC Calls**: Replace all `window.maestro.process` and `window.maestro.agents` Electron IPC calls in React hooks with their respective `window.go.internal.app.App` Wails bindings.
+- [ ] **Remove Electron Core**: Once all React hooks are migrated to Wails bindings, completely strip out `src/main` and the `electron` dependencies from `package.json`.
+- [ ] **Submodule Assimilation**: Begin compiling the identified submodules directly into the Wails backend for zero-dependency execution.
+
 ### Blocked / External Dependencies
 
 - [x] **Fix CI/CD Shell Executions**: Resolved. Automated testing now passes consistently in the containerized environment.
