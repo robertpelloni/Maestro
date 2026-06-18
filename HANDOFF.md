@@ -2,7 +2,13 @@
 
 ## Current State
 
-The project has successfully reached `v0.15.8`.
+The project has successfully reached `v0.15.10`.
+
+**Multi-Language Agentic Harness Expansion** has begun:
+- Initialized Rust (`rust/`), C# (`csharp/`), and Java (`java/`) base projects in the root.
+- Aider submodule was temporarily cloned to analyze its architecture (RepoMap, GitService, DiffApplicator, LlmProvider).
+- Ported Aider architecture **interface stubs** to all 5 target languages (TS, Go, Rust, C#, Java). *Note: the actual internal logic of these agents still needs to be fully reimplemented to achieve feature parity in subsequent sessions.*
+- Submodule `aider` was cleaned up to prepare for the next tools.
 
 **Phase 1 and Phase 2 of the Go Migration** are complete:
 
@@ -14,13 +20,13 @@ The project has successfully reached `v0.15.8`.
 - Created parser interfaces and unit tests for these agents in the Go backend.
 - Implemented actual SQLite bindings using pure Go (`modernc.org/sqlite`) for OpenCode/Claude Code log retrieval.
 
-## Missing Features / Next Steps (Phase 3)
+## Missing Features / Next Steps
 
 As documented in the newly updated `TODO.md`:
 
-1. **Wails Frontend Wiring**: We need to replace all `window.maestro.process` and `window.maestro.agents` Electron IPC calls in the React hooks with their respective `window.go.internal.app.App` Wails bindings.
-2. **Remove Electron Core**: Once all React hooks are migrated to Wails bindings, completely strip out `src/main` and the `electron` dependencies from `package.json`.
-3. **Submodule Assimilation**: The `submodules/` directory is currently empty. We need to begin cloning specific upstream submodules and compiling them directly into the Wails backend for zero-dependency execution.
+1. **Continue Multi-Language Submodule Porting**: Proceed to the next CLI tool from the instructions (e.g. Gemini CLI, Claude Code), clone it as a submodule, analyze it, and build stubs across all 5 languages, then remove the submodule.
+2. **Wails Frontend Wiring**: We need to replace all `window.maestro.process` and `window.maestro.agents` Electron IPC calls in the React hooks with their respective `window.go.internal.app.App` Wails bindings.
+3. **Remove Electron Core**: Once all React hooks are migrated to Wails bindings, completely strip out `src/main` and the `electron` dependencies from `package.json`.
 
 ## Repository Sync Status
 

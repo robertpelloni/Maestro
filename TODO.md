@@ -2,6 +2,12 @@
 
 ## Short-Term Tasks & Bug Fixes
 
+### Multi-Language Expansion (Phase 1)
+- [x] Initialize Rust, C#, and Java structural repositories in root.
+- [x] Extract Aider architecture via submodules.
+- [x] Port Aider core stubs to TS, Go, Rust, C#, and Java.
+- [ ] Repeat process for `aider` alternative submodules (Gemini CLI, Claude Code, etc).
+
 ### Unfinished Migrations & Technical Debt
 
 - [x] **Terminal Tabs Migration**: Remove legacy `shellLogs` dependencies in `useInputProcessing.ts`, `useAgentListeners.ts`, and `useInterruptHandler.ts`. Complete the shift to persistent PTY-backed terminal tabs.

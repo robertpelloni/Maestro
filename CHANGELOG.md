@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.15.10]
+- **Multi-Language Expansion**: Initiated multi-language expansion for Maestro, creating harness structure in Rust, C#, and Java to join the existing TypeScript and Go codebases.
+- **Agent Submodule Porting (Phase 1)**: Completed detailed analysis of Aider agent architecture and ported its core structural interface stubs into all 5 language implementations. Note: The full logic reimplementation of these stubs is scheduled for the next iteration.
+
 ## [v0.15.9] - 2026-04-23
 
 ### Changed
