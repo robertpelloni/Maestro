@@ -1,42 +1,63 @@
 # Changelog
 
-## [0.15.16] - 2026-06-18
+## [0.15.17] - 2026-06-18
+
 ### Added
+
+- Analyzed and ported `litellm` capabilities (API routing fallbacks, standardized request structures) to all language cores (`LITELLM_CLI_ANALYSIS.md`).
+- Analyzed and ported `llamafile` orchestration features (local GGUF binary extraction and multi-os runtime spawning) to all language cores (`LLAMAFILE_CLI_ANALYSIS.md`).
+- Analyzed and ported `manus-cli` specs (RPA container provisioning hooks) to all language cores (`MANUS_CLI_ANALYSIS.md`).
+- Analyzed and ported `mistral-vibe-cli` (vibe profiling), `ollama-cli` (Modelfile builders, local blob streaming), and `open-interpreter` (Python/Shell REPL execution, computer vision hooks) natively to Go, Rust, C#, Java, and TypeScript (`MISTRAL_VIBE_CLI_ANALYSIS.md`, `OLLAMA_CLI_ANALYSIS.md`, `OPEN_INTERPRETER_CLI_ANALYSIS.md`).
+
+## [0.15.16] - 2026-06-18
+
+### Added
+
 - Analyzed `bito-cli` architecture for `{{%input%}}` templating and BASIC/ADVANCED model profiles (`BITO_CLI_ANALYSIS.md`).
 - Ported Bito `InjectPromptMacro` and `SetModelProfile` features to Go, Rust, C#, Java, and TypeScript core.
 - Analyzed `byterover` for AST and lockfile dependency parsing context hooks (`BYTEROVER_CLI_ANALYSIS.md`).
 - Ported ByteRover `ParseDependencies` interfaces to Go, Rust, C#, Java, and TypeScript core.
 
 ## [0.15.15] - 2026-06-18
+
 ### Added
+
 - Analyzed `ampcode` architecture for remote execution hooks and rsync wrappers (`AMPCODE_CLI_ANALYSIS.md`).
 - Ported Amp Code `StartFileSync` and `RunRemoteCommand` features to Go, Rust, C#, Java, and TypeScript core.
 - Analyzed `augmentcode/auggie` for custom slash command frontmatter parsing and `--print` headless PR review hooks (`AUGMENTCODE_CLI_ANALYSIS.md`).
 - Ported Auggie `LoadFrontmatterCommand` and `HeadlessPrint` interfaces to Go, Rust, C#, Java, and TypeScript core.
 
 ## [0.15.14] - 2026-06-18
+
 ### Added
+
 - Analyzed `amazon-q-developer-cli` to extract IAM session/builder-id hooks and CLI translation heuristics (`AMAZON_Q_ANALYSIS.md`).
 - Ported Amazon Q `LoginAwsBuilderId` and `TranslateToShell` features to Go, Rust, C#, Java, and TypeScript core.
 - Analyzed `block/goose` for Advanced Content Provider (ACP) handling and specific project-boundary `.goosehints` rules loading (`GOOSE_ANALYSIS.md`).
 - Ported Goose `LoadGooseHints` and `InitAcpSession` interfaces to Go, Rust, C#, Java, and TypeScript core.
 
 ## [0.15.13] - 2026-06-18
+
 ### Added
+
 - Analyzed `just-every/code` (upstream Codex CLI pattern) for strict TUI event loops and O-series model reasoning configuration (`CODEX_CLI_ANALYSIS.md`).
 - Ported Codex CLI `EnableO1Reasoning`, `SetSandboxMode`, and `RequestUserApproval` features to Go, Rust, C#, Java, and TypeScript core.
 - Analyzed `opencode-ai/opencode` for LSP integrations, macro custom command templating, and localized copilot endpoints (`OPENCODE_ANALYSIS.md`).
 - Ported OpenCode `LoadCustomCommand`, `ExecuteCustomCommand`, and `RequestLspDiagnostics` to Go, Rust, C#, Java, and TypeScript core.
 
 ## [0.15.12] - 2026-06-18
+
 ### Added
+
 - Analyzed `google-gemini/gemini-cli` architecture for headless scripts, search grounding, checkpointing, and MCP tools (`GEMINI_CLI_ANALYSIS.md`).
 - Ported Gemini CLI `GenerateWithGrounding`, `SaveCheckpoint`, `LoadCheckpoint`, and `StreamJSON` features to Go, Rust, C#, Java, and TypeScript core.
 - Analyzed `claude-desktop` functional dependencies (tray integrations, MCP client bridging, OS clipboard access) (`CLAUDE_DESKTOP_ANALYSIS.md`).
 - Ported Claude Desktop `InitializeTray`, `RegisterMCPServer`, `ExecuteMCPTool`, and `ReadClipboard` to Go, Rust, C#, Java, and TypeScript core.
 
 ## [0.15.11] - 2026-06-18
+
 ### Added
+
 - Cloned, analyzed, and removed `claude-code` (just-every/code fork) to extract its core CLI functionalities.
 - Ported Claude Code agent methods (`Plan`, `Solve`, `AutoDrive`, and `BrowserMode`) to Go (`/go/internal/agent/claude_code.go`).
 - Ported Claude Code agent methods to Rust (`/rust/src/claude_code.rs`).
@@ -46,10 +67,13 @@
 - Added `CLAUDE_CODE_ANALYSIS.md` documenting architecture mappings and MCP strategies.
 
 ### Changed
+
 - Reverted `useCommandHistory.test.ts` to its original state to halt test-pollution cycle (flaky test pending proper isolate refactor).
 
 ## [0.15.10] - 2026-06-18
+
 ### Added
+
 - Initialized Rust, C#, and Java core structures.
 - Analyzed Aider agent via submodules and documented architecture.
 - Ported Aider interface stubs to TypeScript, Go, Rust, C#, and Java.
