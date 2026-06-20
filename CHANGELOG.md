@@ -106,3 +106,9 @@
 - Initialized Rust, C#, and Java core structures.
 - Analyzed Aider agent via submodules and documented architecture.
 - Ported Aider interface stubs to TypeScript, Go, Rust, C#, and Java.
+
+## [0.15.21] - 2024-05-24
+
+### Added
+
+- Wails v3 bindings in `go/internal/wails/maestro_bindings.go` to expose the Go backend to the frontend matching the Electron IPC setup.
