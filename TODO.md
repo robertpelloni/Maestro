@@ -1,9 +1,9 @@
 # TODO
 
 ## Immediate Actions
-* Begin analysis and integration of `codex-cli` and `opencode` agentic features across the 5 language environments.
-* Wire the newly implemented MCP clients and AutoDrive tasks to the frontend WebUI.
+* Begin analysis and integration of `amazon-q-cli` and `goose` agentic features across the 5 language environments.
+* Refactor the legacy `useCommandHistory.test.ts` Vite test hooks to use true Map/Memory scopes for the frontend transition.
 
 ## Short-term Features
-* Deepen C# and Java async/await parity for the stream-json logic.
-* Expand the `CLAUDE.md` and `GEMINI.md` context loading implementations in Rust.
+* Deepen C# and Java async/await parity for the stream-json logic and TUI hooks.
+* Finalize bridging the WebUI to invoke these multi-language core services directly over IPC.

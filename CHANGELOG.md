@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.13] - 2026-06-18
+### Added
+- Analyzed `just-every/code` (upstream Codex CLI pattern) for strict TUI event loops and O-series model reasoning configuration (`CODEX_CLI_ANALYSIS.md`).
+- Ported Codex CLI `EnableO1Reasoning`, `SetSandboxMode`, and `RequestUserApproval` features to Go, Rust, C#, Java, and TypeScript core.
+- Analyzed `opencode-ai/opencode` for LSP integrations, macro custom command templating, and localized copilot endpoints (`OPENCODE_ANALYSIS.md`).
+- Ported OpenCode `LoadCustomCommand`, `ExecuteCustomCommand`, and `RequestLspDiagnostics` to Go, Rust, C#, Java, and TypeScript core.
+
 ## [0.15.12] - 2026-06-18
 ### Added
 - Analyzed `google-gemini/gemini-cli` architecture for headless scripts, search grounding, checkpointing, and MCP tools (`GEMINI_CLI_ANALYSIS.md`).
