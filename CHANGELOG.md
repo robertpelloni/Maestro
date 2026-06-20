@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.15] - 2026-06-18
+### Added
+- Analyzed `ampcode` architecture for remote execution hooks and rsync wrappers (`AMPCODE_CLI_ANALYSIS.md`).
+- Ported Amp Code `StartFileSync` and `RunRemoteCommand` features to Go, Rust, C#, Java, and TypeScript core.
+- Analyzed `augmentcode/auggie` for custom slash command frontmatter parsing and `--print` headless PR review hooks (`AUGMENTCODE_CLI_ANALYSIS.md`).
+- Ported Auggie `LoadFrontmatterCommand` and `HeadlessPrint` interfaces to Go, Rust, C#, Java, and TypeScript core.
+
 ## [0.15.14] - 2026-06-18
 ### Added
 - Analyzed `amazon-q-developer-cli` to extract IAM session/builder-id hooks and CLI translation heuristics (`AMAZON_Q_ANALYSIS.md`).
