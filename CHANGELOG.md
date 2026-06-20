@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.15.18] - 2026-06-18
+
+### Added
+
+- Analyzed and ported `pi-cli` capabilities (monorepo package identification hooks) to all language cores (`PI_CLI_ANALYSIS.md`).
+- Analyzed and ported `qwen-code-cli` context parsers (multi-modal local extraction) to all language cores (`QWEN_CODE_CLI_ANALYSIS.md`).
+- Analyzed and ported `rovo-cli` capabilities (enterprise graph querying and Atlassian Jira ticket transition triggers) to all language cores (`ROVO_CLI_ANALYSIS.md`).
+- Analyzed and ported `shell-pilot-cli` (zsh/bash history context predictors) (`SHELL_PILOT_CLI_ANALYSIS.md`).
+- Analyzed and ported `smithery-cli` (MCP registry search mapping) (`SMITHERY_CLI_ANALYSIS.md`).
+- Analyzed and ported `trae-cli` (Builder UI mode toggles) (`TRAE_CLI_ANALYSIS.md`).
+- Analyzed and ported `warp-cli` (Agentic terminal block AST parsing loops) (`WARP_CLI_ANALYSIS.md`).
+- Fully mapped all sub-agent features into standard class properties across Go, C#, Java, Rust, and TS.
+
 ## [0.15.17] - 2026-06-18
 
 ### Added
