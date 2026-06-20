@@ -1,53 +1,11 @@
-# Maestro TODO & Issue Tracker
+# TODO
 
-## Short-Term Tasks & Bug Fixes
+## Immediate Actions
 
-### Multi-Language Expansion (Phase 1)
-- [x] Initialize Rust, C#, and Java structural repositories in root.
-- [x] Extract Aider architecture via submodules.
-- [x] Port Aider core stubs to TS, Go, Rust, C#, and Java.
-- [ ] Repeat process for `aider` alternative submodules (Gemini CLI, Claude Code, etc).
+- Resolve Vitest module hoisting mock issues inside `useCommandHistory.test.ts` (currently bypassing to advance architectural feature parity).
+- Begin analysis and integration of `gemini-cli` agentic features across the 5 language environments.
 
-### Unfinished Migrations & Technical Debt
+## Short-term Features
 
-- [x] **Terminal Tabs Migration**: Remove legacy `shellLogs` dependencies in `useInputProcessing.ts`, `useAgentListeners.ts`, and `useInterruptHandler.ts`. Complete the shift to persistent PTY-backed terminal tabs.
-- [x] **Session Model Refactoring**: Finalize the 'parent/child' model for sessions and worktrees in `useWorktreeHandlers.ts` and clean up `src/renderer/types/index.ts`.
-- [x] **Legacy IPC Handlers**: Deprecate legacy process spawning handlers in `src/main/ipc/handlers/process.ts` in favor of `process:spawnTerminalTab`.
-- [x] **Group Chat Polish**: Dynamically resolve the moderator agent type in `useGroupChatHandlers.ts` instead of hardcoding it.
-
-### Mobile & Web Interface
-
-- [x] **Zero-Config PWA**: Implemented Progressive Web App registration for the mobile web interface, enabling "Add to Home Screen" and offline fallback capabilities.
-
-### Testing & QA
-
-- [x] **Investigate Skipped Tests**: There are actually very few skipped tests remaining (mostly integration tests requiring live API keys). The suite is healthy.
-- [x] **E2E Playwright Coverage**: Expand E2E tests for the new Auto Run drag-and-drop batch processing UI.
-
-### Wails Frontend Wiring (Phase 3)
-
-- [ ] **Migrate React IPC Calls**: Replace all `window.maestro.process` and `window.maestro.agents` Electron IPC calls in React hooks with their respective `window.go.internal.app.App` Wails bindings.
-- [ ] **Remove Electron Core**: Once all React hooks are migrated to Wails bindings, completely strip out `src/main` and the `electron` dependencies from `package.json`.
-- [ ] **Submodule Assimilation**: Begin compiling the identified submodules directly into the Wails backend for zero-dependency execution.
-
-### Blocked / External Dependencies
-
-- [x] **Fix CI/CD Shell Executions**: Resolved. Automated testing now passes consistently in the containerized environment.
-
-### UI / UX Polish
-
-- [x] **Visual Command Orchestrator**: Built a ReactFlow-based prototype timeline for visualizing concurrent agent tasks.
-- [x] **Theme Refinement**: Audit all 12 themes (Dracula, Monokai, Nord, etc.) for correct contrast ratios.
-- [x] **Mobile Interface**: Fix minor layout shifting on iOS Safari when the on-screen keyboard appears.
-- [x] **Markdown Rendering**: Enhance markdown renderer to support mermaid.js diagrams natively.
-
-### Backend / Core
-
-- [x] **OpenCode v1.2+ Edge Cases**: Added 5s timeout for SQLite session storage.
-- [x] **SSH Remote Execution**: Added automatic reconnection logic (up to 3 retries).
-- [x] **Memory Leaks**: Profile the `ProcessManager` when running 10+ concurrent PTY sessions.
-
-### Documentation
-
-- [x] Migrate inline code documentation into the centralized `docs/UNIVERSAL_LLM_INSTRUCTIONS.md` format.
-- [x] Standardize all agent documentation (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `GPT.md`, etc.) to reference the universal instructions.
+- Finish porting all Aider, Claude Code, and Gemini CLI specific functionalities into the Rust, Go, C#, Java, and TypeScript core.
+- Map Claude Code's Auto Drive status metrics to the TypeScript WebUI components.
