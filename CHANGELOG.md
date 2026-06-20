@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.16] - 2026-06-18
+### Added
+- Analyzed `bito-cli` architecture for `{{%input%}}` templating and BASIC/ADVANCED model profiles (`BITO_CLI_ANALYSIS.md`).
+- Ported Bito `InjectPromptMacro` and `SetModelProfile` features to Go, Rust, C#, Java, and TypeScript core.
+- Analyzed `byterover` for AST and lockfile dependency parsing context hooks (`BYTEROVER_CLI_ANALYSIS.md`).
+- Ported ByteRover `ParseDependencies` interfaces to Go, Rust, C#, Java, and TypeScript core.
+
 ## [0.15.15] - 2026-06-18
 ### Added
 - Analyzed `ampcode` architecture for remote execution hooks and rsync wrappers (`AMPCODE_CLI_ANALYSIS.md`).
