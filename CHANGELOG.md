@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.14] - 2026-06-18
+### Added
+- Analyzed `amazon-q-developer-cli` to extract IAM session/builder-id hooks and CLI translation heuristics (`AMAZON_Q_ANALYSIS.md`).
+- Ported Amazon Q `LoginAwsBuilderId` and `TranslateToShell` features to Go, Rust, C#, Java, and TypeScript core.
+- Analyzed `block/goose` for Advanced Content Provider (ACP) handling and specific project-boundary `.goosehints` rules loading (`GOOSE_ANALYSIS.md`).
+- Ported Goose `LoadGooseHints` and `InitAcpSession` interfaces to Go, Rust, C#, Java, and TypeScript core.
+
 ## [0.15.13] - 2026-06-18
 ### Added
 - Analyzed `just-every/code` (upstream Codex CLI pattern) for strict TUI event loops and O-series model reasoning configuration (`CODEX_CLI_ANALYSIS.md`).
