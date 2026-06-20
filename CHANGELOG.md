@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.19] - 2026-06-18
+
+### Added
+
+- Integrated all 24 sub-agents into a unified `MaestroRouter` class across Go, Rust, C#, Java, and TypeScript.
+- Created `autoOrchestrate` method demonstrating composite agent flows (setting reasoning, sandbox policies, building plans, and autonomously driving solutions).
+- Implemented IPC bindings (`maestroHandlers.ts` and `preload/index.ts`) mapping the unified `MaestroRouter` directly to the `window.maestro` object for the Electron frontend.
+
 ## [0.15.18] - 2026-06-18
 
 ### Added

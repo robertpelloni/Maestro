@@ -2,8 +2,8 @@
 
 ## Immediate Actions
 
-- Build the Master API `MaestroRouter` class that unifies all 20+ sub-agent functionalities into a single interface!
-- Create the backend IPC bindings so the TypeScript frontend can call `window.maestro.executeTool()`.
+- Build actual frontend React components calling the new `window.maestro.autoOrchestrate` hooks.
+- Verify Wails v3 integration for the Go `MaestroRouter` backend.
 
 ## Short-term Features
 
