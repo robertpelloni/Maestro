@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.20] - 2026-06-18
+
+### Added
+
+- Implemented `MaestroDashboard.tsx` to serve as the unified frontend React interface for the `MaestroRouter` orchestration system.
+- Created `App.tsx` shell component integrating the dashboard.
+- Solidified testing environments and WebUI components for cross-agent actions.
+
 ## [0.15.19] - 2026-06-18
 
 ### Added
