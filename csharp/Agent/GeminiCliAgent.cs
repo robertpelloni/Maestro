@@ -1,42 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class GeminiCliAgent
     {
-        public bool UseSearchGrounding { get; set; } = true;
-        private Dictionary<string, string> Checkpoints = new Dictionary<string, string>();
-
-        public async Task<string> GenerateWithGroundingAsync(string prompt)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await Task.Delay(400);
-            string grounding = UseSearchGrounding ? "Searched Google for: latest context" : "Grounding disabled";
-            return $"Response for '{prompt}' [{grounding}]";
-        }
-
-        public void SaveCheckpoint(string name, string state)
-        {
-            Checkpoints[name] = state;
-        }
-
-        public string LoadCheckpoint(string name)
-        {
-            if (Checkpoints.TryGetValue(name, out string state))
+            var steps = new[]
             {
-                return state;
-            }
-            throw new Exception($"Checkpoint not found: {name}");
-        }
+                $"Initializing {nameof(GeminiCliAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
 
-        public async IAsyncEnumerable<string> StreamJsonAsync(string prompt)
-        {
-            for (int i = 0; i < 3; i++)
+            foreach (var step in steps)
             {
-                yield return $"{{\"chunk\": {i}, \"content\": \"part {i}\"}}";
-                await Task.Delay(100);
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
             }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(GeminiCliAgent)} Execution Finished\"}}";
         }
     }
 }

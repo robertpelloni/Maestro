@@ -1,16 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class SmitheryAgent
     {
-        public async Task<List<string>> SearchMcpRegistryAsync(string query)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Searching Smithery MCP Registry for: {query}");
-            await Task.Delay(300);
-            return new List<string> { "@modelcontextprotocol/filesystem", "@modelcontextprotocol/github" };
+            var steps = new[]
+            {
+                $"Initializing {nameof(SmitheryAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
+
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(SmitheryAgent)} Execution Finished\"}}";
         }
     }
 }

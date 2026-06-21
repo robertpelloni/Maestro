@@ -1,13 +1,40 @@
 package com.maestro.agent;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ShellPilotAgent {
-    public CompletableFuture<String> predictNextCommand(List<String> history) {
-        return CompletableFuture.supplyAsync(() -> {
-            try { Thread.sleep(150); } catch (InterruptedException e) {}
-            return "Predicted command based on " + history.size() + " history items: git status";
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing ShellPilotAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
+
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"ShellPilotAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
+            }
         });
+
+        return publisher;
     }
 }

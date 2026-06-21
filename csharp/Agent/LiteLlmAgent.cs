@@ -1,23 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class LiteLlmAgent
     {
-        public List<string> Fallbacks { get; private set; } = new List<string>();
-
-        public void ConfigureFallbacks(List<string> models)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Fallbacks = models;
-            Console.WriteLine($"Configured fallback models: {string.Join(", ", Fallbacks)}");
-        }
+            var steps = new[]
+            {
+                $"Initializing {nameof(LiteLlmAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
 
-        public async Task<string> StandardizeModelPayloadAsync(string payload)
-        {
-            await Task.Delay(50);
-            return $"{{\"standardized\": true, \"raw\": \"{payload}\"}}";
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(LiteLlmAgent)} Execution Finished\"}}";
         }
     }
 }

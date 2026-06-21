@@ -1,18 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class ManusAgent
     {
-        public bool ContainerActive { get; private set; } = false;
-
-        public async Task<string> RequestRpaContainerAsync()
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Console.WriteLine("Provisioning secure RPA container...");
-            await Task.Delay(300);
-            ContainerActive = true;
-            return "rpa-container-id-9912";
+            var steps = new[]
+            {
+                $"Initializing {nameof(ManusAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
+
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(ManusAgent)} Execution Finished\"}}";
         }
     }
 }

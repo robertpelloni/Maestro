@@ -1,27 +1,40 @@
 package com.maestro.agent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AmpCodeAgent {
-    private String remoteHost = "localhost";
-    private boolean isSyncing = false;
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public CompletableFuture<Void> startFileSync(String remote) {
-        return CompletableFuture.runAsync(() -> {
-            this.remoteHost = remote;
-            this.isSyncing = true;
-            System.out.println("Started bi-directional file sync to remote: " + remote);
-            try { Thread.sleep(100); } catch (InterruptedException e) {}
-        });
-    }
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing AmpCodeAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
 
-    public CompletableFuture<String> runRemoteCommand(String command) {
-        return CompletableFuture.supplyAsync(() -> {
-            if (!this.isSyncing) {
-                throw new RuntimeException("Must establish file sync before executing remote commands");
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"AmpCodeAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
             }
-            try { Thread.sleep(300); } catch (InterruptedException e) {}
-            return "[Remote: " + this.remoteHost + "] Executed: " + command;
         });
+
+        return publisher;
     }
 }

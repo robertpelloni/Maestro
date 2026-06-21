@@ -1,39 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class ClaudeDesktopAgent
     {
-        private Dictionary<string, string> MCPServers = new Dictionary<string, string>();
-        public bool TrayActive { get; private set; } = false;
-
-        public void InitializeTray()
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            TrayActive = true;
-            Console.WriteLine("Tray icon initialized.");
-        }
-
-        public void RegisterMCPServer(string name, string command)
-        {
-            MCPServers[name] = command;
-            Console.WriteLine($"Registered MCP Server: {name} -> {command}");
-        }
-
-        public async Task<string> ExecuteMCPToolAsync(string serverName, string toolName)
-        {
-            if (!MCPServers.ContainsKey(serverName))
+            var steps = new[]
             {
-                throw new Exception($"MCP Server {serverName} not found");
-            }
-            await Task.Delay(200);
-            return $"Executed tool {toolName} on server {serverName} successfully";
-        }
+                $"Initializing {nameof(ClaudeDesktopAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
 
-        public string ReadClipboard()
-        {
-            return "Clipboard content (simulated)";
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(ClaudeDesktopAgent)} Execution Finished\"}}";
         }
     }
 }

@@ -1,16 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class PiAgent
     {
-        public async Task<List<string>> ScanMonorepoWorkspacesAsync(string directory)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scanning monorepo workspaces in {directory}...");
-            await Task.Delay(200);
-            return new List<string> { "packages/core", "packages/web", "apps/desktop" };
+            var steps = new[]
+            {
+                $"Initializing {nameof(PiAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
+
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(PiAgent)} Execution Finished\"}}";
         }
     }
 }

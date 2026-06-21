@@ -1,35 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class BitoAgent
     {
-        public string ModelProfile { get; private set; } = "ADVANCED";
-        public int MaxContext { get; private set; } = 240000;
-
-        public void SetModelProfile(string profile)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            if (profile == "BASIC") {
-                MaxContext = 40000;
-            } else {
-                MaxContext = 240000;
-            }
-            ModelProfile = profile;
-            Console.WriteLine($"Bito Model Profile set to: {ModelProfile} (Limit: {MaxContext})");
-        }
+            var steps = new[]
+            {
+                $"Initializing {nameof(BitoAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
 
-        public async Task<string> InjectPromptMacroAsync(string template, string fileContent)
-        {
-            await Task.Delay(50);
-
-            string result = template.Replace("{{%input%}}", fileContent);
-
-            if (result.Length > MaxContext) {
-                throw new Exception($"Injected prompt exceeds maximum context length of {MaxContext}");
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
             }
 
-            return result;
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(BitoAgent)} Execution Finished\"}}";
         }
     }
 }

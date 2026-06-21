@@ -1,13 +1,32 @@
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class WarpAgent
     {
-        public async Task<string> ParseTerminalBlockAsync(string ptyStream)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await Task.Delay(50);
-            return $"Parsed semantic block from PTY stream size: {ptyStream.Length}";
+            var steps = new[]
+            {
+                $"Initializing {nameof(WarpAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
+
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(WarpAgent)} Execution Finished\"}}";
         }
     }
 }

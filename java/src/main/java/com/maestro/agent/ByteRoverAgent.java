@@ -1,13 +1,40 @@
 package com.maestro.agent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ByteRoverAgent {
-    public CompletableFuture<String> parseDependencies(String directory) {
-        return CompletableFuture.supplyAsync(() -> {
-            System.out.println("Scanning lockfiles in " + directory + "...");
-            try { Thread.sleep(150); } catch (InterruptedException e) {}
-            return "Parsed dependencies for " + directory + ": Found 12 packages.";
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing ByteRoverAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
+
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"ByteRoverAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
+            }
         });
+
+        return publisher;
     }
 }

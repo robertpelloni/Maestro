@@ -1,23 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class AuggieAgent
     {
-        private Dictionary<string, string> Commands = new Dictionary<string, string>();
-
-        public void LoadFrontmatterCommand(string name, string content)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Commands[name] = content;
-            Console.WriteLine($"Loaded frontmatter command: /{name}");
-        }
+            var steps = new[]
+            {
+                $"Initializing {nameof(AuggieAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
 
-        public async Task<string> HeadlessPrintAsync(string prompt)
-        {
-            await Task.Delay(100);
-            return $"[CI OUTPUT] Successfully executed headless action for: {prompt}";
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(AuggieAgent)} Execution Finished\"}}";
         }
     }
 }

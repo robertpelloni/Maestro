@@ -1,16 +1,40 @@
 package com.maestro.agent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class LlamafileAgent {
-    private String localEndpoint = "";
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public CompletableFuture<String> spawnLocalModel(String binaryPath) {
-        return CompletableFuture.supplyAsync(() -> {
-            System.out.println("Spawning local model process: " + binaryPath);
-            try { Thread.sleep(400); } catch (InterruptedException e) {}
-            this.localEndpoint = "http://localhost:8080";
-            return this.localEndpoint;
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing LlamafileAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
+
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"LlamafileAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
+            }
         });
+
+        return publisher;
     }
 }

@@ -1,15 +1,40 @@
 package com.maestro.agent;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PiAgent {
-    public CompletableFuture<List<String>> scanMonorepoWorkspaces(String directory) {
-        return CompletableFuture.supplyAsync(() -> {
-            System.out.println("Scanning monorepo workspaces in " + directory + "...");
-            try { Thread.sleep(200); } catch (InterruptedException e) {}
-            return Arrays.asList("packages/core", "packages/web", "apps/desktop");
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing PiAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
+
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"PiAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
+            }
         });
+
+        return publisher;
     }
 }

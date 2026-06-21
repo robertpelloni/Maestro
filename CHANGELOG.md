@@ -112,3 +112,10 @@
 ### Added
 
 - Wails v3 bindings in `go/internal/wails/maestro_bindings.go` to expose the Go backend to the frontend matching the Electron IPC setup.
+
+## [0.15.22] - 2024-05-24
+
+### Changed
+
+- Converted C# mocked sub-agents and `MaestroRouter` to correctly utilize `IAsyncEnumerable` instead of synchronous `Thread.Sleep()`.
+- Converted Java mocked sub-agents and `MaestroRouter` to use standard asynchronous `Flow.Publisher` streams via `SubmissionPublisher`.

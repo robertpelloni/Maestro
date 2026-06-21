@@ -1,29 +1,40 @@
 package com.maestro.agent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GeminiCliAgent {
-    private boolean useSearchGrounding = true;
-    private Map<String, String> checkpoints = new HashMap<>();
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public CompletableFuture<String> generateWithGrounding(String prompt) {
-        return CompletableFuture.supplyAsync(() -> {
-            try { Thread.sleep(400); } catch (InterruptedException e) {}
-            String grounding = useSearchGrounding ? "Searched Google for: latest context" : "Grounding disabled";
-            return "Response for '" + prompt + "' [" + grounding + "]";
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing GeminiCliAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
+
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"GeminiCliAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
+            }
         });
-    }
 
-    public void saveCheckpoint(String name, String state) {
-        checkpoints.put(name, state);
-    }
-
-    public String loadCheckpoint(String name) throws Exception {
-        if (checkpoints.containsKey(name)) {
-            return checkpoints.get(name);
-        }
-        throw new Exception("Checkpoint not found: " + name);
+        return publisher;
     }
 }

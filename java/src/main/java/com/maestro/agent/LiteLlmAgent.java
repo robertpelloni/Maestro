@@ -1,21 +1,40 @@
 package com.maestro.agent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class LiteLlmAgent {
-    private List<String> fallbacks = new ArrayList<>();
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public void configureFallbacks(List<String> models) {
-        this.fallbacks = models;
-        System.out.println("Configured fallback models: " + String.join(", ", models));
-    }
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing LiteLlmAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
 
-    public CompletableFuture<String> standardizeModelPayload(String payload) {
-        return CompletableFuture.supplyAsync(() -> {
-            try { Thread.sleep(50); } catch (InterruptedException e) {}
-            return "{\"standardized\": true, \"raw\": \"" + payload + "\"}";
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"LiteLlmAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
+            }
         });
+
+        return publisher;
     }
 }

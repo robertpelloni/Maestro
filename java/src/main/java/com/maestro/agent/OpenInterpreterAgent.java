@@ -1,20 +1,40 @@
 package com.maestro.agent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class OpenInterpreterAgent {
-    public CompletableFuture<String> executeInRepl(String code) {
-        return CompletableFuture.supplyAsync(() -> {
-            try { Thread.sleep(200); } catch (InterruptedException e) {}
-            return "REPL execution output for: " + code;
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing OpenInterpreterAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
+
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"OpenInterpreterAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
+            }
         });
-    }
 
-    public String captureScreen() {
-        return "base64_encoded_screen_capture";
-    }
-
-    public void executeMouseClick(int x, int y) {
-        System.out.println("Executed mouse click at (" + x + ", " + y + ")");
+        return publisher;
     }
 }

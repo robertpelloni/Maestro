@@ -1,34 +1,40 @@
 package com.maestro.agent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClaudeDesktopAgent {
-    private Map<String, String> mcpServers = new HashMap<>();
-    private boolean trayActive = false;
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public void initializeTray() {
-        this.trayActive = true;
-        System.out.println("Tray icon initialized.");
-    }
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing ClaudeDesktopAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
 
-    public void registerMCPServer(String name, String command) {
-        mcpServers.put(name, command);
-        System.out.println("Registered MCP Server: " + name + " -> " + command);
-    }
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
 
-    public CompletableFuture<String> executeMCPTool(String serverName, String toolName) {
-        return CompletableFuture.supplyAsync(() -> {
-            if (!mcpServers.containsKey(serverName)) {
-                throw new RuntimeException("MCP Server " + serverName + " not found");
+                publisher.submit("{\"status\": \"complete\", \"data\": \"ClaudeDesktopAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
             }
-            try { Thread.sleep(200); } catch (InterruptedException e) {}
-            return "Executed tool " + toolName + " on server " + serverName + " successfully";
         });
-    }
 
-    public String readClipboard() {
-        return "Clipboard content (simulated)";
+        return publisher;
     }
 }

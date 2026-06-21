@@ -1,24 +1,40 @@
 package com.maestro.agent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GooseAgent {
-    private String hintsFile = ".goosehints";
-    private boolean acpSessionActive = false;
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public CompletableFuture<String> loadGooseHints(String filepath) {
-        return CompletableFuture.supplyAsync(() -> {
-            try { Thread.sleep(50); } catch (InterruptedException e) {}
-            return "Loaded hints from " + filepath + ": Avoid mutating core databases";
-        });
-    }
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing GooseAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
 
-    public CompletableFuture<Boolean> initAcpSession(String provider) {
-        return CompletableFuture.supplyAsync(() -> {
-            System.out.println("Initializing ACP Session for provider: " + provider);
-            try { Thread.sleep(300); } catch (InterruptedException e) {}
-            this.acpSessionActive = true;
-            return true;
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"GooseAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
+            }
         });
+
+        return publisher;
     }
 }

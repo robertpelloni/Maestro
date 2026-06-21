@@ -1,29 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class AmpCodeAgent
     {
-        public string RemoteHost { get; private set; } = "localhost";
-        public bool IsSyncing { get; private set; } = false;
-
-        public async Task StartFileSyncAsync(string remote)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            RemoteHost = remote;
-            IsSyncing = true;
-            Console.WriteLine($"Started bi-directional file sync to remote: {remote}");
-            await Task.Delay(100);
-        }
-
-        public async Task<string> RunRemoteCommandAsync(string command)
-        {
-            if (!IsSyncing)
+            var steps = new[]
             {
-                throw new Exception("Must establish file sync before executing remote commands");
+                $"Initializing {nameof(AmpCodeAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
+
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
             }
-            await Task.Delay(300);
-            return $"[Remote: {RemoteHost}] Executed: {command}";
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(AmpCodeAgent)} Execution Finished\"}}";
         }
     }
 }

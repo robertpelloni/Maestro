@@ -1,14 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class QwenAgent
     {
-        public async Task<string> ExtractQwenContextAsync(string payload)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await Task.Delay(100);
-            return $"Extracted multi-modal Qwen context from: {payload}";
+            var steps = new[]
+            {
+                $"Initializing {nameof(QwenAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
+
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(QwenAgent)} Execution Finished\"}}";
         }
     }
 }

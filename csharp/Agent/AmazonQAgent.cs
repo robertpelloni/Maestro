@@ -1,29 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class AmazonQAgent
     {
-        public string AwsProfile { get; set; } = "default";
-        public bool IsLoggedIn { get; private set; } = false;
-
-        public async Task<bool> LoginAwsBuilderIdAsync()
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Console.WriteLine("Initiating AWS Builder ID Login...");
-            await Task.Delay(200);
-            IsLoggedIn = true;
-            return true;
-        }
-
-        public async Task<string> TranslateToShellAsync(string prompt)
-        {
-            if (!IsLoggedIn)
+            var steps = new[]
             {
-                throw new Exception("Must be logged in to translate");
+                $"Initializing {nameof(AmazonQAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
+
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
             }
-            await Task.Delay(100);
-            return $"aws cloudformation list-stacks # Translation for: {prompt}";
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(AmazonQAgent)} Execution Finished\"}}";
         }
     }
 }

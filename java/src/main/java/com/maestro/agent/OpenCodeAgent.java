@@ -1,39 +1,40 @@
 package com.maestro.agent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class OpenCodeAgent {
-    private Map<String, String> customCommands = new HashMap<>();
-    private boolean lspEnabled = true;
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public void loadCustomCommand(String id, String template) {
-        customCommands.put(id, template);
-        System.out.println("Loaded custom command macro: " + id);
-    }
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing OpenCodeAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
 
-    public CompletableFuture<String> executeCustomCommand(String id, Map<String, String> args) {
-        return CompletableFuture.supplyAsync(() -> {
-            if (!customCommands.containsKey(id)) {
-                throw new RuntimeException("Custom command not found: " + id);
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"OpenCodeAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
             }
-            String template = customCommands.get(id);
-            for (Map.Entry<String, String> entry : args.entrySet()) {
-                template = template.replace("$" + entry.getKey(), entry.getValue());
-            }
-            try { Thread.sleep(100); } catch (InterruptedException e) {}
-            return "Executed macro '" + id + "' resulting in: " + template;
         });
-    }
 
-    public CompletableFuture<String> requestLspDiagnostics(String filepath) {
-        return CompletableFuture.supplyAsync(() -> {
-            if (!lspEnabled) {
-                throw new RuntimeException("LSP is currently disabled");
-            }
-            try { Thread.sleep(150); } catch (InterruptedException e) {}
-            return "[{\"file\": \"" + filepath + "\", \"line\": 42, \"msg\": \"simulated lsp error\"}]";
-        });
+        return publisher;
     }
 }

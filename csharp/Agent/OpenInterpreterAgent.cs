@@ -1,24 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class OpenInterpreterAgent
     {
-        public async Task<string> ExecuteInReplAsync(string code)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await Task.Delay(200);
-            return $"REPL execution output for: {code}";
-        }
+            var steps = new[]
+            {
+                $"Initializing {nameof(OpenInterpreterAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
 
-        public string CaptureScreen()
-        {
-            return "base64_encoded_screen_capture";
-        }
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
 
-        public void ExecuteMouseClick(int x, int y)
-        {
-            Console.WriteLine($"Executed mouse click at ({x}, {y})");
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(OpenInterpreterAgent)} Execution Finished\"}}";
         }
     }
 }

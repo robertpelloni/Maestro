@@ -1,15 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class ByteRoverAgent
     {
-        public async Task<string> ParseDependenciesAsync(string directory)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"Scanning lockfiles in {directory}...");
-            await Task.Delay(150);
-            return $"Parsed dependencies for {directory}: Found 12 packages.";
+            var steps = new[]
+            {
+                $"Initializing {nameof(ByteRoverAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
+
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(ByteRoverAgent)} Execution Finished\"}}";
         }
     }
 }

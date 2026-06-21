@@ -1,19 +1,40 @@
 package com.maestro.agent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class OllamaAgent {
-    public CompletableFuture<Void> buildModelfile(String modelName, String instructions) {
-        return CompletableFuture.runAsync(() -> {
-            System.out.println("Building Modelfile for " + modelName + "...");
-            try { Thread.sleep(300); } catch (InterruptedException e) {}
-        });
-    }
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public CompletableFuture<Void> pullLocalModel(String modelName) {
-        return CompletableFuture.runAsync(() -> {
-            System.out.println("Pulling local model: " + modelName);
-            try { Thread.sleep(500); } catch (InterruptedException e) {}
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing OllamaAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
+
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"OllamaAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
+            }
         });
+
+        return publisher;
     }
 }

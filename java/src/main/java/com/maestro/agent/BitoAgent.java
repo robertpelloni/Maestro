@@ -1,32 +1,40 @@
 package com.maestro.agent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BitoAgent {
-    private String modelProfile = "ADVANCED";
-    private int maxContext = 240000;
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public void setModelProfile(String profile) {
-        if ("BASIC".equals(profile)) {
-            this.maxContext = 40000;
-        } else {
-            this.maxContext = 240000;
-        }
-        this.modelProfile = profile;
-        System.out.println("Bito Model Profile set to: " + this.modelProfile + " (Limit: " + this.maxContext + ")");
-    }
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing BitoAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
 
-    public CompletableFuture<String> injectPromptMacro(String template, String fileContent) {
-        return CompletableFuture.supplyAsync(() -> {
-            try { Thread.sleep(50); } catch (InterruptedException e) {}
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
 
-            String result = template.replace("{{%input%}}", fileContent);
-
-            if (result.length() > this.maxContext) {
-                throw new RuntimeException("Injected prompt exceeds maximum context length of " + this.maxContext);
+                publisher.submit("{\"status\": \"complete\", \"data\": \"BitoAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
             }
-
-            return result;
         });
+
+        return publisher;
     }
 }

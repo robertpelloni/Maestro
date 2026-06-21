@@ -1,25 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class GooseAgent
     {
-        public string HintsFile { get; set; } = ".goosehints";
-        public bool AcpSessionActive { get; private set; } = false;
-
-        public async Task<string> LoadGooseHintsAsync(string filepath)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await Task.Delay(50);
-            return $"Loaded hints from {filepath}: Avoid mutating core databases";
-        }
+            var steps = new[]
+            {
+                $"Initializing {nameof(GooseAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
 
-        public async Task<bool> InitAcpSessionAsync(string provider)
-        {
-            Console.WriteLine($"Initializing ACP Session for provider: {provider}");
-            await Task.Delay(300);
-            AcpSessionActive = true;
-            return true;
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(GooseAgent)} Execution Finished\"}}";
         }
     }
 }

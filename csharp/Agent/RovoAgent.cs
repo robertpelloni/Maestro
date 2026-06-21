@@ -1,20 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class RovoAgent
     {
-        public async Task<string> QueryEnterpriseGraphAsync(string query)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await Task.Delay(400);
-            return $"Enterprise graph results for: {query}";
-        }
+            var steps = new[]
+            {
+                $"Initializing {nameof(RovoAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
 
-        public async Task TransitionIssueStatusAsync(string issueKey, string status)
-        {
-            Console.WriteLine($"Transitioned {issueKey} to {status}");
-            await Task.Delay(200);
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
+            }
+
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(RovoAgent)} Execution Finished\"}}";
         }
     }
 }

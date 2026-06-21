@@ -1,38 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Maestro.Agent
 {
     public class CodexCliAgent
     {
-        public string SandboxMode { get; private set; } = "workspace-write";
-        public bool ReasoningMode { get; private set; } = false;
-
-        public void EnableO1Reasoning(bool enabled)
+        public async IAsyncEnumerable<string> ExecuteTaskAsync(string task, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            ReasoningMode = enabled;
-            Console.WriteLine($"O1 Reasoning mode set to: {enabled}");
-        }
-
-        public void SetSandboxMode(string mode)
-        {
-            SandboxMode = mode;
-            Console.WriteLine($"Sandbox mode set to: {mode}");
-        }
-
-        public async Task<bool> RequestUserApprovalAsync(string action)
-        {
-            Console.WriteLine($"[TUI Prompt] User approval required for: {action}");
-            await Task.Delay(300);
-
-            if (SandboxMode == "read-only")
+            var steps = new[]
             {
-                Console.WriteLine("[TUI] Action denied by read-only sandbox");
-                return false;
+                $"Initializing {nameof(CodexCliAgent)} context...",
+                "Analyzing task requirements...",
+                $"Processing: {task}",
+                "Applying AI transformations...",
+                "Finalizing code block generation..."
+            };
+
+            foreach (var step in steps)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(200, cancellationToken);
+                yield return $"{{\"status\": \"streaming\", \"data\": \"{step}\"}}";
             }
 
-            Console.WriteLine("[TUI] Action approved");
-            return true;
+            yield return $"{{\"status\": \"complete\", \"data\": \"{nameof(CodexCliAgent)} Execution Finished\"}}";
         }
     }
 }

@@ -1,32 +1,40 @@
 package com.maestro.agent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClaudeCodeAgent {
-    private boolean browserMode = false;
-    private String reasoningLevel = "medium";
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public CompletableFuture<String> plan(String prompt) {
-        return CompletableFuture.supplyAsync(() -> {
-            try { Thread.sleep(500); } catch (InterruptedException e) {}
-            return "Consolidated Plan for: " + prompt + "\n1. Analyze\n2. Coordinate\n3. Execute";
-        });
-    }
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing ClaudeCodeAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
 
-    public CompletableFuture<String> solve(String prompt) {
-        return CompletableFuture.supplyAsync(() -> {
-            try { Thread.sleep(300); } catch (InterruptedException e) {}
-            return "Fastest solution found for: " + prompt;
-        });
-    }
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
 
-    public CompletableFuture<Void> autoDrive(String task) {
-        return CompletableFuture.runAsync(() -> {
-            System.out.println("Starting Auto Drive for task: " + task);
-            for (int i = 1; i <= 3; i++) {
-                System.out.println("Auto Drive Step " + i + " complete");
-                try { Thread.sleep(200); } catch (InterruptedException e) {}
+                publisher.submit("{\"status\": \"complete\", \"data\": \"ClaudeCodeAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
             }
         });
+
+        return publisher;
     }
 }

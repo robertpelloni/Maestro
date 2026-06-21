@@ -1,27 +1,40 @@
 package com.maestro.agent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AmazonQAgent {
-    private String awsProfile = "default";
-    private boolean isLoggedIn = false;
+    public Flow.Publisher<String> executeTaskAsync(String task) {
+        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public CompletableFuture<Boolean> loginAwsBuilderId() {
-        return CompletableFuture.supplyAsync(() -> {
-            System.out.println("Initiating AWS Builder ID Login...");
-            try { Thread.sleep(200); } catch (InterruptedException e) {}
-            this.isLoggedIn = true;
-            return true;
-        });
-    }
+        executor.submit(() -> {
+            try {
+                String[] steps = {
+                    "Initializing AmazonQAgent context...",
+                    "Analyzing task requirements...",
+                    "Processing: " + task,
+                    "Applying AI transformations...",
+                    "Finalizing code block generation..."
+                };
 
-    public CompletableFuture<String> translateToShell(String prompt) {
-        return CompletableFuture.supplyAsync(() -> {
-            if (!this.isLoggedIn) {
-                throw new RuntimeException("Must be logged in to translate");
+                for (String step : steps) {
+                    Thread.sleep(200); // Simulating async delay
+                    publisher.submit("{\"status\": \"streaming\", \"data\": \"" + step + "\"}");
+                }
+
+                publisher.submit("{\"status\": \"complete\", \"data\": \"AmazonQAgent Execution Finished\"}");
+                publisher.close();
+            } catch (InterruptedException e) {
+                publisher.closeExceptionally(e);
+                Thread.currentThread().interrupt();
+            } finally {
+                executor.shutdown();
             }
-            try { Thread.sleep(100); } catch (InterruptedException e) {}
-            return "aws cloudformation list-stacks # Translation for: " + prompt;
         });
+
+        return publisher;
     }
 }
