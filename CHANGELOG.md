@@ -119,3 +119,9 @@
 
 - Converted C# mocked sub-agents and `MaestroRouter` to correctly utilize `IAsyncEnumerable` instead of synchronous `Thread.Sleep()`.
 - Converted Java mocked sub-agents and `MaestroRouter` to use standard asynchronous `Flow.Publisher` streams via `SubmissionPublisher`.
+
+## [0.15.23] - 2024-05-24
+
+### Added
+
+- Wails v3 Application Entrypoint in `go/main.go` and `wails.json` to embed and serve the React UI.

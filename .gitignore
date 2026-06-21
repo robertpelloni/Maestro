@@ -70,3 +70,10 @@ java/bin/
 
 # Rust build artifacts
 rust/target/
+wails ignore target build files
+
+# Frontend Build & Dist Artifacts
+dist/
+out/
+build/
+go/frontend/
