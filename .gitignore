@@ -60,3 +60,20 @@ yarn-error.log*
 .vscode/
 .VSCodeCounter
 .qodo
+
+# C# build artifacts
+csharp/bin/
+csharp/obj/
+
+# Java build artifacts
+java/bin/
+
+# Rust build artifacts
+rust/target/
+wails ignore target build files
+
+# Frontend Build & Dist Artifacts
+dist/
+out/
+build/
+go/frontend/
