@@ -1,30 +1,21 @@
-# Handoff to Next Model
+# Session Handoff
 
-## Current State
+## Completed Work
 
-The project has successfully reached `v0.15.8`.
+- Defined `MaestroApp` which encapsulates `MaestroRouter` to be used with the Wails frontend.
+- Refactored all C# sub-agents (`csharp/Agent/*.cs`) and Java sub-agents (`java/src/main/java/com/maestro/agent/*.java`) from blocking `Thread.Sleep()` stubs into full asynchronous data streams.
+- Built `go/main.go` using Wails v2/v3 patterns to embed `frontend/dist` and bind the application logic. Configured `wails.json`.
+- **Configuration Engine Pipeline**: Implemented multi-language secure `.env` parsers (`ConfigManager`) in Node (`dotenv`), Go (`godotenv`), Rust (`dotenvy`), C# (`DotNetEnv`), and Java (`dotenv-java`), injecting them into all 5 language implementations of the `MaestroRouter` to prepare for live agent connections.
+- Version bumped dynamically to `v0.15.24` across all core files.
 
-**Phase 1 and Phase 2 of the Go Migration** are complete:
+## Next Steps
 
-- Eradicated legacy Electron IPC handlers for process spawning.
-- Fully implemented PTY streaming via terminal tabs.
-- Ported Git, SSH, and Filesystem detection logic to Wails/Go.
-- Frontend technical debt involving `shellLogs` and `worktreeParentPath` has been eradicated.
-- Added definitions for ~30 new CLI agents to the frontend.
-- Created parser interfaces and unit tests for these agents in the Go backend.
-- Implemented actual SQLite bindings using pure Go (`modernc.org/sqlite`) for OpenCode/Claude Code log retrieval.
+- Implement Agent Hydration: Inject the API keys grabbed from the new ConfigManager into the respective sub-agents so they can make live HTTP requests.
+- Address the recovery guidance requests regarding `go/internal/agents` and verification of the capability map, integrating it natively into the new `MaestroRouter` structures.
 
-## Missing Features / Next Steps (Phase 3)
+## Notes
 
-As documented in the newly updated `TODO.md`:
-
-1. **Wails Frontend Wiring**: We need to replace all `window.maestro.process` and `window.maestro.agents` Electron IPC calls in the React hooks with their respective `window.go.internal.app.App` Wails bindings.
-2. **Remove Electron Core**: Once all React hooks are migrated to Wails bindings, completely strip out `src/main` and the `electron` dependencies from `package.json`.
-3. **Submodule Assimilation**: The `submodules/` directory is currently empty. We need to begin cloning specific upstream submodules and compiling them directly into the Wails backend for zero-dependency execution.
-
-## Repository Sync Status
-
-All local feature branches have been merged up to date with `main`.
-Upstream changes have been fetched and merged.
-
-Please continue with Phase 3, focusing on the Wails frontend wiring.
+- Wails setup is localized to `go/internal/wails/` and `go/main.go`.
+- `IAsyncEnumerable` is used in C#.
+- `SubmissionPublisher` and `Flow.Publisher` are used in Java.
+- All secrets from `.env` are now strictly ignored by git and handled locally.

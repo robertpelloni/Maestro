@@ -6,7 +6,8 @@ Maestro is designed to be the ultimate, insanely great, pass-through interface a
 
 ### Key Pillars
 
-1. **Universal Agent Support**: Out-of-the-box integration for Claude Code, Gemini CLI, Copilot, Aider, OpenCode, and ~30 other CLIs. If it can be run in a terminal, it can be orchestrated in Maestro.
-2. **True Parallel Development**: Through Git Worktrees and Auto Run Playbooks, Maestro enables parallel, multi-agent development spanning multiple isolated branches without merge conflicts.
-3. **High Performance**: Transitioning from a Node.js/Electron IPC backend to a native Go implementation ensures minimal memory overhead and snappy PTY responsiveness, even with dozens of agents running simultaneously.
-4. **Platform Agnosticism**: While the current frontend is web/React-based, the architectural separation created by the Go port will pave the way for completely native frontends (macOS Swift, Windows C#/.NET).
+1. **Multi-Language Parity (The Ultimate Harness)**: Maestro is actively being ported and structured across 5 core languages—TypeScript, Go, Rust, C#, and Java. Maestro is not just a UI; it is the definitive foundation for agent orchestration across the entire computing ecosystem.
+2. **Universal Agent Support**: Out-of-the-box integration and native porting for major AI tools (e.g., **Aider**, Claude Code, Gemini CLI). We deconstruct, analyze, and absorb agent architectures directly into the Maestro multi-language core.
+3. **True Parallel Development**: Through Git Worktrees and Auto Run Playbooks, Maestro enables parallel, multi-agent development spanning multiple isolated branches without merge conflicts.
+4. **High Performance**: Transitioning from a Node.js/Electron IPC backend to natively compiled Go and Rust implementations ensures minimal memory overhead and snappy PTY responsiveness, even with dozens of agents running simultaneously.
+5. **Platform Agnosticism**: While the current frontend is web/React-based, the multi-language backend separation paves the way for completely native frontends across all operating systems.
