@@ -7,11 +7,13 @@
 - Built `go/main.go` using Wails v2/v3 patterns to embed `frontend/dist` and bind the application logic. Configured `wails.json`.
 - Implemented multi-language secure `.env` parsers (`ConfigManager`) in Node, Go, Rust, C#, and Java, injecting them into all 5 language implementations of the `MaestroRouter`.
 - **Capability Mapping:** Built `go/internal/agent/agent_detector.go` and `src/main/agents/capabilities.ts` to track and enforce the environment variables (like `OPENAI_API_KEY`) required to power each isolated agent. Integrated the Go detector into the `wailsbindings.MaestroApp`.
-- Version bumped dynamically to `v0.15.25` across all core files.
+- **Extensible Plugin System:** Constructed the `PluginManager` architecture in Go and TypeScript. These managers scan the `~/.maestro/plugins` directory for `manifest.json` definitions, enabling dynamically loaded third-party CLI tools to be routed and streamed through the `MaestroRouter`.
+- Version bumped dynamically to `v0.15.26` across all core files.
 
 ## Next Steps
 
-- Implement Extensible Plugin System: Begin the structural work for the plugin system as requested by the supervisor. The plugin system will likely interface heavily with the new configuration managers and capability maps to dynamically load third-party agent interfaces at runtime.
+- Implement Plugin System Parity: Replicate the Extensible Plugin System logic in Rust, C#, and Java to ensure parity across all five target architectures.
+- The next step after parity is to finish "hydrating" the built-in agents by passing the unified configuration variables into the agent implementations so they can make live HTTP requests.
 
 ## Notes
 

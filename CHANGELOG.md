@@ -132,3 +132,9 @@
 
 - `AgentDetector` struct in the Go backend to map out specific capabilities and requirements (like `OPENAI_API_KEY`) for all 24+ isolated agents.
 - Finalized integration for `go/internal/agents` ensuring that all languages, including recent C# and Java conversions, correctly compile against the wails bindings and updated dependencies.
+
+## [0.15.26] - 2024-05-24
+
+### Added
+
+- Extensible `PluginManager` architecture in TypeScript and Go. It scans `~/.maestro/plugins` for `manifest.json` configurations and allows the `MaestroRouter` to dynamically stream outputs from custom, third-party CLI agents.
