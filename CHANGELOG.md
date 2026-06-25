@@ -125,3 +125,10 @@
 ### Added
 
 - Wails v3 Application Entrypoint in `go/main.go` and `wails.json` to embed and serve the React UI.
+
+## [0.15.25] - 2024-05-24
+
+### Added
+
+- `AgentDetector` struct in the Go backend to map out specific capabilities and requirements (like `OPENAI_API_KEY`) for all 24+ isolated agents.
+- Finalized integration for `go/internal/agents` ensuring that all languages, including recent C# and Java conversions, correctly compile against the wails bindings and updated dependencies.
