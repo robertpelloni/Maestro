@@ -46,3 +46,9 @@
 - **Goal**: Seamless transition between desktop environments.
 - **Features**:
   - Cloud-synced playbooks, session histories, and settings.
+
+### Goal #3: Extensible Plugin System
+
+- [x] Initial `PluginManager` architecture in TypeScript and Go.
+- [ ] Achieve **Plugin System Parity**: Replicate the Extensible Plugin System logic in Rust, C#, and Java to ensure parity across all five target architectures.
+- [ ] Define Event Lifecycle Hooks: Define standard interfaces for external plugin binaries to receive JSON payload hooks (e.g. `on_start`, `on_file_changed`, `on_error`) during the `autoOrchestrate` loop.

@@ -10,6 +10,11 @@ export interface PluginManifest {
 	command: string;
 	args: string[];
 	required_env: string[];
+	events?: {
+		on_start?: string;
+		on_file_changed?: string;
+		on_error?: string;
+	};
 }
 
 export class PluginManager {
@@ -57,6 +62,18 @@ export class PluginManager {
 
 	public getAvailablePlugins(): PluginManifest[] {
 		return Array.from(this.manifests.values());
+	}
+
+	public async emitEvent(eventName: string, payload: any): Promise<void> {
+		for (const manifest of this.manifests.values()) {
+			if (manifest.events && (manifest.events as any)[eventName]) {
+				const commandToRun = (manifest.events as any)[eventName];
+				console.log(
+					`[PluginManager] Emitting ${eventName} to ${manifest.name} via ${commandToRun}`
+				);
+				// In a real implementation this would exec the hook command with the JSON payload
+			}
+		}
 	}
 
 	public async *executePlugin(name: string, input: string): AsyncGenerator<string, void, unknown> {

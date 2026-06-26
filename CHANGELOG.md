@@ -138,3 +138,9 @@
 ### Added
 
 - Extensible `PluginManager` architecture in TypeScript and Go. It scans `~/.maestro/plugins` for `manifest.json` configurations and allows the `MaestroRouter` to dynamically stream outputs from custom, third-party CLI agents.
+
+## [0.15.27] - 2024-05-24
+
+### Added
+
+- External Event Lifecycle Hooks in the Go and TypeScript `PluginManager` to allow third party custom agents to subscribe to orchestrator events such as `on_start`, `on_file_changed`, and `on_error`.

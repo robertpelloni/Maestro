@@ -9,13 +9,20 @@ import (
 	"sync"
 )
 
+type PluginEvents struct {
+	OnStart       string `json:"on_start,omitempty"`
+	OnFileChanged string `json:"on_file_changed,omitempty"`
+	OnError       string `json:"on_error,omitempty"`
+}
+
 type PluginManifest struct {
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Version     string   `json:"version"`
-	Command     string   `json:"command"`
-	Args        []string `json:"args"`
-	RequiredEnv []string `json:"required_env"`
+	Name        string       `json:"name"`
+	Description string       `json:"description"`
+	Version     string       `json:"version"`
+	Command     string       `json:"command"`
+	Args        []string     `json:"args"`
+	RequiredEnv []string     `json:"required_env"`
+	Events      PluginEvents `json:"events,omitempty"`
 }
 
 type PluginManager struct {
@@ -78,6 +85,28 @@ func (pm *PluginManager) GetAvailablePlugins() []PluginManifest {
 	return plugins
 }
 
+func (pm *PluginManager) EmitEvent(eventName string, payload interface{}) {
+	pm.mu.RLock()
+	defer pm.mu.RUnlock()
+
+	for _, manifest := range pm.manifests {
+		commandToRun := ""
+		switch eventName {
+		case "on_start":
+			commandToRun = manifest.Events.OnStart
+		case "on_file_changed":
+			commandToRun = manifest.Events.OnFileChanged
+		case "on_error":
+			commandToRun = manifest.Events.OnError
+		}
+
+		if commandToRun != "" {
+			log.Printf("[PluginManager] Emitting %s to %s via %s", eventName, manifest.Name, commandToRun)
+			// Mock exec
+		}
+	}
+}
+
 func (pm *PluginManager) ExecutePlugin(name string, input string) (string, error) {
 	pm.mu.RLock()
 	manifest, exists := pm.manifests[name]
@@ -89,6 +118,7 @@ func (pm *PluginManager) ExecutePlugin(name string, input string) (string, error
 
 	// Create command
 	cmd := exec.Command(manifest.Command, manifest.Args...)
+	_ = cmd // ignore for mock
 	// In a real implementation, you would pipe input via stdin,
 	// set environment variables from the ConfigManager,
 	// and read stdout iteratively to stream results back.
