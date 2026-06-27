@@ -146,5 +146,13 @@
 - External Event Lifecycle Hooks in the Go and TypeScript `PluginManager` to allow third party custom agents to subscribe to orchestrator events such as `on_start`, `on_file_changed`, and `on_error`.
 
 ## [0.15.28] - 2024-05-24
+
 ### Changed
+
 - Finalized migration of the `Hypercode` live environment provider legacy Electron IPC handlers into Wails v3 struct bindings within Go (`hypercode_core_client.go` and `hypercode_live_provider.go`), closing the IPC deprecation loop.
+
+## [0.15.29] - 2024-05-24
+
+### Added
+
+- Context Compaction module implemented within the Go `AgentDetector` (`CompactContext`). This provides token-aware summarization for the `MaestroRouter` to condense expansive session histories before executing isolated AI agents.
