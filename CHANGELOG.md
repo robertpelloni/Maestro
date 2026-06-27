@@ -125,3 +125,34 @@
 ### Added
 
 - Wails v3 Application Entrypoint in `go/main.go` and `wails.json` to embed and serve the React UI.
+
+## [0.15.25] - 2024-05-24
+
+### Added
+
+- `AgentDetector` struct in the Go backend to map out specific capabilities and requirements (like `OPENAI_API_KEY`) for all 24+ isolated agents.
+- Finalized integration for `go/internal/agents` ensuring that all languages, including recent C# and Java conversions, correctly compile against the wails bindings and updated dependencies.
+
+## [0.15.26] - 2024-05-24
+
+### Added
+
+- Extensible `PluginManager` architecture in TypeScript and Go. It scans `~/.maestro/plugins` for `manifest.json` configurations and allows the `MaestroRouter` to dynamically stream outputs from custom, third-party CLI agents.
+
+## [0.15.27] - 2024-05-24
+
+### Added
+
+- External Event Lifecycle Hooks in the Go and TypeScript `PluginManager` to allow third party custom agents to subscribe to orchestrator events such as `on_start`, `on_file_changed`, and `on_error`.
+
+## [0.15.28] - 2024-05-24
+
+### Changed
+
+- Finalized migration of the `Hypercode` live environment provider legacy Electron IPC handlers into Wails v3 struct bindings within Go (`hypercode_core_client.go` and `hypercode_live_provider.go`), closing the IPC deprecation loop.
+
+## [0.15.29] - 2024-05-24
+
+### Added
+
+- Context Compaction module implemented within the Go `AgentDetector` (`CompactContext`). This provides token-aware summarization for the `MaestroRouter` to condense expansive session histories before executing isolated AI agents.

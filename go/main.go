@@ -11,7 +11,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
 
-	"github.com/robertpelloni/maestro/go/internal/wails"
+	wailsbindings "github.com/robertpelloni/maestro/go/internal/wails"
 )
 
 //go:embed all:frontend/dist
@@ -19,7 +19,7 @@ var assets embed.FS
 
 func main() {
 	// Create an instance of the app structure
-	app := wails.NewMaestroApp()
+	app := wailsbindings.NewMaestroApp()
 
 	// Create application with options
 	err := wailsapp.Run(&options.App{
